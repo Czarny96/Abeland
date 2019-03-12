@@ -1,7 +1,7 @@
 [project]
 title = Desktop
-dependencies = https://github.com/britzl/defold-luasocket/archive/master.zip,https://github.com/britzl/defold-websocket/archive/master.zip,https://github.com/maxtorion/LuaSec_Mod_for_Abeland/blob/master/modified_lua_sec.zip,https://github.com/gamestdio/colyseus-defold/archive/master.zip
-custom_resources = 
+dependencies = https://github.com/britzl/defold-luasocket/archive/master.zip,https://github.com/britzl/defold-websocket/archive/master.zip,https://github.com/gamestdio/colyseus-defold/archive/master.zip,https://github.com/maxtorion/LuaSec_Mod_for_Abeland/archive/master.zip
+write_log = 0
 
 [bootstrap]
 main_collection = /main/main.collectionc
