@@ -1,6 +1,7 @@
 function init(self)
 	msg.post(".", "acquire_input_focus")
 
+	self.firing = false
 	self.moving = false
 
 	self.input = vmath.vector3()
@@ -15,25 +16,37 @@ function update(self, dt)
 		go.set_position(pos)
 	end
 
+	if self.firing then
+		local angle = math.atan2(self.dir.y, self.dir.x)
+		local rot = vmath.quat_rotation_z(angle)
+		local props = { dir = self.dir }
+		factory.create("#rangeAttackFactory", nil, rot, props)
+	end
+	
+	
 	self.input.x = 0
 	self.input.y = 0
 
+	self.firing = false
 	self.moving = false
 end
 
 function on_input(self, action_id, action)
 	if action_id == hash("up") then
 		self.input.y = 1
-		print("Click! UP")
+		--print("Click! UP")
 	elseif action_id == hash("down") then
 		self.input.y = -1
-		print("Click! DOWN")
+		--print("Click! DOWN")
 	elseif action_id == hash("left") then
 		self.input.x = -1
-		print("Click! LEFT")
+		--print("Click! LEFT")
 	elseif action_id == hash("right") then
 		self.input.x = 1
-		print("Click! RIGHT")
+		--print("Click! RIGHT")
+	elseif action_id == hash("space") then
+		self.firing = true
+		--print("Click! SPACE")
 	end
 
 	if vmath.length(self.input) > 0 then

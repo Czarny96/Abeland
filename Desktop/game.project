@@ -11,7 +11,7 @@ game_binding = /input/game.input_bindingc
 use_accelerometer = 0
 
 [display]
-width = 1280
+width = 720
 height = 720
 
 [script]

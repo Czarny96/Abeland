@@ -1,11 +1,17 @@
 images {
-  image: "/assets/images/background.png"
+  image: "/assets/prototypes/enemy_prot.png"
 }
 images {
-  image: "/assets/images/logo.png"
+  image: "/assets/prototypes/obstacle_prot.png"
 }
 images {
-  image: "/builtins/graphics/particle_blob.png"
+  image: "/assets/prototypes/player_prot.png"
+}
+images {
+  image: "/assets/prototypes/background_prot.png"
+}
+images {
+  image: "/assets/prototypes/attack_prot.png"
 }
 margin: 0
 extrude_borders: 2

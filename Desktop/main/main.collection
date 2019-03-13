@@ -3,8 +3,8 @@ instances {
   id: "player"
   prototype: "/main/player.go"
   position {
-    x: 561.0
-    y: 291.0
+    x: 360.0
+    y: 360.0
     z: 0.0
   }
   rotation {
@@ -41,7 +41,7 @@ embedded_instances {
   "  id: \"background\"\n"
   "  type: \"sprite\"\n"
   "  data: \"tile_set: \\\"/main/main.atlas\\\"\\n"
-  "default_animation: \\\"background\\\"\\n"
+  "default_animation: \\\"background_prot\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"
@@ -59,7 +59,7 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 640.0
+    x: 360.0
     y: 360.0
     z: 0.0
   }
