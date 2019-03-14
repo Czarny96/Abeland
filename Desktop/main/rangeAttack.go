@@ -34,7 +34,7 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "collisionobject"
+  id: "enemiesCollider"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
   "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
@@ -81,7 +81,7 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "collisionobject1"
+  id: "arenaCollider"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
   "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"

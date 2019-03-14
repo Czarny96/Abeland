@@ -11,9 +11,9 @@ end
 
 function update(self, dt)
 	if self.moving then
-		local pos = go.get_position()
-		pos = pos + self.dir * self.speed * dt
-		go.set_position(pos)
+		local l_pos = go.get_position()
+		l_pos = l_pos + self.dir * self.speed * dt
+		go.set_position(l_pos)
 	end
 
 	if self.firing then

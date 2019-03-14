@@ -14,7 +14,7 @@ components {
   }
 }
 embedded_components {
-  id: "arena"
+  id: "arenaCollider"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
   "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
@@ -61,7 +61,7 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "enemy"
+  id: "enemyCollider"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
   "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
@@ -108,7 +108,7 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "logo"
+  id: "sprite"
   type: "sprite"
   data: "tile_set: \"/main/main.atlas\"\n"
   "default_animation: \"player_prot\"\n"
