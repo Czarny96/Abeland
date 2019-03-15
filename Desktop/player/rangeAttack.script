@@ -3,6 +3,7 @@ go.property("projectileDir", vmath.vector3())
 function init(self)
 	self.projectileSpeed = 300
 	self.projectilelife = 1
+	self.damage = 25
 end
 
 function update(self, dt)
@@ -13,16 +14,12 @@ function update(self, dt)
 	self.projectilelife = self.projectilelife - dt
 
 	if(self.projectilelife <= 0) then
-		msg.post("#rangeAttack", "kill_particle")
+		go.delete()
 	end 
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("kill_particle") then
-		go.delete()
-	elseif message_id == hash("collision_response") then
-		--COLLISION WITH ENEMY OR ARENA OBJECT
-		--CHECK rangeAttack.go
+	if message_id == hash("collision_response") then
 		go.delete()
 	end
 end

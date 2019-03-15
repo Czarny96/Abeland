@@ -1,5 +1,5 @@
-go.property("shootingDelay", 0.25)
 go.property("movingDir", vmath.vector3(0, 0, 0))
+go.property("position", vmath.vector3(0, 0, 0))
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
@@ -11,6 +11,7 @@ end
 
 function update(self, dt)
 	go.set("#player", "movingDir", vmath.vector3(0, 0, 0))
+	
 	if self.inputCollection.up then
 		go.set("#player", "movingDir.y", 1)
 	end
@@ -45,6 +46,8 @@ function update(self, dt)
 		go.set_position(l_playerPos)
 	end
 
+	go.set("#player", "position", go.get_position())
+	
 	self.inputCollection = { up = false, down = false, left = false, right = false}
 	self.movingFlag = false
 end

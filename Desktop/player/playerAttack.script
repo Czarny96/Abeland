@@ -1,4 +1,5 @@
 go.property("shootingDelay", 0.25)
+go.property("damage", 25)
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
