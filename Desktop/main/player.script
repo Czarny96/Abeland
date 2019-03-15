@@ -7,6 +7,7 @@ function init(self)
 	self.movingDir = vmath.vector3(0, 0, 0)
 
 	self.firingFlag = false
+	self.shootingDelay = 0.25
 	self.shootingDir = vmath.vector3(0, 1, 0)
 end
 
@@ -53,11 +54,16 @@ function update(self, dt)
 		end
 	end
 
-	if self.firingFlag then
+	if self.shootingDelay > 0  then
+		self.shootingDelay = self.shootingDelay - dt
+	end
+	
+	if self.firingFlag and self.shootingDelay <= 0 then
 		local l_angle = math.atan2(self.shootingDir.y, self.shootingDir.x)
 		local l_rotation = vmath.quat_rotation_z(l_angle)
-		local l_props = { dir = self.shootingDir }
+		local l_props = { projectileDir = self.shootingDir }
 		factory.create("#rangeAttackFactory", nil, l_rotation, l_props)
+		self.shootingDelay = 0.25
 	end
 
 	self.inputCollection = { up = false, down = false, left = false, right = false, space = false }

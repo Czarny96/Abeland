@@ -1,24 +1,18 @@
-go.property("dir", vmath.vector3())
-
-local function explode(self)
-	self.life = 1000
-	go.set_rotation(vmath.quat())
-	self.speed = 0
-end
+go.property("projectileDir", vmath.vector3())
 
 function init(self)
-	self.speed = 300
-	self.life = 1
+	self.projectileSpeed = 300
+	self.projectilelife = 1
 end
 
 function update(self, dt)
-	local pos = go.get_position()
-	pos = pos + self.dir * self.speed * dt
-	go.set_position(pos)
+	local l_pos = go.get_position()
+	l_pos = l_pos + self.projectileDir * self.projectileSpeed * dt
+	go.set_position(l_pos)
 
-	self.life = self.life - dt
+	self.projectilelife = self.projectilelife - dt
 
-	if(self.life <= 0) then
+	if(self.projectilelife <= 0) then
 		msg.post("#rangeAttack", "kill_particle")
 	end 
 end
