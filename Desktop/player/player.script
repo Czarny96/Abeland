@@ -1,35 +1,34 @@
+go.property("shootingDelay", 0.25)
+go.property("movingDir", vmath.vector3(0, 0, 0))
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	self.inputCollection = { up = false, down = false, left = false, right = false, space = false }
 
-	self.movingFlag = false
 	self.movingSpeed = 150
-	self.movingDir = vmath.vector3(0, 0, 0)
-
-	self.firingFlag = false
-	self.shootingDelay = 0.25
-	self.shootingDir = vmath.vector3(0, 1, 0)
+	self.inputCollection = { up = false, down = false, left = false, right = false }
+	self.movingFlag = false
 end
 
 function update(self, dt)
+	go.set("#player", "movingDir", vmath.vector3(0, 0, 0))
 	if self.inputCollection.up then
-		self.movingDir.y = 1
+		go.set("#player", "movingDir.y", 1)
 	end
 	if self.inputCollection.down then
-		self.movingDir.y = -1
+		go.set("#player", "movingDir.y", -1)
 	end
 	if self.inputCollection.down and self.inputCollection.up then
-		self.movingDir.y = 0
+		go.set("#player", "movingDir.y", 0)
 	end
 
 	if self.inputCollection.left then
-		self.movingDir.x = -1
+		go.set("#player", "movingDir.x", -1)
 	end
 	if self.inputCollection.right then
-		self.movingDir.x = 1
+		go.set("#player", "movingDir.x", 1)
 	end
 	if self.inputCollection.left and self.inputCollection.right then
-		self.movingDir.x = 0
+		go.set("#player", "movingDir.x", 0)
 	end
 
 	if self.inputCollection.up or self.inputCollection.down or self.inputCollection.left or self.inputCollection.right 
@@ -46,30 +45,8 @@ function update(self, dt)
 		go.set_position(l_playerPos)
 	end
 
-	if not (self.movingDir.x == 0 and self.movingDir.y == 0) then
-		self.shootingDir = vmath.normalize(self.movingDir)
-	end
-	
-	if self.inputCollection.space then
-		self.firingFlag = true
-	end
-
-	if self.shootingDelay > 0  then
-		self.shootingDelay = self.shootingDelay - dt
-	end
-	
-	if self.firingFlag and self.shootingDelay <= 0 then
-		local l_angle = math.atan2(self.shootingDir.y, self.shootingDir.x)
-		local l_rotation = vmath.quat_rotation_z(l_angle)
-		local l_props = { projectileDir = self.shootingDir }
-		factory.create("#rangeAttackFactory", nil, l_rotation, l_props)
-		self.shootingDelay = 0.25
-	end
-
-	self.inputCollection = { up = false, down = false, left = false, right = false, space = false }
+	self.inputCollection = { up = false, down = false, left = false, right = false}
 	self.movingFlag = false
-	self.movingDir = vmath.vector3(0, 0, 0)
-	self.firingFlag = false
 end
 
 function on_input(self, action_id, action)
@@ -84,8 +61,5 @@ function on_input(self, action_id, action)
 	end
 	if action_id == hash("right") then
 		self.inputCollection.right = true
-	end
-	if action_id == hash("space") then
-		self.inputCollection.space = true
 	end
 end
