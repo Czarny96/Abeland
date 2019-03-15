@@ -46,12 +46,12 @@ function update(self, dt)
 		go.set_position(l_position)
 	end
 
+	if not (self.movingDir.x == 0 and self.movingDir.y == 0) then
+		self.shootingDir = vmath.normalize(self.movingDir)
+	end
+	
 	if self.inputCollection.space then
 		self.firingFlag = true
-
-		if not (self.movingDir.x == 0 and self.movingDir.y == 0) then
-			self.shootingDir = vmath.normalize(self.movingDir)
-		end
 	end
 
 	if self.shootingDelay > 0  then
