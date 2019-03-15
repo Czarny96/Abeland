@@ -40,10 +40,10 @@ function update(self, dt)
 	end
 
 	if self.movingFlag then
-		local l_position = go.get_position()
+		local l_playerPos = go.get_position()
 		local l_movingDir = vmath.vector3(self.movingDir.x, self.movingDir.y, 0)
-		l_position = l_position + l_movingDir * self.movingSpeed * dt
-		go.set_position(l_position)
+		l_playerPos = l_playerPos + l_movingDir * self.movingSpeed * dt
+		go.set_position(l_playerPos)
 	end
 
 	if not (self.movingDir.x == 0 and self.movingDir.y == 0) then

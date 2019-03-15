@@ -6,9 +6,9 @@ function init(self)
 end
 
 function update(self, dt)
-	local l_pos = go.get_position()
-	l_pos = l_pos + self.projectileDir * self.projectileSpeed * dt
-	go.set_position(l_pos)
+	local l_projectilePos = go.get_position()
+	l_projectilePos = l_projectilePos + self.projectileDir * self.projectileSpeed * dt
+	go.set_position(l_projectilePos)
 
 	self.projectilelife = self.projectilelife - dt
 

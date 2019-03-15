@@ -1,6 +1,6 @@
 components {
   id: "player"
-  component: "/main/player.script"
+  component: "/player/player.script"
   position {
     x: 0.0
     y: 0.0
@@ -130,7 +130,7 @@ embedded_components {
 embedded_components {
   id: "rangeAttackFactory"
   type: "factory"
-  data: "prototype: \"/main/rangeAttack.go\"\n"
+  data: "prototype: \"/player/rangeAttack.go\"\n"
   "load_dynamically: false\n"
   ""
   position {

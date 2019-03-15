@@ -1,0 +1,13 @@
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	
+	self.movingFlag = false
+	self.movingSpeed = 100
+	self.movingDir = vmath.vector3(0, 0, 0)
+end
+
+function update(self, dt)
+	local l_enemyPos = go.get_position()
+	local l_playerPos = go.get_position(#player)
+	
+end

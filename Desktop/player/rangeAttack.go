@@ -1,6 +1,6 @@
 components {
   id: "rangeAttack"
-  component: "/main/rangeAttack.script"
+  component: "/player/rangeAttack.script"
   position {
     x: 0.0
     y: 0.0
