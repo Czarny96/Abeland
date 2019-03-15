@@ -1,12 +1,15 @@
+
+local joystickDefaultPos = vmath.vector3()
+local joystickValue = {x=0, y=0} -- [-1, 1]
+local joystickMaxDist = 200 -- uhh nie wiem jak to nazwać ale chodzi o maksymalne wychylenie względem środka
+local joystickHolding = false 
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
 
 	-- get position of virtual joystick
-	self.joystickDefaultPos = { x = 0, y = 0 }
-	local galka = gui.get_node("gałka_front")
-	local pos = gui.get_position(galka)
-	self.joystickDefaultPos.x = pos.x
-	self.joystickDefaultPos.y = pos.y
+	local joystick = gui.get_node("gałka_front")
+	joystickDefaultPos = gui.get_position(joystick)
 	
 end
 
@@ -27,17 +30,38 @@ end
 
 function on_input(self, action_id, action)
 	if action_id == hash("mouse_left") then
-		print(action.x)
+
+		-- virtual joystick 
 		local button = gui.get_node("gałka_front")
-		if gui.pick_node(button, action.x, action.y) then
+		if gui.pick_node(button, action.x, action.y) or joystickHolding then
+			
+			joystickHolding = true
+			
 			local pos = gui.get_position(button)
-			--print(action.x .. " " .. pos.x)
-			gui.set_position(button, vmath.vector3(action.x, action.y, 0))
+			local diff = vmath.vector3(action.x, action.y, 0) - joystickDefaultPos
+			local len = vmath.length(diff)
+			
+			if len < joystickMaxDist then
+				-- joystick is inside circle
+				gui.set_position(button, vmath.vector3(action.x, action.y, 0))
+				joystickValue.x = diff.x / joystickMaxDist
+				joystickValue.y = diff.y / joystickMaxDist
+			else 
+				-- joystick is on the edge of circle
+				local normalized = vmath.normalize(diff)
+				gui.set_position(button, joystickDefaultPos + normalized * joystickMaxDist)
+				joystickValue.x = normalized.x
+				joystickValue.y = normalized.y
+			end
+			
 		end
 	end	
 
 	if action_id == hash("mouse_left") and action.released then
-		
+		-- move joystick to default position when thumb is up
+		local joystick = gui.get_node("gałka_front")
+		joystickHolding = false
+		gui.set_position(joystick, joystickDefaultPos)
 	end
 end
 
