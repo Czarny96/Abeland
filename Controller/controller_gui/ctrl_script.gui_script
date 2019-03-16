@@ -1,7 +1,11 @@
 local tcp_client = require "defnet.tcp_client"
 
 local SERVER_PORT = 5555
-local SERVER_ADRESS = "192.168.0.206"
+local WAS_SERVER_FOUND = false
+local WAS_CLIENT_SETUP = false
+local p2p_discovery = require "defnet.p2p_discovery"
+local PORT = 50000
+local SERVER_ADRESS =  nil
 
 local joystickDefaultPos = vmath.vector3()
 local joystickValue = {x=0, y=0} -- [-1, 1]
@@ -21,22 +25,16 @@ function init(self)
 	-- get center position of virtual joystick
 	local joystick = gui.get_node("gałka_front")
 	joystickDefaultPos = gui.get_position(joystick)
+	
+	-- server discovery
+	self.p2p = p2p_discovery.create(PORT)
 
-	-- tcp init
-	local client, err = tcp_client.create(SERVER_ADRESS, SERVER_PORT,
-	function(data)
-		print(data)
-	end,
-	function()
-		self.client = nil
+	
+	self.p2p.listen("findme", function(ip, port)
+		print("Found server", ip, port)
+		SERVER_ADRESS = ip 
 	end)
-	if client then
-		self.client = client
-		gui.set_text(gui.get_node("debugText1"), "Connected")
-	else
-		print(err)
-		gui.set_text(gui.get_node("debugText1"), "Connection failed")
-	end
+	
 end
 
 function final(self)
@@ -46,14 +44,43 @@ function final(self)
 end
 
 function update(self, dt)
+	self.p2p.update()
+	
+	
+	
+	if SERVER_ADRESS ~= nill and SERVER_ADRESS ~= true then
+		WAS_SERVER_FOUND = true
+	end
+	
+	if WAS_SERVER_FOUND == true and WAS_CLIENT_SETUP == false then
+		
+		local client, err = tcp_client.create(SERVER_ADRESS, SERVER_PORT,
+		function(data)
+			print(data)
+		end,
+		function()
+			self.client = nil
+		end)
+		if client then
+			self.client = client
+			gui.set_text(gui.get_node("debugText1"), "Connected")
+		else
+			print(err)
+			gui.set_text(gui.get_node("debugText1"), "Connection failed")
+		end
+		WAS_CLIENT_SETUP = true
+	end	
+	
 	if self.client then
 		self.client.update()
 	end
+	
 	if joystickValue.x ~= prevJoystickValue.x or joystickValue.y ~= prevJoystickValue.y then
 		if self.client then
 			self.client.send("GałaSeby: x-" .. tostring(joystickValue.x) .. " y-" .. tostring(joystickValue.y) .. "\r\n")
 		end
 	end
+	
 	prevJoystickValue.x = joystickValue.x
 	prevJoystickValue.y = joystickValue.y
 	
