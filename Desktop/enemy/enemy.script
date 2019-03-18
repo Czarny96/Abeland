@@ -17,8 +17,10 @@ function update(self, dt)
 
 	local l_positionDiffrence = (l_playerPos - l_enemyPos)
 
-	local l_movingDir = vmath.vector3(l_positionDiffrence.x / l_positionDiffrenceAbs.x, l_positionDiffrence.y / l_positionDiffrenceAbs.y, 0)
+	local l_movingDir = vmath.vector3(l_positionDiffrence.x,l_positionDiffrence.y, 0)
 
+	l_movingDir = vmath.normalize(l_movingDir)
+	
 	if l_positionDiffrence.x >= self.followDistance or l_positionDiffrence.x <= -self.followDistance 
 	or l_positionDiffrence.y >= self.followDistance or l_positionDiffrence.y <= -self.followDistance then
 		l_enemyPos = l_enemyPos + l_movingDir * self.movingSpeed * dt
