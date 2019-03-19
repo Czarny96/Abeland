@@ -45,16 +45,16 @@ function buttonPressed(self, buttonId)
 	
 	if buttonId == blueButton.id then
 		print(buttonId .. "pressed")
-		--self.client.send("BlueClick " .. tostring(os.time()) .. "\r\n")
 	elseif buttonId == greenButton.id then
 		print(buttonId .. "pressed")
-		--self.client.send("GreenClick " .. tostring(os.time()) .. "\r\n")
 	elseif buttonId == redButton.id then
 		print(buttonId .. "pressed")
-		--self.client.send("RedClick " .. tostring(os.time()) .. "\r\n")
 	elseif buttonId == yellowButton.id then
 		print(buttonId .. "pressed")
-		--self.client.send("YellowClick " .. tostring(os.time()) .. "\r\n")
+	end
+
+	if self.client then 
+		self.client.send(buttonId .. " click " .. "\r\n")
 	end
 end
 
