@@ -3,7 +3,6 @@ go.property("projectileDir", vmath.vector3())
 function init(self)
 	self.projectileSpeed = 300
 	self.projectilelife = 1
-	self.damage = 25
 end
 
 function update(self, dt)

@@ -1,0 +1,47 @@
+go.property("enemyMovingDir", vmath.vector3(0, 0, 0))
+go.property("hp", 100)
+
+function init(self)
+	self.movingFlag = false
+	self.movingSpeed = 50
+	self.followDistance = 500
+	self.runAwayDistance = 300
+end
+
+function update(self, dt)
+	local l_enemyPos = go.get_position()
+	local l_playerPos = go.get("player#player", "position")
+
+	local l_distanceBetweenPlayerAndEnemy = math.abs(math.sqrt(math.pow(l_enemyPos.x - l_playerPos.x, 2) + math.pow(l_enemyPos.y - l_playerPos.y, 2)), 2)
+
+	-- fixing moving direction for enemy to follow player
+	local l_positionDiffrenceAbs = (l_playerPos - l_enemyPos)
+	l_positionDiffrenceAbs.x = math.abs(l_positionDiffrenceAbs.x)
+	l_positionDiffrenceAbs.y = math.abs(l_positionDiffrenceAbs.y)
+	local l_positionDiffrence = (l_playerPos - l_enemyPos)
+	local l_movingDir = vmath.vector3(l_positionDiffrence.x,l_positionDiffrence.y, 0)
+	l_movingDir = vmath.normalize(l_movingDir)
+	
+	if l_distanceBetweenPlayerAndEnemy >= self.followDistance then
+		l_enemyPos = l_enemyPos + l_movingDir * self.movingSpeed * dt
+		go.set_position(l_enemyPos)
+	elseif l_distanceBetweenPlayerAndEnemy <= self.runAwayDistance then
+		l_enemyPos = l_enemyPos + l_movingDir * -self.movingSpeed * dt
+		go.set_position(l_enemyPos)
+	end
+
+	if self.hp <= 0 then
+		go.delete()
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("collision_response") then
+		if message.group == hash("attacks") then
+			local l_enemyUrl = msg.url()
+			local l_enemyHp = go.get(l_enemyUrl, "hp")
+			local l_attackDmg = go.get("player#playerAttack", "damage")
+			go.set(l_enemyUrl, "hp", l_enemyHp - l_attackDmg)
+		end
+	end
+end
