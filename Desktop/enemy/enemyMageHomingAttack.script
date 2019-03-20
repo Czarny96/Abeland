@@ -8,8 +8,7 @@ function update(self, dt)
 	local projectilePos = go.get_position()
 	local playerPos = go.get("player#player", "position")
 
-	local distanceBetweenPlayerAndProjectile = math.abs(math.sqrt(math.pow(projectilePos.x - playerPos.x, 2) + math.pow(projectilePos.y - playerPos.y, 2)), 2)
-	print(distanceBetweenPlayerAndProjectile)
+	local distanceBetweenPlayerAndProjectile = vmath.length(projectilePos - playerPos)
 	
 	-- fixing moving direction for enemy to follow player
 	local positionDiffrenceAbs = (playerPos - projectilePos)
