@@ -5,22 +5,22 @@ function init(self)
 end
 
 function update(self, dt)
-	local l_projectilePos = go.get_position()
-	local l_playerPos = go.get("player#player", "position")
+	local projectilePos = go.get_position()
+	local playerPos = go.get("player#player", "position")
 
-	local l_distanceBetweenPlayerAndProjectile = math.abs(math.sqrt(math.pow(l_projectilePos.x - l_playerPos.x, 2) + math.pow(l_projectilePos.y - l_playerPos.y, 2)), 2)
-	print(l_distanceBetweenPlayerAndProjectile)
+	local distanceBetweenPlayerAndProjectile = math.abs(math.sqrt(math.pow(projectilePos.x - playerPos.x, 2) + math.pow(projectilePos.y - playerPos.y, 2)), 2)
+	print(distanceBetweenPlayerAndProjectile)
 	
 	-- fixing moving direction for enemy to follow player
-	local l_positionDiffrenceAbs = (l_playerPos - l_projectilePos)
-	l_positionDiffrenceAbs.x = math.abs(l_positionDiffrenceAbs.x)
-	l_positionDiffrenceAbs.y = math.abs(l_positionDiffrenceAbs.y)
-	local l_positionDiffrence = (l_playerPos - l_projectilePos)
-	local l_movingDir = vmath.vector3(l_positionDiffrence.x,l_positionDiffrence.y, 0)
-	l_movingDir = vmath.normalize(l_movingDir)
+	local positionDiffrenceAbs = (playerPos - projectilePos)
+	positionDiffrenceAbs.x = math.abs(positionDiffrenceAbs.x)
+	positionDiffrenceAbs.y = math.abs(positionDiffrenceAbs.y)
+	local positionDiffrence = (playerPos - projectilePos)
+	local movingDir = vmath.vector3(positionDiffrence.x,positionDiffrence.y, 0)
+	movingDir = vmath.normalize(movingDir)
 
-	l_projectilePos = l_projectilePos + l_movingDir * (self.projectileSpeed + l_distanceBetweenPlayerAndProjectile * self.projectileSpeedByDistanceMultiplier) * dt
-	go.set_position(l_projectilePos)
+	projectilePos = projectilePos + movingDir * (self.projectileSpeed + distanceBetweenPlayerAndProjectile * self.projectileSpeedByDistanceMultiplier) * dt
+	go.set_position(projectilePos)
 
 	self.projectileLife = self.projectileLife - dt
 
