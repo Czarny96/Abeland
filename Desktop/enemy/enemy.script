@@ -26,7 +26,29 @@ function update(self, dt)
 		l_enemyPos = l_enemyPos + l_movingDir * self.movingSpeed * dt
 		go.set_position(l_enemyPos)
 	end
+	
+	if l_movingDir.x < -0.3 and l_movingDir.y > 0.3 then
+		msg.post("#sprite", "play_animation", {id = hash("enemy_up_left")})
+	elseif l_movingDir.x > 0.3 and l_movingDir.y > 0.3 then
+		msg.post("#sprite", "play_animation", {id = hash("enemy_up_right")})
+	elseif l_movingDir.x < -0.3 and l_movingDir.y < -0.3 then
+		msg.post("#sprite", "play_animation", {id = hash("enemy_down_left")})
+	elseif l_movingDir.x > 0.3 and l_movingDir.y < -0.3 then
+		msg.post("#sprite", "play_animation", {id = hash("enemy_down_right")})
+	elseif l_movingDir.y > 0.3  then
+		msg.post("#sprite", "play_animation", {id = hash("enemy_up")})
+	elseif l_movingDir.y < -0.3  then
+		msg.post("#sprite", "play_animation", {id = hash("enemy_down")})
+	elseif l_movingDir.x < -0.3  then
+		msg.post("#sprite", "play_animation", {id = hash("enemy_left")})
+	elseif l_movingDir.x > 0.3  then
+		msg.post("#sprite", "play_animation", {id = hash("enemy_right")})
+	end
 
+
+
+
+	
 	if self.hp <= 0 then
 		go.delete()
 	end
