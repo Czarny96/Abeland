@@ -1,5 +1,5 @@
-local tcp_server = require "defnet.tcp_server"
-local p2p_discovery = require "defnet.p2p_discovery"
+local tcpServer = require "defnet.tcp_server"
+local p2pDiscovery = require "defnet.p2p_discovery"
 
 local TCP_SERVER_PORT = 5555
 local PORT = 50000
@@ -24,10 +24,10 @@ function init(self)
 	-- Add initialization code here
 	msg.post(".", "acquire_input_focus")
 	-- tcp server init
-	self.server = tcp_server.create(TCP_SERVER_PORT, on_data, on_client_connected, on_client_disconnected)
+	self.server = tcpServer.create(TCP_SERVER_PORT, on_data, on_client_connected, on_client_disconnected)
 	self.server.start()
 	-- broadcast init
-	self.p2p = p2p_discovery.create(PORT)
+	self.p2p = p2pDiscovery.create(PORT)
 	self.p2p.broadcast("findme")
 	
 	print("Server Initialized")

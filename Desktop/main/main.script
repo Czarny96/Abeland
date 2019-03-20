@@ -1,4 +1,4 @@
-local was_loaded = false
+local wasLoaded = false
 function init(self)
 	msg.post(".", "acquire_input_focus")
 end
@@ -6,10 +6,10 @@ end
 function on_input(self, action_id, action)
 	if action_id == hash("click") and action.pressed then
 		print("Click!")
-		if was_loaded == false then
+		if wasLoaded == false then
 			msg.post("#tcp_serverproxy", "async_load")
 			msg.post("player","disable")
-			was_loaded = true
+			wasLoaded = true
 		end
 	end
 end
