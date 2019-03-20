@@ -4,6 +4,6 @@ end
 
 function on_input(self, action_id, action)
 	if action_id == hash("click") and action.pressed then
-		print("Click!")
+		factory.create("#playerFactory", nil, 0,0)
 	end
 end
