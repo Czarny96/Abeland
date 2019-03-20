@@ -1,0 +1,67 @@
+local tcpServer = require "defnet.tcp_server"
+local p2pDiscovery = require "defnet.p2p_discovery"
+
+local TCP_SERVER_PORT = 5555
+local PORT = 50000
+
+local function on_data(data, ip, port, client)
+	print("TCP server received data '" .. data .. "' from " .. ip .. ":" .. port)
+end
+
+local function on_client_connected(ip, port, client)
+	print("Client connected from " .. ip .. ":" .. port)
+	local text = gui.get_node("client_ip_text")
+	gui.set_text(text, ip)
+end
+
+local function on_client_disconnected(ip, port, client)
+	print("Client discconnected from " .. ip .. ":" .. port)
+	local text = gui.get_node("client_ip_text")
+	gui.set_text(text, "Client disconnected")
+end
+
+function init(self)
+	-- Add initialization code here
+	msg.post(".", "acquire_input_focus")
+	-- tcp server init
+	self.server = tcpServer.create(TCP_SERVER_PORT, on_data, on_client_connected, on_client_disconnected)
+	self.server.start()
+	-- broadcast init
+	self.p2p = p2pDiscovery.create(PORT)
+	self.p2p.broadcast("findme")
+	
+	print("Server Initialized")
+end
+
+function final(self)
+	-- Add finalization code here
+	msg.post(".", "release_input_focus")
+	if self.server then
+		self.server.stop()
+	end
+end
+
+function update(self, dt)
+	-- Add update code here
+	self.p2p.update()
+	
+	if self.server then
+		self.server.update()
+		
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
