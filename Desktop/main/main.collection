@@ -20,51 +20,11 @@ instances {
   }
 }
 instances {
-  id: "enemy"
-  prototype: "/enemy/enemy.go"
+  id: "enemyMage"
+  prototype: "/enemy/enemyMage.go"
   position {
-    x: 608.0
-    y: 618.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
-  id: "enemy1"
-  prototype: "/enemy/enemy.go"
-  position {
-    x: 347.0
-    y: 618.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
-  id: "enemy2"
-  prototype: "/enemy/enemy.go"
-  position {
-    x: 610.0
-    y: 380.0
+    x: 579.0
+    y: 589.0
     z: 0.0
   }
   rotation {

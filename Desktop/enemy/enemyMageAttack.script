@@ -1,0 +1,17 @@
+go.property("damage", 25)
+go.property("shootingDelay", 3)
+
+function init(self)
+	self.shootingTimer = 0
+end
+
+function update(self, dt)
+	if self.shootingTimer < self.shootingDelay  then
+		self.shootingTimer = self.shootingTimer + dt
+	end
+
+	if self.shootingTimer >= self.shootingDelay then
+		factory.create("#enemyMageHomingAttackFactory", nil)
+		self.shootingTimer = 0
+	end
+end

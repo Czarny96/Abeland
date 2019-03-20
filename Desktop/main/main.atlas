@@ -7,6 +7,11 @@ images {
 images {
   image: "/assets/prototypes/attack_prot.png"
 }
+images {
+  image: "/assets/prototypes/enemy_mage_prot.png"
+}
+images {
+  image: "/assets/prototypes/enemy_mage_homing_attack.png"
 animations {
   id: "player_up"
   images {

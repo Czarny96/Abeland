@@ -1,0 +1,37 @@
+function init(self)
+	self.projectileSpeed = 50
+	self.projectileSpeedByDistanceMultiplier = 0.3
+	self.projectileLife = 10
+end
+
+function update(self, dt)
+	local projectilePos = go.get_position()
+	local playerPos = go.get("player#player", "position")
+
+	local distanceBetweenPlayerAndProjectile = math.abs(math.sqrt(math.pow(projectilePos.x - playerPos.x, 2) + math.pow(projectilePos.y - playerPos.y, 2)), 2)
+	print(distanceBetweenPlayerAndProjectile)
+	
+	-- fixing moving direction for enemy to follow player
+	local positionDiffrenceAbs = (playerPos - projectilePos)
+	positionDiffrenceAbs.x = math.abs(positionDiffrenceAbs.x)
+	positionDiffrenceAbs.y = math.abs(positionDiffrenceAbs.y)
+	local positionDiffrence = (playerPos - projectilePos)
+	local movingDir = vmath.vector3(positionDiffrence.x,positionDiffrence.y, 0)
+	movingDir = vmath.normalize(movingDir)
+
+	projectilePos = projectilePos + movingDir * (self.projectileSpeed + distanceBetweenPlayerAndProjectile * self.projectileSpeedByDistanceMultiplier) * dt
+	go.set_position(projectilePos)
+
+	self.projectileLife = self.projectileLife - dt
+
+	if(self.projectileLife <= 0) then
+		go.delete()
+	end 
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("collision_response") then
+		go.delete()
+	end
+end
+

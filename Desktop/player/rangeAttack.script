@@ -4,8 +4,7 @@ function init(self)
 	self.projectileSpeed = 300
 	self.projectilelife = 1
 	self.damage = 25
---	go.set_scale(0.2)
-
+  --go.set_scale(0.2)
 end
 
 function update(self, dt)
