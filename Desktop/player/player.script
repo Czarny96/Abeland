@@ -3,7 +3,7 @@ go.property("position", vmath.vector3(0, 0, 0))
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-
+	
 	self.movingSpeed = 150
 	self.inputCollection = { up = false, down = false, left = false, right = false }
 	self.movingFlag = false
@@ -11,6 +11,38 @@ end
 
 function update(self, dt)
 	go.set("#player", "movingDir", vmath.vector3(0, 0, 0))
+
+	
+	
+	if self.inputCollection.up and self.inputCollection.left then
+		msg.post("#sprite", "play_animation", {id = hash("player_up_left")})
+	elseif self.inputCollection.up and self.inputCollection.right then
+		msg.post("#sprite", "play_animation", {id = hash("player_up_right")})
+	elseif self.inputCollection.down and self.inputCollection.left then
+		msg.post("#sprite", "play_animation", {id = hash("player_down_left")})
+	elseif self.inputCollection.down and self.inputCollection.right then
+		msg.post("#sprite", "play_animation", {id = hash("player_down_right")})
+	elseif self.inputCollection.up then
+		msg.post("#sprite", "play_animation", {id = hash("player_up")})
+	elseif self.inputCollection.down then
+		msg.post("#sprite", "play_animation", {id = hash("player_down")})
+	elseif self.inputCollection.left then
+		msg.post("#sprite", "play_animation", {id = hash("player_left")})
+	elseif self.inputCollection.right then
+		msg.post("#sprite", "play_animation", {id = hash("player_right")})
+	end
+
+	if self.inputCollection.left then
+		go.set("#player", "movingDir.x", -1)
+	end
+	if self.inputCollection.right then
+		go.set("#player", "movingDir.x", 1)
+	end
+	if self.inputCollection.left and self.inputCollection.right then
+		go.set("#player", "movingDir.x", 0)
+	end
+
+
 	
 	if self.inputCollection.up then
 		go.set("#player", "movingDir.y", 1)

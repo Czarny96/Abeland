@@ -3,12 +3,15 @@ go.property("projectileDir", vmath.vector3())
 function init(self)
 	self.projectileSpeed = 300
 	self.projectilelife = 1
+	self.damage = 25
+  --go.set_scale(0.2)
 end
 
 function update(self, dt)
 	local l_projectilePos = go.get_position()
 	l_projectilePos = l_projectilePos + self.projectileDir * self.projectileSpeed * dt
 	go.set_position(l_projectilePos)
+	
 
 	self.projectilelife = self.projectilelife - dt
 
