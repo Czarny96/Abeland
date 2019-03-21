@@ -1,0 +1,2 @@
+prototype: "/player/playerClasses/archer/player.go"
+load_dynamically: false

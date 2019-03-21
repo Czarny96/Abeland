@@ -1,35 +1,37 @@
-go.property("shootingDelay", 0.25)
-go.property("damage", 25)
+--MAGE
+go.property("shootingDelay", 1)
+go.property("damage", 40)
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
 
 	self.inputCollection = { space = false }
 	self.l_movingDir = vmath.vector3(0,0,0)
-	
+	self.l_shootingDelay = 0
 	self.firingFlag = false
 	self.shootingDir = vmath.vector3(0, 1, 0)
 end
 
 function update(self, dt)
+	
 	if self.inputCollection.space then
 		self.firingFlag = true
 	end
 
-	if self.shootingDelay > 0  then
-		self.shootingDelay = self.shootingDelay - dt
+	if self.l_shootingDelay > 0  then
+		self.l_shootingDelay = self.l_shootingDelay - dt
 	end
 
 	if not (self.l_movingDir.x == 0 and self.l_movingDir.y == 0) then
 		self.shootingDir = vmath.normalize(self.l_movingDir)
 	end
 	
-	if self.firingFlag and self.shootingDelay <= 0 then
+	if self.firingFlag and self.l_shootingDelay <= 0 then
 		local l_angle = math.atan2(self.l_movingDir.y, self.l_movingDir.x)
 		local l_rotation = vmath.quat_rotation_z(l_angle)
 		local l_props = { projectileDir = self.shootingDir }
-		factory.create("#rangeAttackFactory", nil, l_rotation, l_props)
-		self.shootingDelay = 0.25
+		factory.create("#attackFactory", nil, l_rotation, l_props)
+		self.l_shootingDelay = self.shootingDelay
 	end
 
 	self.inputCollection = { space = false }

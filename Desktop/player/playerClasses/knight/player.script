@@ -1,0 +1,99 @@
+--KNIGHT
+go.property("movingDir", vmath.vector3(0, 0, 0))
+go.property("position", vmath.vector3(0, 0, 0))
+go.property("health", 200)
+go.property("movingSpeed", 180)
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+
+	self.inputCollection = { up = false, down = false, left = false, right = false }
+	self.movingFlag = false
+end
+
+function update(self, dt)
+	go.set("#player", "movingDir", vmath.vector3(0, 0, 0))
+	
+	if self.inputCollection.left then
+		go.set("#player", "movingDir.x", -1)
+	end
+	if self.inputCollection.right then
+		go.set("#player", "movingDir.x", 1)
+	end
+	if self.inputCollection.left and self.inputCollection.right then
+		go.set("#player", "movingDir.x", 0)
+	end
+	if self.inputCollection.up then
+		go.set("#player", "movingDir.y", 1)
+	end
+	if self.inputCollection.down then
+		go.set("#player", "movingDir.y", -1)
+	end
+	if self.inputCollection.down and self.inputCollection.up then
+		go.set("#player", "movingDir.y", 0)
+	end
+	if self.inputCollection.left then
+		go.set("#player", "movingDir.x", -1)
+	end
+	if self.inputCollection.right then
+		go.set("#player", "movingDir.x", 1)
+	end
+	if self.inputCollection.left and self.inputCollection.right then
+		go.set("#player", "movingDir.x", 0)
+	end
+
+	if self.inputCollection.up or self.inputCollection.down or self.inputCollection.left or self.inputCollection.right 
+	and not(self.inputCollection.up and self.inputCollection.down and self.inputCollection.left and self.inputCollection.right) then
+		self.movingFlag = true
+	else
+		self.movingFlag = false
+	end
+
+	if self.movingFlag then
+		local playerPos = go.get_position()
+		local movingDir = vmath.vector3(self.movingDir.x, self.movingDir.y, 0)
+		if movingDir ~= vmath.vector3(0,0,0) then
+			self.movingDir = vmath.normalize(movingDir)
+		end
+		playerPos = playerPos + self.movingDir * self.movingSpeed * dt
+			go.set_position(playerPos)
+	end
+
+	if self.movingDir.x < -0.3 and self.movingDir.y > 0.3 then
+		msg.post("#sprite", "play_animation", {id = hash("player_up_left")})
+	elseif self.movingDir.x > 0.3 and self.movingDir.y > 0.3 then
+		msg.post("#sprite", "play_animation", {id = hash("player_up_right")})
+	elseif self.movingDir.x < -0.3 and self.movingDir.y < -0.3 then
+		msg.post("#sprite", "play_animation", {id = hash("player_down_left")})
+	elseif self.movingDir.x > 0.3 and self.movingDir.y < -0.3 then
+		msg.post("#sprite", "play_animation", {id = hash("player_down_right")})
+	elseif self.movingDir.y > 0.3  then
+		msg.post("#sprite", "play_animation", {id = hash("player_up")})
+	elseif self.movingDir.y < -0.3  then
+		msg.post("#sprite", "play_animation", {id = hash("player_down")})
+	elseif self.movingDir.x < -0.3  then
+		msg.post("#sprite", "play_animation", {id = hash("player_left")})
+	elseif self.movingDir.x > 0.3  then
+		msg.post("#sprite", "play_animation", {id = hash("player_right")})
+	end
+	
+	go.set("#player", "position", go.get_position())
+	
+	self.inputCollection = { up = false, down = false, left = false, right = false}
+	self.movingFlag = false
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("up") then
+		self.inputCollection.up = true
+	end
+	if action_id == hash("down") then
+		self.inputCollection.down = true
+	end
+	if action_id == hash("left") then
+		self.inputCollection.left = true
+	end
+	if action_id == hash("right") then
+		self.inputCollection.right = true
+	end
+end
