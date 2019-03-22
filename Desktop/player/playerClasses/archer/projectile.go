@@ -81,7 +81,7 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "arenaCollider"
+  id: "wallsCollider"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
   "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
@@ -89,7 +89,7 @@ embedded_components {
   "friction: 0.1\n"
   "restitution: 0.5\n"
   "group: \"attacks\"\n"
-  "mask: \"arena\"\n"
+  "mask: \"walls\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"
