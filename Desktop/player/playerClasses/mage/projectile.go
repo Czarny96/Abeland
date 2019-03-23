@@ -89,7 +89,7 @@ embedded_components {
   "friction: 0.1\n"
   "restitution: 0.5\n"
   "group: \"attacks\"\n"
-  "mask: \"arena\"\n"
+  "mask: \"walls\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"

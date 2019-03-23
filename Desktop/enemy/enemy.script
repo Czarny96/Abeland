@@ -45,10 +45,6 @@ function update(self, dt)
 		msg.post("#sprite", "play_animation", {id = hash("enemy_right")})
 	end
 
-
-
-
-	
 	if self.hp <= 0 then
 		go.delete()
 	end

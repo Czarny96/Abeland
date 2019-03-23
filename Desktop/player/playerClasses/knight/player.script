@@ -83,6 +83,17 @@ function update(self, dt)
 	self.movingFlag = false
 end
 
+function handleCollisionWithWall(self, message_id, message, sender)
+	local playerPos = go.get_position()
+	
+	self.movingDir.x = -self.movingDir.x
+	self.movingDir.y = -self.movingDir.y
+	self.movingDir = vmath.normalize(self.movingDir)
+	
+	playerPos = playerPos + self.movingDir * self.movingSpeed
+	go.set_position(playerPos)
+end
+
 function on_input(self, action_id, action)
 	if action_id == hash("up") then
 		self.inputCollection.up = true
@@ -95,5 +106,14 @@ function on_input(self, action_id, action)
 	end
 	if action_id == hash("right") then
 		self.inputCollection.right = true
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("contact_point_response") then	
+		if message.group == hash("walls") then
+			print("wall!")
+			handleCollisionWithWall(self, message_id, message, sender)
+		end
 	end
 end
