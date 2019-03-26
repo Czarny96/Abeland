@@ -56,19 +56,15 @@ function update(self, dt)
 
 	-- Collisions with walls
 	if self.wallsTopCollider and self.movingDir.y > 0 then
-		print("topCollider block")
 		self.movingDir.y = 0
 	end
 	if self.wallsBottomCollider and self.movingDir.y < 0 then
-		print("bottomCollider block")
 		self.movingDir.y = 0
 	end
 	if self.wallsLeftCollider and self.movingDir.x < 0 then
-		print("leftCollider block")
 		self.movingDir.x = 0
 	end
 	if self.wallsRightCollider and self.movingDir.x > 0 then
-		print("rightCollider block")
 		self.movingDir.x = 0
 	end
 	
