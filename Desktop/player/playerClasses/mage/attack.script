@@ -2,10 +2,8 @@
 go.property("shootingDelay", 1)
 go.property("damage", 40)
 
-function init(self)
-	msg.post(".", "acquire_input_focus")
 
-	self.inputCollection = { space = false }
+function init(self)
 	self.l_movingDir = vmath.vector3(0,0,0)
 	self.l_shootingDelay = 0
 	self.firingFlag = false
@@ -13,11 +11,6 @@ function init(self)
 end
 
 function update(self, dt)
-	
-	if self.inputCollection.space then
-		self.firingFlag = true
-	end
-
 	if self.l_shootingDelay > 0  then
 		self.l_shootingDelay = self.l_shootingDelay - dt
 	end
@@ -25,7 +18,7 @@ function update(self, dt)
 	if not (self.l_movingDir.x == 0 and self.l_movingDir.y == 0) then
 		self.shootingDir = vmath.normalize(self.l_movingDir)
 	end
-	
+
 	if self.firingFlag and self.l_shootingDelay <= 0 then
 		local l_angle = math.atan2(self.l_movingDir.y, self.l_movingDir.x)
 		local l_rotation = vmath.quat_rotation_z(l_angle)
@@ -38,9 +31,8 @@ function update(self, dt)
 	self.firingFlag = false
 end
 
-function on_input(self, action_id, action)
-	self.l_movingDir = go.get("#player", "movingDir")
-	if action_id == hash("space") then
-		self.inputCollection.space = true
+function on_message(self, message_id, message, sender)
+	if message_id == hash("fire") then
+		self.firingFlag = true
 	end
 end

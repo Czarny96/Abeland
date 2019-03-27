@@ -1,0 +1,98 @@
+local tcp_client = require "defnet.tcp_client"
+local p2p_discovery = require "defnet.p2p_discovery"
+
+local P2P_PORT = 50000
+local SERVER_IP =  nil
+local SERVER_PORT = 5555
+local clientHandler = nil
+
+local reconnectTimer = 0
+
+local frame = ""
+
+function init(self)
+
+	-- server discovery
+	self.p2p = p2p_discovery.create(P2P_PORT)
+
+
+	self.p2p.listen("findme", function(ip, port)
+		print("Found server", ip, port)
+		SERVER_IP =  ip
+		connectToServer(self, ip, SERVER_PORT)
+	end)
+	
+end
+
+function onData(data)
+	if data == "btn_data" then
+		msg.post("/go#ctrlGui", "dataRequest")
+		if clientHandler then
+			clientHandler.send(frame)
+		end
+	end
+end
+
+function connectToServer(self, ip, port)
+	local client, err = tcp_client.create(ip, port,
+	onData,
+	function()
+		self.client = nil
+		clientHandler = nil
+		--gui.set_text(gui.get_node("connectionText"), "Disconnected")
+		msg.post("/go#ctrlGui", "setConnectionText", {text = "Disconnected"})
+	end)
+	if client then
+		self.client = client
+		clientHandler = client
+		--gui.set_text(gui.get_node("connectionText"), "Connected")
+		msg.post("/go#ctrlGui", "setConnectionText", {text = "Connected"})
+	else
+		print(err)
+		--gui.set_text(gui.get_node("connectionText"), "Connection failed")
+		msg.post("/go#ctrlGui", "setConnectionText", {text = "Connection failed"})
+	end
+end
+
+function final(self)
+	if self.client then
+		self.client.destroy()
+	end
+end
+
+function update(self, dt)
+	-- SERVER LOGIC
+	self.p2p.update()
+
+	reconnectTimer = reconnectTimer + dt
+	-- server dc'ed and ip is known, so try to reconnect
+	if not self.client and SERVER_IP ~= nil and reconnectTimer > 5 then
+		reconnectTimer = 0
+		print("RECONNECTING")
+		connectToServer(self, SERVER_IP, SERVER_PORT)
+	end
+
+	if self.client then
+		self.client.update()
+	end
+	-- END OF SERVER LOGIC
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+	if message_id == hash("setControllerData") then
+		frame = message.frame
+	end
+
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end

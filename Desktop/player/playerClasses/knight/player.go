@@ -29,6 +29,7 @@ components {
   }
 }
 embedded_components {
+
   id: "wallsBottomCollider"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
