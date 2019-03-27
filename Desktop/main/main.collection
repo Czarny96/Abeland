@@ -1,26 +1,5 @@
 name: "main"
 instances {
-
-  id: "player"
-  prototype: "/player/playerClasses/knight/player.go"
-  position {
-    x: 176.0
-    y: 363.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
   id: "ground"
   prototype: "/arena/ground.go"
   position {
@@ -40,7 +19,6 @@ instances {
     z: 1.0
   }
 }
-
 instances {
   id: "walls"
   prototype: "/arena/walls.go"
@@ -52,7 +30,6 @@ instances {
   rotation {
     x: 0.0
     y: 0.0
-
     z: 0.0
     w: 1.0
   }
@@ -62,12 +39,12 @@ instances {
     z: 1.0
   }
 }
-instances {
-  id: "player1"
-  prototype: "/player/playerClasses/archer/player.go"
+collection_instances {
+  id: "TCP_server"
+  collection: "/server/TCP_server.collection"
   position {
-    x: 569.0
-    y: 355.0
+    x: 0.0
+    y: 0.0
     z: 0.0
   }
   rotation {
