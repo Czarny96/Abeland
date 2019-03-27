@@ -1,0 +1,260 @@
+
+local joystickDefaultPos = vmath.vector3() -- position in steady state
+local joystickValue = {x=0, y=0} -- min: -1, max: 1
+local joystickMaxDist = 150 
+local joystickTouchId = -1 -- '-1' if joystick is in idle position
+
+local leftJoystick = {
+	defaultPos = vmath.vector3(),
+	touchPos = vmath.vector3(),
+	value = {x=0, y=0},
+	maxDist = 150,
+	touchId = -1,
+	area = {left=0, right=1920/2, top=1080, bottom=0}
+}
+
+local rightJoystick = {
+	defaultPos = vmath.vector3(),
+	touchPos = vmath.vector3(),
+	value = {x=0, y=0},
+	maxDist = 150,
+	touchId = -1,
+	area = {left=1300,right=1920,top=500,bottom=0}
+}
+
+local buttonCollection = {
+	blueButton = {id = "btn_blue", idNum = 1, isPressed = false, pressTimer = 0}, 
+	greenButton = {id = "btn_green", idNum = 2, isPressed = false, pressTimer = 0}, 
+	redButton = {id = "btn_red", idNum = 3, isPressed = false, pressTimer = 0}, 
+	yellowButton = {id = "btn_yellow", idNum = 4, isPressed = false, pressTimer = 0}
+}
+local buttonPressedScale = 0.8
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+
+	-- get center position of virtual joystick
+	local joystick = gui.get_node("joystick_front")
+	leftJoystick.defaultPos = gui.get_position(joystick)
+	
+	joystick = gui.get_node("right_joystick_front")
+	rightJoystick.defaultPos = gui.get_position(joystick)
+	
+end
+
+function createFrame()
+	local frame = string.format("%.6f;%.6f;%.6f;%.6f", 
+		leftJoystick.value.x, leftJoystick.value.y, 
+		rightJoystick.value.x, rightJoystick.value.y)
+
+	local zeroButtonsClicked = true
+	for key, button in pairs(buttonCollection) do
+		if button.isPressed then
+			zeroButtonsClicked = false
+			frame = frame .. ";" .. tostring(button.idNum)
+		end
+	end
+
+	if zeroButtonsClicked then
+		frame = frame .. ";0"
+	end
+
+	frame = frame .. "\n\r"
+	return frame
+end
+
+
+function buttonPressed(self, buttonId)
+	-- shrink it a little bit while being pressed
+	gui.set_scale(gui.get_node(buttonId), vmath.vector3(buttonPressedScale))
+
+	print(buttonId .. "pressed")
+
+	-- feel free to use it
+	if buttonId == buttonCollection.blueButton.id then
+	elseif buttonId == buttonCollection.greenButton.id then
+	elseif buttonId == buttonCollection.redButton.id then
+	elseif buttonId == buttonCollection.yellowButton.id then
+	end
+end
+
+function buttonReleased(self, buttonId)
+	-- set default size
+	gui.set_scale(gui.get_node(buttonId), vmath.vector3(1.0))
+
+	print(buttonId .. "released")
+
+	-- feel free to use it
+	if buttonId == buttonCollection.blueButton.id then
+	elseif buttonId == buttonCollection.greenButton.id then
+	elseif buttonId == buttonCollection.redButton.id then
+	elseif buttonId == buttonCollection.yellowButton.id then
+	end
+end
+
+function final(self)
+	
+end
+
+
+function update(self, dt)
+	
+	-- BUTTONS
+	for key, button in pairs(buttonCollection) do
+		if button.pressTimer > 0 then
+			if not button.isPressed then
+				button.isPressed = true
+				buttonPressed(self, button.id)
+			end
+			button.pressTimer = button.pressTimer - dt
+			if button.pressTimer <= 0 then
+				button.isPressed = false
+				buttonReleased(self, button.id)
+			end
+		end
+	end
+	-- END OF BUTTONS
+	
+end
+
+function on_message(self, message_id, message, sender)
+	
+	if message_id == hash("dataRequest") then
+		local _frame = createFrame()
+		msg.post("/go#client", "setControllerData", {frame = _frame})
+		
+	elseif message_id == hash("setConnectionText") then
+		gui.set_text(gui.get_node("connectionText"), message.text)
+	end
+	
+end
+
+function setJoystickPosition(x, y, joystick)
+	
+	local button = nil
+	if joystick == leftJoystick then
+		button = gui.get_node("joystick_front")
+	else
+		button = gui.get_node("right_joystick_front")
+	end
+
+	local pos = gui.get_position(button)
+	local diff = vmath.vector3(x, y, 0) - joystick.touchPos
+	local len = vmath.length(diff)
+
+	if len < joystick.maxDist then
+		-- joystick is inside circle
+		gui.set_position(button, vmath.vector3(x, y, 0))
+		joystick.value.x = diff.x / joystick.maxDist
+		joystick.value.y = diff.y / joystick.maxDist
+	else 
+		-- joystick is on the edge of circle
+		local normalized = vmath.normalize(diff)
+		gui.set_position(button, joystick.touchPos + normalized * joystick.maxDist)
+		joystick.value.x = normalized.x
+		joystick.value.y = normalized.y
+	end
+
+end
+
+function isTouchedInJoystickArea(x, y, joystick)
+	if x > joystick.area.left and x < joystick.area.right and y < joystick.area.top and y > joystick.area.bottom then
+		return true
+	end
+	return false
+end
+
+function on_input(self, action_id, action)
+
+	-- action.touch example values:
+	-- x = 1422,
+    -- tap_count = 0,
+    -- pressed = false,
+    -- y = 815,
+    -- screen_y = 816,
+    -- screen_dy = 0,
+    -- screen_dx = 0,
+    -- dx = 0,
+    -- dy = 0,
+    -- id = 0,
+    -- released = true,
+    -- screen_x = 1422
+	if action_id == hash("multitouch") then
+		for i, touchData in ipairs(action.touch) do -- iterate over every element in action.touch 
+
+			for key, button in pairs(buttonCollection) do
+				local btn = gui.get_node(button.id)
+
+				-- BUGFIX #1: resize button to 1.02 if scale is set to 0.8, and
+				--		   then go back to 0.8 after 'checking collision'
+				--		   REMOVE IT IF BUTTON IS NOT SCALING WHILE BEING PRESSED
+				local scale = gui.get_scale(btn)
+				if scale.x < 0.9 then
+					scale = vmath.vector3(1.02)
+					gui.set_scale(btn, scale)
+					scale = gui.get_scale(btn)
+				end	
+				-- PART 1 OF BUGFIX #1 END
+				
+				if gui.pick_node(btn, touchData.x, touchData.y) then 
+					button.pressTimer = 0.05
+				end
+
+				-- PART 2 OF BUGFIX #1
+				scale = gui.get_scale(btn)
+				if scale.x > 1.01 then
+					scale = vmath.vector3(buttonPressedScale)
+					gui.set_scale(btn, scale)
+				end	
+				-- PART 2 OF BUGFIX #1 END
+				
+			end
+
+			-- LEFT JOYSTICK
+			if touchData.pressed and leftJoystick.touchId == -1 and isTouchedInJoystickArea(touchData.x, touchData.y, leftJoystick) then
+				leftJoystick.touchId = touchData.id
+				leftJoystick.touchPos = vmath.vector3(touchData.x, touchData.y, 0)
+				gui.set_position(gui.get_node("joystick_back"), leftJoystick.touchPos)
+			elseif touchData.released and leftJoystick.touchId == touchData.id then
+				if leftJoystick.touchId == touchData.id then
+					leftJoystick.touchId = -1
+					gui.set_position(gui.get_node("joystick_front"), leftJoystick.defaultPos)
+					gui.set_position(gui.get_node("joystick_back"), leftJoystick.defaultPos)
+					leftJoystick.value.x = 0
+					leftJoystick.value.y = 0
+				end
+			end
+
+			if touchData.id == leftJoystick.touchId then
+				setJoystickPosition(touchData.x, touchData.y, leftJoystick)
+			end
+			-- END OF LEFT JOYSTICK
+			-- RIGHT JOYSTICK
+			if touchData.pressed and rightJoystick.touchId == -1 and isTouchedInJoystickArea(touchData.x, touchData.y, rightJoystick) then
+				rightJoystick.touchId = touchData.id
+				rightJoystick.touchPos = vmath.vector3(touchData.x, touchData.y, 0)
+				gui.set_position(gui.get_node("right_joystick_back"), rightJoystick.touchPos)
+			elseif touchData.released and rightJoystick.touchId == touchData.id then
+				if rightJoystick.touchId == touchData.id then
+					rightJoystick.touchId = -1
+					gui.set_position(gui.get_node("right_joystick_front"), rightJoystick.defaultPos)
+					gui.set_position(gui.get_node("right_joystick_back"), rightJoystick.defaultPos)
+					rightJoystick.value.x = 0
+					rightJoystick.value.y = 0
+				end
+			end
+
+			if touchData.id == rightJoystick.touchId then
+				setJoystickPosition(touchData.x, touchData.y, rightJoystick)
+			end
+			-- END OF RIGHT JOYSTICK
+
+		end
+	end
+	
+end
+
+function on_reload(self)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end

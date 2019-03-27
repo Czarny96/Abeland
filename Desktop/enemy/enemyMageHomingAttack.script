@@ -10,6 +10,7 @@ function update(self, dt)
 
 	local distanceBetweenPlayerAndProjectile = vmath.length(projectilePos - playerPos)
 	
+	
 	-- fixing moving direction for enemy to follow player
 	local positionDiffrenceAbs = (playerPos - projectilePos)
 	positionDiffrenceAbs.x = math.abs(positionDiffrenceAbs.x)
