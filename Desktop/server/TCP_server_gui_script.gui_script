@@ -1,43 +1,23 @@
 local tcpServer = require "defnet.tcp_server"
 local p2pDiscovery = require "defnet.p2p_discovery"
-local translationLayer = require "server.TranslationLayer"
 
 local TCP_SERVER_PORT = 5555
 local PORT = 50000
 
--- temp, test only
-local clientsTable = {}
-local createdPlayersTable = {}
-local currentPlayers = 0
-local dtPassed = 0
-
 local function on_data(data, ip, port, client)
 	print("TCP server received data '" .. data .. "' from " .. ip .. ":" .. port)
-	translationLayer.translateFrameToPlayer(data, createdPlayersTable[ip])
 end
 
 local function on_client_connected(ip, port, client)
 	print("Client connected from " .. ip .. ":" .. port)
-
-	if currentPlayers < 4 then
-		clientsTable[ip] = client
-		currentPlayers = currentPlayers + 1
-		
-		-- WARNING: Temporally fixed to call one factory, until mechanism to chose class at the controller side is avaible
-		createdPlayersTable[ip] = translationLayer.createPlayerObject("/factories#knightFactory", vmath.vector3(147, 297, 0))
-	else
-		print("To many clients, cannot connected another one")
-	end
-	
+	local text = gui.get_node("client_ip_text")
+	gui.set_text(text, ip)
 end
 
 local function on_client_disconnected(ip, port, client)
-	print("Client ".. ip.." Disconnected")
-	currentPlayers = currentPlayers - 1
-	clientsTable[ip] =  nil
-	--TODO: decide what to do when player disconnects
-	translationLayer.RemovePlayerObject(createdPlayersTable[ip])
-	createdPlayersTable[ip] = nil
+	print("Client discconnected from " .. ip .. ":" .. port)
+	local text = gui.get_node("client_ip_text")
+	gui.set_text(text, "Client disconnected")
 end
 
 function init(self)
@@ -48,8 +28,8 @@ function init(self)
 	self.server.start()
 	-- broadcast init
 	self.p2p = p2pDiscovery.create(PORT)
-
 	self.p2p.broadcast("findme")
+	
 	print("Server Initialized")
 end
 
@@ -65,18 +45,9 @@ function update(self, dt)
 	-- Add update code here
 	self.p2p.update()
 	
-	--TODO: adjust clocking for optimal user experience
-	if  currentPlayers > 0 and dtPassed > 0.01 then
-		for ip,client in pairs(clientsTable) do
-			self.server.send("btn_data\n\r", client)
-		end
-		dtPassed = 0
-	else
-		dtPassed = dtPassed + dt
-	end
-	
 	if self.server then
-		self.server.update()	
+		self.server.update()
+		
 	end
 end
 

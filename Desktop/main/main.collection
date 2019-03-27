@@ -1,6 +1,5 @@
 name: "main"
 instances {
-
   id: "player"
   prototype: "/player/playerClasses/knight/player.go"
   position {
@@ -40,7 +39,6 @@ instances {
     z: 1.0
   }
 }
-
 instances {
   id: "walls"
   prototype: "/arena/walls.go"
@@ -52,7 +50,6 @@ instances {
   rotation {
     x: 0.0
     y: 0.0
-
     z: 0.0
     w: 1.0
   }

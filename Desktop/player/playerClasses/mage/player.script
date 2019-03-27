@@ -95,10 +95,10 @@ function update(self, dt)
 	elseif self.movingDir.x > 0.3  then
 		msg.post("#sprite", "play_animation", {id = hash("player_right")})
 	end
-end
-
-function init(self)
-	msg.post(".", "acquire_input_focus")
+	
+	go.set("#player", "position", go.get_position())
+	
+	self.inputCollection = { up = false, down = false, left = false, right = false}
 	self.movingFlag = false
 	self.wallsTopCollider = false
 	self.wallsBottomCollider = false
@@ -106,45 +106,18 @@ function init(self)
 	self.wallsRightCollider = false
 end
 
-function update(self, dt)
-	if self.movingFlag then
-		local playerPos = go.get_position()
-		local movingDir = vmath.vector3(self.movingDir.x, self.movingDir.y, 0)
-		if movingDir ~= vmath.vector3(0,0,0) then
-			self.movingDir = vmath.normalize(movingDir)
-		end
-		playerPos = playerPos + self.movingDir * self.movingSpeed * dt
-		go.set_position(playerPos)
+function on_input(self, action_id, action)
+	if action_id == hash("up") then
+		self.inputCollection.up = true
 	end
-
-	updateAnimation(self)
-
-	go.set("#player", "position", go.get_position())
-	self.movingFlag = false
-end
-
-function handleCollisionWithWall(self, message_id, message, sender)
-	local playerPos = go.get_position()
-
-	self.movingDir.x = -self.movingDir.x
-	self.movingDir.y = -self.movingDir.y
-	self.movingDir = vmath.normalize(self.movingDir)
-	playerPos = playerPos + self.movingDir * self.movingSpeed
-	go.set_position(playerPos)
-end
-
-function on_message(self, message_id, message, sender)
-	if message_id == hash("contact_point_response") then	
-		if message.group == hash("walls") then
-			print("COLLIDED WITH WALL!")
-			handleCollisionWithWall(self, message_id, message, sender)
-		end
+	if action_id == hash("down") then
+		self.inputCollection.down = true
 	end
-
-	if message_id == hash("move") then
-		self.movingDir.x = message.x
-		self.movingDir.y = message.y
-		self.movingFlag = true
+	if action_id == hash("left") then
+		self.inputCollection.left = true
+	end
+	if action_id == hash("right") then
+		self.inputCollection.right = true
 	end
 end
 

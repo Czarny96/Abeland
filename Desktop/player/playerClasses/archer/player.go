@@ -29,7 +29,6 @@ components {
   }
 }
 embedded_components {
-
   id: "enemyCollider"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
@@ -38,9 +37,7 @@ embedded_components {
   "friction: 0.1\n"
   "restitution: 0.5\n"
   "group: \"players\"\n"
-
   "mask: \"enemies\"\n"
-
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"

@@ -1,0 +1,246 @@
+local tcp_client = require "defnet.tcp_client"
+
+local SERVER_PORT = 5555
+local WAS_SERVER_FOUND = false
+local WAS_CLIENT_SETUP = false
+local p2p_discovery = require "defnet.p2p_discovery"
+local PORT = 50000
+local SERVER_ADRESS =  nil
+
+local joystickDefaultPos = vmath.vector3() -- position in steady state
+local joystickValue = {x=0, y=0} -- min: -1, max: 1
+local joystickPreviousValue = {x=0, y=0}
+local joystickMaxDist = 200 
+local joystickTouchId = -1 -- -1 if joystick is in idle position
+
+
+local blueButton = {id = "btn_blue", isPressed = false, pressTimer = 0}
+local greenButton = {id = "btn_green", isPressed = false, pressTimer = 0}
+local redButton = {id = "btn_red", isPressed = false, pressTimer = 0}
+local yellowButton = {id = "btn_yellow", isPressed = false, pressTimer = 0}
+local buttonCollection = {blueButton, greenButton, redButton, yellowButton}
+local buttonPressedScale = 0.8
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+
+	-- get center position of virtual joystick
+	local joystick = gui.get_node("joystick_front")
+	joystickDefaultPos = gui.get_position(joystick)
+	
+	-- server discovery
+	self.p2p = p2p_discovery.create(PORT)
+
+	
+	self.p2p.listen("findme", function(ip, port)
+		print("Found server", ip, port)
+		SERVER_ADRESS = ip 
+	end)
+	
+end
+
+function buttonPressed(self, buttonId)
+	-- shrink it a little bit while being pressed
+	gui.set_scale(gui.get_node(buttonId), vmath.vector3(buttonPressedScale))
+	
+	if buttonId == blueButton.id then
+		print(buttonId .. "pressed")
+	elseif buttonId == greenButton.id then
+		print(buttonId .. "pressed")
+	elseif buttonId == redButton.id then
+		print(buttonId .. "pressed")
+	elseif buttonId == yellowButton.id then
+		print(buttonId .. "pressed")
+	end
+
+	if self.client then 
+		self.client.send(buttonId .. " click " .. "\r\n")
+	end
+end
+
+function buttonReleased(self, buttonId)
+	-- set default size
+	gui.set_scale(gui.get_node(buttonId), vmath.vector3(1.0))
+	
+	if buttonId == blueButton.id then
+		print(buttonId .. "released")
+	elseif buttonId == greenButton.id then
+		print(buttonId .. "released")
+	elseif buttonId == redButton.id then
+		print(buttonId .. "released")
+	elseif buttonId == yellowButton.id then
+		print(buttonId .. "released")
+	end
+end
+
+function final(self)
+	if self.client then
+		self.client.destroy()
+	end
+end
+
+
+function update(self, dt)
+	self.p2p.update()
+
+	-- SERVER LOGIC
+	if SERVER_ADRESS ~= nil and SERVER_ADRESS ~= true then
+		WAS_SERVER_FOUND = true
+	end
+	
+	if WAS_SERVER_FOUND == true and WAS_CLIENT_SETUP == false then
+		
+		local client, err = tcp_client.create(SERVER_ADRESS, SERVER_PORT,
+		function(data)
+			print(data)
+		end,
+		function()
+			self.client = nil
+		end)
+		if client then
+			self.client = client
+			gui.set_text(gui.get_node("connectionText"), "Connected")
+		else
+			print(err)
+			gui.set_text(gui.get_node("connectionText"), "Connection failed")
+		end
+		WAS_CLIENT_SETUP = true
+	end	
+	
+	if self.client then
+		self.client.update()
+	end
+	-- END OF SERVER LOGIC
+
+	-- BUTTONS
+	for i=1, #buttonCollection do
+		if buttonCollection[i].pressTimer > 0 then
+			if not buttonCollection[i].isPressed then
+				buttonCollection[i].isPressed = true
+				buttonPressed(self, buttonCollection[i].id)
+			end
+			buttonCollection[i].pressTimer = buttonCollection[i].pressTimer - dt
+			if buttonCollection[i].pressTimer <= 0 then
+				buttonCollection[i].isPressed = false
+				buttonReleased(self, buttonCollection[i].id)
+			end
+		end
+	end
+	-- END OF BUTTONS
+
+	-- JOYSTICK
+	if joystickValue.x ~= joystickPreviousValue.x or joystickValue.y ~= joystickPreviousValue.y then
+		print("zmiana gały: " .. tostring(joystickValue.x) .. " " .. tostring(joystickValue.y))
+		if self.client then
+			self.client.send("Joystick: x-" .. tostring(joystickValue.x) .. " y-" .. tostring(joystickValue.y) .. "\r\n")
+		end
+	end
+	
+	joystickPreviousValue.x = joystickValue.x
+	joystickPreviousValue.y = joystickValue.y
+	-- END OF JOYSTICK
+	
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+end
+
+function setJoystickPosition(x, y)
+	
+	local button = gui.get_node("joystick_front")
+
+	local pos = gui.get_position(button)
+	local diff = vmath.vector3(x, y, 0) - joystickDefaultPos
+	local len = vmath.length(diff)
+
+	if len < joystickMaxDist then
+		-- joystick is inside circle
+		gui.set_position(button, vmath.vector3(x, y, 0))
+		joystickValue.x = diff.x / joystickMaxDist
+		joystickValue.y = diff.y / joystickMaxDist
+	else 
+		-- joystick is on the edge of circle
+		local normalized = vmath.normalize(diff)
+		gui.set_position(button, joystickDefaultPos + normalized * joystickMaxDist)
+		joystickValue.x = normalized.x
+		joystickValue.y = normalized.y
+	end
+
+end
+
+function on_input(self, action_id, action)
+
+	-- action.touch example values:
+	-- x = 1422,
+    -- tap_count = 0,
+    -- pressed = false,
+    -- y = 815,
+    -- screen_y = 816,
+    -- screen_dy = 0,
+    -- screen_dx = 0,
+    -- dx = 0,
+    -- dy = 0,
+    -- id = 0,
+    -- released = true,
+    -- screen_x = 1422
+	if action_id == hash("multitouch") then
+		for i, touchData in ipairs(action.touch) do -- iterate over every element in action.touch 
+
+			-- iterate over every button
+			for j=1, #buttonCollection do
+				local btn = gui.get_node(buttonCollection[j].id)
+
+				-- BUGFIX #1: resize button to 1.02 if scale is set to 0.8, and
+				--		   then go back to 0.8 after 'checking collision'
+				--		   REMOVE IT IF BUTTON IS NOT SCALING WHILE BEING PRESSED
+				local scale = gui.get_scale(btn)
+				if scale.x < 0.9 then
+					scale = vmath.vector3(1.02)
+					gui.set_scale(btn, scale)
+					scale = gui.get_scale(btn)
+				end	
+				-- PART 1 OF BUGFIX #1 END
+				
+				if gui.pick_node(btn, touchData.x, touchData.y) then 
+					buttonCollection[j].pressTimer = 0.05
+				end
+
+				-- PART 2 OF BUGFIX #1
+				scale = gui.get_scale(btn)
+				if scale.x > 1.01 then
+					scale = vmath.vector3(buttonPressedScale)
+					gui.set_scale(btn, scale)
+				end	
+				-- PART 2 OF BUGFIX #1 END
+				
+			end
+
+			-- joystick
+			if joystickTouchId < 0 then
+				if gui.pick_node(gui.get_node("joystick_front"), touchData.x, touchData.y) then
+					joystickTouchId = touchData.id
+				end
+			end
+			
+			if joystickTouchId == touchData.id then
+				if touchData.released then
+					joystickTouchId = -1
+					gui.set_position(gui.get_node("joystick_front"), joystickDefaultPos)
+					joystickValue.x = 0
+					joystickValue.y = 0
+				elseif joystickTouchId == touchData.id then
+					setJoystickPosition(touchData.x, touchData.y)
+				end
+			end
+
+		end
+	end
+	
+end
+
+function on_reload(self)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
