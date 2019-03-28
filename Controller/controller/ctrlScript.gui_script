@@ -7,7 +7,7 @@ local leftJoystick = {
 	value = {x=0, y=0},
 	maxDist = 150,
 	touchId = -1,
-	area = {left=0, right=1920/2, top=1080, bottom=0}
+	area = {left=175, right=1920/3, top=1080-175, bottom=175}
 }
 
 -- Right joystick isn't floating!
