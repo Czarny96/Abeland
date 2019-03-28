@@ -8,8 +8,21 @@ local PORT = 50000
 -- temp, test only
 local clientsTable = {}
 local createdPlayersTable = {}
+local createdPlayerInactivityTable = {}
 local currentPlayers = 0
 local dtPassed = 0
+
+local function inactivePlayerHandler(objectID)
+	print("Inactive player"..objectID)
+	if createdPlayerInactivityTable[objectID][2] == false then
+		createdPlayerInactivityTable[objectID][2] = true 
+		translationLayer.desactivatePlayer(objectID)
+	else
+		createdPlayerInactivityTable[objectID][2] = false 
+		translationLayer.activatePlayer(objectID)
+	end
+end
+
 
 local function on_data(data, ip, port, client)
 	
@@ -17,6 +30,11 @@ local function on_data(data, ip, port, client)
 	local trueClientIP, trueClientPort = client:getpeername()
 	print("TCP server received data '" .. data .. "' from " .. trueClientIP .. ":" .. trueClientPort)
 	translationLayer.translateFrameToPlayer(data, createdPlayersTable[ip])
+	createdPlayerInactivityTable[createdPlayersTable[trueClientIP]][1] = 0.0
+	if createdPlayerInactivityTable[createdPlayersTable[trueClientIP]][2] == true then
+		inactivePlayerHandler(createdPlayersTable[trueClientIP])
+	end
+	
 end
 
 local function on_client_connected(ip, port, client) 
@@ -31,7 +49,8 @@ local function on_client_connected(ip, port, client)
 		currentPlayers = currentPlayers + 1
 		
 		-- WARNING: Temporally fixed to call one factory, until mechanism to chose class at the controller side is avaible
-		createdPlayersTable[ip] = translationLayer.createPlayerObject("go#knightFactory", vmath.vector3(147, 297, 0))
+		createdPlayersTable[trueClientIP] = translationLayer.createPlayerObject("go#knightFactory", vmath.vector3(147, 297, 0))
+		createdPlayerInactivityTable[createdPlayersTable[trueClientIP]] = {0.0, false}
 	else
 		print("To many clients, cannot connected another one")
 	end
@@ -48,6 +67,7 @@ local function on_client_disconnected(ip, port, client)
 	translationLayer.RemovePlayerObject(createdPlayersTable[trueClientIP])
 	createdPlayersTable[trueClientIP] = nil
 end
+
 
 function init(self)
 	-- Add initialization code here
@@ -78,12 +98,22 @@ function update(self, dt)
 	if  currentPlayers > 0 and dtPassed > 0.01 then
 		for ip,client in pairs(clientsTable) do
 			self.server.send("btn_data\n\r", client)
+			createdPlayerInactivityTable[createdPlayersTable[ip]][1] = createdPlayerInactivityTable[createdPlayersTable[ip]][1] + dt
 		end
 		dtPassed = 0
 	else
 		dtPassed = dtPassed + dt
 	end
-	
+
+	if  currentPlayers > 0 then
+		for ip,player in pairs(createdPlayersTable) do
+			-- Value to adjust
+			if createdPlayerInactivityTable[player][1] > 1 and createdPlayerInactivityTable[player][2] == false then
+				inactivePlayerHandler(player)
+				
+			end
+		end
+	end
 	if self.server then
 		self.server.update()	
 	end

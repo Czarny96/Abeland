@@ -23,6 +23,16 @@ function M.RemovePlayerObject(objectID)
 	msg.post(objectID, "kill")
 end
 
+function M.desactivatePlayer(objectID)
+	print("Desactivating player"..objectID)
+	msg.post(objectID, "desactivate")
+end
+
+function M.activatePlayer(objectID)
+	print("Activating player"..objectID)
+	msg.post(objectID, "activate")
+end
+
 function string:split(sep)
 	local sep, fields = sep or ";", {}
 	local pattern = string.format("([^%s]+)", sep)
