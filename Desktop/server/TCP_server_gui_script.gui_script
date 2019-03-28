@@ -18,6 +18,8 @@ end
 
 local function on_client_connected(ip, port, client)
 	print("Client connected from " .. ip .. ":" .. port)
+	
+	pprint(client)
 
 	if currentPlayers < 4 then
 		clientsTable[ip] = client
