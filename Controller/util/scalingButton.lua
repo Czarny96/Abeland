@@ -7,7 +7,7 @@ local M = {}
 
 local BUTTON_SCALE = 0.8 -- button will be rescaled to this value after clicking
 
-function M.create(nodeId, onReleaseCallback, onClickCallback)
+function M.create(nodeId, buttonId, onReleaseCallback, onClickCallback)
 	local button = {}
 
 	-- FIELDS
@@ -15,6 +15,7 @@ function M.create(nodeId, onReleaseCallback, onClickCallback)
 	button.node = gui.get_node(nodeId)
 	button.onRelease = onReleaseCallback
 	button.onClick = onClickCallback
+	button.buttonId = buttonId -- used only in controller project
 
 	button.isPressed = false
 	button.touchId = -1
