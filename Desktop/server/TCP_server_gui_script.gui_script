@@ -12,17 +12,22 @@ local currentPlayers = 0
 local dtPassed = 0
 
 local function on_data(data, ip, port, client)
-	print("TCP server received data '" .. data .. "' from " .. ip .. ":" .. port)
+	
+	-- Name "true" is used, because ip recived in function is ip belonging to the server
+	local trueClientIP, trueClientPort = client:getpeername()
+	print("TCP server received data '" .. data .. "' from " .. trueClientIP .. ":" .. trueClientPort)
 	translationLayer.translateFrameToPlayer(data, createdPlayersTable[ip])
 end
 
-local function on_client_connected(ip, port, client)
-	print("Client connected from " .. ip .. ":" .. port)
+local function on_client_connected(ip, port, client) 
+	-- Name "true" is used, because ip recived in function is ip belonging to the server
+	local trueClientIP, trueClientPort = client:getpeername()
+	print("Client connected from " .. trueClientIP .. ":" .. trueClientPort)
 	
-	pprint(client)
+	
 
 	if currentPlayers < 4 then
-		clientsTable[ip] = client
+		clientsTable[trueClientIP] = client
 		currentPlayers = currentPlayers + 1
 		
 		-- WARNING: Temporally fixed to call one factory, until mechanism to chose class at the controller side is avaible
@@ -34,12 +39,14 @@ local function on_client_connected(ip, port, client)
 end
 
 local function on_client_disconnected(ip, port, client)
-	print("Client ".. ip.." Disconnected")
+	-- Name "true" is used, because ip recived in function is ip belonging to the server
+	local trueClientIP, trueClientPort = client:getpeername()
+	print("Client disconnected from " .. trueClientIP .. ":" .. trueClientPort)
 	currentPlayers = currentPlayers - 1
-	clientsTable[ip] =  nil
+	clientsTable[trueClientIP] =  nil
 	--TODO: decide what to do when player disconnects
-	translationLayer.RemovePlayerObject(createdPlayersTable[ip])
-	createdPlayersTable[ip] = nil
+	translationLayer.RemovePlayerObject(createdPlayersTable[trueClientIP])
+	createdPlayersTable[trueClientIP] = nil
 end
 
 function init(self)

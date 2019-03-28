@@ -89,6 +89,10 @@ function on_message(self, message_id, message, sender)
 		self.movingDir.y = message.y
 		self.movingFlag = true
 	end
+
+	if message_id == hash("kill") then
+		go.delete(self)
+	end
 	
 	if message_id == hash("contact_point_response") then	
 		if message.group == hash("walls") then

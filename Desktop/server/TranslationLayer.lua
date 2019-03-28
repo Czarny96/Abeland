@@ -20,6 +20,7 @@ end
 function M.RemovePlayerObject(objectID)
 	print("Removing Player Object")
 	--TODO: Inside palyer must be a part of code whtich allows to self destruction
+	msg.post(objectID, "kill")
 end
 
 function string:split(sep)
@@ -35,10 +36,23 @@ function M.translateFrameToPlayer(frame, playerObjectID)
 
 	movmentX = tonumber(fields[1])
 	movmentY = tonumber(fields[2])
+	
 
 	--Sending move command to playerObjet
 	if movmentX ~= 0 or movmentY ~=0 then
 		msg.post(playerObjectID, "move", {x = movmentX, y=movmentY})
+	end
+
+	--Button interpretation
+	button = tonumber(fields[5])
+	if button == 1 then
+		msg.post(playerObjectID, "btnBlue")
+	elseif button == 2 then
+		msg.post(playerObjectID, "btnGreen")
+	elseif button == 3 then
+		msg.post(playerObjectID, "btnRed")
+	elseif button == 4 then
+		msg.post(playerObjectID, "btnYellow")
 	end
 end
 
