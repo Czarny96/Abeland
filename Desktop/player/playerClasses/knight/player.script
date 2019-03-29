@@ -34,6 +34,8 @@ local function updateAnimation(self)
 		msg.post("#sprite", "play_animation", {id = hash("player_left")})
 	elseif self.movingDir.x > 0.3  then
 		msg.post("#sprite", "play_animation", {id = hash("player_right")})
+	else 
+		msg.post("#sprite", "play_animation", {id = hash("player_down")})
 	end
 end
 
@@ -61,11 +63,12 @@ function update(self, dt)
 		end
 		playerPos = playerPos + self.movingDir * self.movingSpeed * dt
 		go.set_position(playerPos)
+		go.set("#player", "position", go.get_position())
+		updateAnimation(self)
 	end
 	
-	updateAnimation(self)
+
 	
-	go.set("#player", "position", go.get_position())
 	self.movingFlag = false
 	self.wallsTopCollider = false
 	self.wallsBottomCollider = false
@@ -93,6 +96,14 @@ function on_message(self, message_id, message, sender)
 
 	if message_id == hash("kill") then
 		go.delete()
+	end
+
+	if message_id == hash("desactivate") then
+		msg.post("#sprite", "play_animation", {id = hash("player_afk")})
+	end
+
+	if message_id == hash("activate") then
+		msg.post("#sprite", "play_animation", {id = hash("player_down")})
 	end
 	
 	if message_id == hash("contact_point_response") then	

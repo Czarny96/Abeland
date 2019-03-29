@@ -29,7 +29,6 @@ components {
   }
 }
 embedded_components {
-
   id: "wallsBottomCollider"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
@@ -126,7 +125,7 @@ embedded_components {
 embedded_components {
   id: "sprite"
   type: "sprite"
-  data: "tile_set: \"/main/main.atlas\"\n"
+  data: "tile_set: \"/atlass/playerClassAtlass/knight.atlas\"\n"
   "default_animation: \"player_up\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
