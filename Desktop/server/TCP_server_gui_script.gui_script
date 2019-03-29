@@ -29,7 +29,7 @@ local function on_data(data, ip, port, client)
 	-- Name "true" is used, because ip recived in function is ip belonging to the server
 	local trueClientIP, trueClientPort = client:getpeername()
 	print("TCP server received data '" .. data .. "' from " .. trueClientIP .. ":" .. trueClientPort)
-	translationLayer.translateFrameToPlayer(data, createdPlayersTable[ip])
+	translationLayer.translateFrameToPlayer(data, createdPlayersTable[trueClientIP])
 	createdPlayerInactivityTable[createdPlayersTable[trueClientIP]][1] = 0.0
 	if createdPlayerInactivityTable[createdPlayersTable[trueClientIP]][2] == true then
 		inactivePlayerHandler(createdPlayersTable[trueClientIP])

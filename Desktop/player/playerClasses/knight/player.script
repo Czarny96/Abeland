@@ -84,14 +84,15 @@ function handleCollisionWithWall(self, message_id, message, sender)
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("move") then
+		if message_id == hash("move") then
+
 		self.movingDir.x = message.x
 		self.movingDir.y = message.y
 		self.movingFlag = true
 	end
 
 	if message_id == hash("kill") then
-		go.delete(self)
+		go.delete()
 	end
 	
 	if message_id == hash("contact_point_response") then	
