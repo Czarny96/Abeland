@@ -11,6 +11,7 @@ local createdPlayerInactivityTable = {}
 local currentPlayers = 0
 local dtPassed = 0
 local serverHandler = nil
+local unansweredMessages = 0
 
 -- For rudy, to get playersIDs
 function returnPlayersIDs()
@@ -40,6 +41,7 @@ local function on_data(data, ip, port, client)
 	print("TCP server received data '" .. data .. "' from " .. trueClientIP .. ":" .. trueClientPort)
 	translationLayer.translateFrameToPlayer(data, createdPlayersTable[trueClientIP])
 	createdPlayerInactivityTable[createdPlayersTable[trueClientIP]][1] = 0.0
+	unansweredMessages = 0
 	if createdPlayerInactivityTable[createdPlayersTable[trueClientIP]][2] == true then
 		serverHandler.flushClient(client)
 		serverHandler.send("flush\n\r", client)
@@ -113,7 +115,10 @@ function update(self, dt)
 	if  currentPlayers > 0 and dtPassed > 0.01 then
 		for ip,client in pairs(clientsTable) do
 			if createdPlayerInactivityTable[createdPlayersTable[ip]][2]==false then
-				self.server.send("btn_data\n\r", client)
+				if unansweredMessages < 10 then
+					self.server.send("btn_data\n\r", client)
+				end
+				unansweredMessages = unansweredMessages + 1
 				createdPlayerInactivityTable[createdPlayersTable[ip]][1] = createdPlayerInactivityTable[createdPlayersTable[ip]][1] + dt
 			end
 		end
