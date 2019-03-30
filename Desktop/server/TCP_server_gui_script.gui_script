@@ -56,8 +56,6 @@ local function on_client_connected(ip, port, client)
 	local trueClientIP, trueClientPort = client:getpeername()
 	print("Client connected from " .. trueClientIP .. ":" .. trueClientPort)
 
-	
-
 	if currentPlayers < 4 then
 		clientsTable[trueClientIP] = client
 		currentPlayers = currentPlayers + 1
@@ -115,7 +113,7 @@ function update(self, dt)
 	if  currentPlayers > 0 and dtPassed > 0.01 then
 		for ip,client in pairs(clientsTable) do
 			if createdPlayerInactivityTable[createdPlayersTable[ip]][2]==false then
-				if createdPlayerInactivityTable[createdPlayersTable[ip]][3] < 0.2 then
+				if createdPlayerInactivityTable[createdPlayersTable[ip]][3] < 0.1 then
 					self.server.send("btn_data\n\r", client)
 				end
 				createdPlayerInactivityTable[createdPlayersTable[ip]][3] = createdPlayerInactivityTable[createdPlayersTable[ip]][3] + dt
