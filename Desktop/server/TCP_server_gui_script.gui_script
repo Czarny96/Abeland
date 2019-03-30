@@ -41,7 +41,7 @@ local function on_data(data, ip, port, client)
 	print("TCP server received data '" .. data .. "' from " .. trueClientIP .. ":" .. trueClientPort)
 	translationLayer.translateFrameToPlayer(data, createdPlayersTable[trueClientIP])
 	createdPlayerInactivityTable[createdPlayersTable[trueClientIP]][1] = 0.0
-	unansweredMessages = 0
+	createdPlayerInactivityTable[createdPlayersTable[trueClientIP]][3] = 0
 	if createdPlayerInactivityTable[createdPlayersTable[trueClientIP]][2] == true then
 		serverHandler.flushClient(client)
 		serverHandler.send("flush\n\r", client)
@@ -64,7 +64,7 @@ local function on_client_connected(ip, port, client)
 		
 		-- WARNING: Temporally fixed to call one factory, until mechanism to chose class at the controller side is avaible
 		createdPlayersTable[trueClientIP] = translationLayer.createPlayerObject("go#knightFactory", vmath.vector3(147, 297, 0))
-		createdPlayerInactivityTable[createdPlayersTable[trueClientIP]] = {0.0, false}
+		createdPlayerInactivityTable[createdPlayersTable[trueClientIP]] = {0.0, false , 0.0}
 	else
 		print("To many clients, cannot connected another one")
 	end
@@ -115,10 +115,10 @@ function update(self, dt)
 	if  currentPlayers > 0 and dtPassed > 0.01 then
 		for ip,client in pairs(clientsTable) do
 			if createdPlayerInactivityTable[createdPlayersTable[ip]][2]==false then
-				if unansweredMessages < 15 then
+				if createdPlayerInactivityTable[createdPlayersTable[ip]][3] < 0.2 then
 					self.server.send("btn_data\n\r", client)
 				end
-				unansweredMessages = unansweredMessages + 1
+				createdPlayerInactivityTable[createdPlayersTable[ip]][3] = createdPlayerInactivityTable[createdPlayersTable[ip]][3] + dt
 				createdPlayerInactivityTable[createdPlayersTable[ip]][1] = createdPlayerInactivityTable[createdPlayersTable[ip]][1] + dt
 			end
 		end
