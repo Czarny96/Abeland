@@ -13,7 +13,7 @@ local dtPassed = 0
 local serverHandler = nil
 
 -- For rudy, to get playersIDs
-function returnCreatedPlayersIDs()
+function returnPlayersIDs()
 	local playerIDs = {}
 	for ip,player in pairs(createdPlayersTable) do
 		table.insert(playerIDs, player)
