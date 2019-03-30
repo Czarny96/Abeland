@@ -115,7 +115,7 @@ function update(self, dt)
 	if  currentPlayers > 0 and dtPassed > 0.01 then
 		for ip,client in pairs(clientsTable) do
 			if createdPlayerInactivityTable[createdPlayersTable[ip]][2]==false then
-				if unansweredMessages < 10 then
+				if unansweredMessages < 15 then
 					self.server.send("btn_data\n\r", client)
 				end
 				unansweredMessages = unansweredMessages + 1
