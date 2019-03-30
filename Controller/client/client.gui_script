@@ -30,6 +30,10 @@ function onData(data)
 		if clientHandler then
 			clientHandler.send(frame)
 		end
+	elseif data == "flush" then
+		if clientHandler then
+			clientHandler.flush()
+		end
 	end
 end
 
