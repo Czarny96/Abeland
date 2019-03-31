@@ -1,5 +1,8 @@
+require "main.globals"
+
 go.property("enemyMovingDir", vmath.vector3(0, 0, 0))
 go.property("hp", 100)
+go.property("damage", 20)
 
 function init(self)
 	self.movingFlag = false
@@ -9,9 +12,9 @@ end
 
 function update(self, dt)
 	local enemyPos = go.get_position()
-	local playersPos = {}
-	playersPos = returnPlayersIDs()
-	print(playersPos)
+	local playersIDs = getPlayersIDs()
+	
+	print(playersIDs[1])
 	
 	local positionDiffrenceAbs = (playerPos - enemyPos)
 	positionDiffrenceAbs.x = math.abs(positionDiffrenceAbs.x)
