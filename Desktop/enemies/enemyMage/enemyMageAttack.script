@@ -3,15 +3,18 @@ go.property("shootingDelay", 3)
 
 function init(self)
 	self.shootingTimer = 0
+	self.isEnemyMageKilled = false
 end
 
 function update(self, dt)
-	if self.shootingTimer < self.shootingDelay  then
-		self.shootingTimer = self.shootingTimer + dt
-	end
+	self.isEnemyMageKilled = go.get("/enemyMage#enemy", "isKilled")
 
-	if self.shootingTimer >= self.shootingDelay then
-		factory.create("#enemyMageHomingAttackFactory", nil)
-		self.shootingTimer = 0
+	if self.isEnemyMageKilled == false then
+		if self.shootingTimer >= self.shootingDelay then
+			factory.create("#enemyMageHomingAttackFactory", nil)
+			self.shootingTimer = 0
+		else
+			self.shootingTimer = self.shootingTimer + dt
+		end
 	end
 end

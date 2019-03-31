@@ -3,14 +3,42 @@ require "main.globals"
 go.property("enemyMovingDir", vmath.vector3(0, 0, 0))
 go.property("health", 100)
 go.property("damage", 20)
+go.property("isKilled", false)
 
 function init(self)
 	self.movingSpeed = 50
 	self.followDistance = 50
+	self.killedTimer = 0
+end
+
+local function updateAnimation(self)
+	if self.enemyMovingDir.x < -0.3 and self.enemyMovingDir.y > 0.3 then
+		msg.post("#sprite", "play_animation", {id = hash("enemy_up_left")})
+	elseif self.enemyMovingDir.x > 0.3 and self.enemyMovingDir.y > 0.3 then
+		msg.post("#sprite", "play_animation", {id = hash("enemy_up_right")})
+	elseif self.enemyMovingDir.x < -0.3 and self.enemyMovingDir.y < -0.3 then
+		msg.post("#sprite", "play_animation", {id = hash("enemy_down_left")})
+	elseif self.enemyMovingDir.x > 0.3 and self.enemyMovingDir.y < -0.3 then
+		msg.post("#sprite", "play_animation", {id = hash("enemy_down_right")})
+	elseif self.enemyMovingDir.y > 0.3  then
+		msg.post("#sprite", "play_animation", {id = hash("enemy_up")})
+	elseif self.enemyMovingDir.y < -0.3  then
+		msg.post("#sprite", "play_animation", {id = hash("enemy_down")})
+	elseif self.enemyMovingDir.x < -0.3  then
+		msg.post("#sprite", "play_animation", {id = hash("enemy_left")})
+	elseif self.enemyMovingDir.x > 0.3  then
+		msg.post("#sprite", "play_animation", {id = hash("enemy_right")})
+	else 
+		msg.post("#sprite", "play_animation", {id = hash("enemy_down")})
+	end
+end
+
+local function playDeathAnimation(self)
+	msg.post("#sprite", "play_animation", {id = hash("enemy_killed")})
 end
 
 function update(self, dt)
-	if getPlayersIDs() ~= 0 then
+	if getPlayersIDs() ~= 0 and self.isKilled == false then
 		local enemyPos = go.get_position()
 		local closestPlayerID = getClosestPlayerID(enemyPos)
 		local closestPlayerPos = getPlayerPos(closestPlayerID)
@@ -22,41 +50,34 @@ function update(self, dt)
 
 		local positionDiffrence = closestPlayerPos - enemyPos
 
-		local movingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
-		movingDir = vmath.normalize(movingDir)
+		self.enemyMovingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
+		self.enemyMovingDir = vmath.normalize(self.enemyMovingDir)
 
 		if positionDiffrence.x >= self.followDistance or positionDiffrence.x <= -self.followDistance 
 		or positionDiffrence.y >= self.followDistance or positionDiffrence.y <= -self.followDistance then
-			enemyPos = enemyPos + movingDir * self.movingSpeed * dt
+			enemyPos = enemyPos + self.enemyMovingDir * self.movingSpeed * dt
 			go.set_position(enemyPos)
-		end
-
-		if movingDir.x < -0.3 and movingDir.y > 0.3 then
-			msg.post("#sprite", "play_animation", {id = hash("enemy_up_left")})
-		elseif movingDir.x > 0.3 and movingDir.y > 0.3 then
-			msg.post("#sprite", "play_animation", {id = hash("enemy_up_right")})
-		elseif movingDir.x < -0.3 and movingDir.y < -0.3 then
-			msg.post("#sprite", "play_animation", {id = hash("enemy_down_left")})
-		elseif movingDir.x > 0.3 and movingDir.y < -0.3 then
-			msg.post("#sprite", "play_animation", {id = hash("enemy_down_right")})
-		elseif movingDir.y > 0.3  then
-			msg.post("#sprite", "play_animation", {id = hash("enemy_up")})
-		elseif movingDir.y < -0.3  then
-			msg.post("#sprite", "play_animation", {id = hash("enemy_down")})
-		elseif movingDir.x < -0.3  then
-			msg.post("#sprite", "play_animation", {id = hash("enemy_left")})
-		elseif movingDir.x > 0.3  then
-			msg.post("#sprite", "play_animation", {id = hash("enemy_right")})
+			updateAnimation(self)
 		end
 	end
 	
 	if self.health <= 0 then
-		go.delete()
+		if self.isKilled == false then
+			playDeathAnimation(self)
+			self.killedTimer = 10
+			self.isKilled = true
+		end
+
+		if self.killedTimer <= 0 then
+			go.delete()
+		else
+			self.killedTimer = self.killedTimer - dt
+		end
 	end
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("collision_response") then
+	if message_id == hash("collision_response") and self.isKilled == false then
 		if message.group == hash("attacks") then
 			local enemyUrl = msg.url()
 			local enemyHp = go.get(enemyUrl, "hp")

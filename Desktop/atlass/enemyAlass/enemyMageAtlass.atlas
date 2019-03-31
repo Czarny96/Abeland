@@ -1,7 +1,7 @@
 animations {
-  id: "enemy_up"
+  id: "enemy_mage_down_right"
   images {
-    image: "/assets/prototypes/enemy_prot_up.png"
+    image: "/assets/prototypes/enemyMage_prot_down_right.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 60
@@ -9,9 +9,9 @@ animations {
   flip_vertical: 0
 }
 animations {
-  id: "enemy_down"
+  id: "enemy_mage_up_left"
   images {
-    image: "/assets/prototypes/enemy_prot_down.png"
+    image: "/assets/prototypes/enemyMage_prot_up_left.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 60
@@ -19,9 +19,9 @@ animations {
   flip_vertical: 0
 }
 animations {
-  id: "enemy_left"
+  id: "enemy_mage_left"
   images {
-    image: "/assets/prototypes/enemy_prot_left.png"
+    image: "/assets/prototypes/enemyMage_prot_left.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 60
@@ -29,9 +29,9 @@ animations {
   flip_vertical: 0
 }
 animations {
-  id: "enemy_right"
+  id: "enemy_mage_down_left"
   images {
-    image: "/assets/prototypes/enemy_prot_right.png"
+    image: "/assets/prototypes/enemyMage_prot_down_left.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 60
@@ -39,9 +39,9 @@ animations {
   flip_vertical: 0
 }
 animations {
-  id: "enemy_up_left"
+  id: "enemy_mage_right"
   images {
-    image: "/assets/prototypes/enemy_prot_up_left.png"
+    image: "/assets/prototypes/enemyMage_prot_right.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 60
@@ -49,9 +49,9 @@ animations {
   flip_vertical: 0
 }
 animations {
-  id: "enemy_up_right"
+  id: "enemy_mage_down"
   images {
-    image: "/assets/prototypes/enemy_prot_up_right.png"
+    image: "/assets/prototypes/enemyMage_prot_down.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 60
@@ -59,9 +59,9 @@ animations {
   flip_vertical: 0
 }
 animations {
-  id: "enemy_down_left"
+  id: "enemy_mage_up"
   images {
-    image: "/assets/prototypes/enemy_prot_down_left.png"
+    image: "/assets/prototypes/enemyMage_prot_up.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 60
@@ -69,9 +69,9 @@ animations {
   flip_vertical: 0
 }
 animations {
-  id: "enemy_down_right"
+  id: "enemy_mage_killed"
   images {
-    image: "/assets/prototypes/enemy_prot_down_right.png"
+    image: "/assets/prototypes/enemyMage_killed.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 60
@@ -79,9 +79,9 @@ animations {
   flip_vertical: 0
 }
 animations {
-  id: "enemy_killed"
+  id: "enemy_mage_up_right"
   images {
-    image: "/assets/prototypes/enemy_killed.png"
+    image: "/assets/prototypes/enemyMage_prot_up_right.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 60
