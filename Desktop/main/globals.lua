@@ -34,3 +34,32 @@ function getPlayersPos()
 		return 0
 	end
 end
+
+-- Get closes player ID to position given
+function getClosestPlayerID(pos)
+	local playersIDs = getPlayersIDs()
+	local playersPos = getPlayersPos()
+	
+	if playersIDs ~= 0 then
+		local closestPlayerID = playersIDs[1]
+		local distanceToClosestPlayer = vmath.length(playersPos[1] - pos)
+
+		for i, playerPos in pairs(playersPos) do 
+			local distanceToCurrentPlayer = vmath.length(playerPos - pos)
+			
+			if distanceToCurrentPlayer < distanceToClosestPlayer then
+				closestPlayerID = playersIDs[i]
+				distanceToClosestPlayer = vmath.length(playerPos - pos)
+			end
+		end
+		return closestPlayerID
+	else
+		return 0
+	end
+end
+
+-- Get player position of given ID
+function getPlayerPos(id)
+	local playerPos = go.get(id.."#player", "position")
+	return playerPos
+end

@@ -1,3 +1,5 @@
+go.property("damage", 20)
+
 function init(self)
 	self.projectileSpeed = 50
 	self.projectileSpeedByDistanceMultiplier = 0.3
@@ -5,34 +7,23 @@ function init(self)
 end
 
 function update(self, dt)
-	local projectilePos = go.get_position()
-	local playersPos = getPlayersPos()
-	
 	if getPlayersIDs() ~= 0 then
-		local closestPlayerID = getPlayersIDs()[1]
-		local closestPlayerPos = getPlayersPos()[1]
-		local distanceToClosestPlayer = vmath.length(closestPlayerPos - projectilePos)
-		
-		for i, playerPos in pairs(playersPos) do 
-			local distanceToCurrentPlayer = vmath.length(playerPos - projectilePos)
-			if distanceToCurrentPlayer < distanceToClosestPlayer then
-				closestPlayerID = getPlayersIDs()[i]
-				closestPlayerPos = getPlayersPos()[i]
-				distanceToClosestPlayer = vmath.length(playerPos - projectilePos)
-			end
-		end
+		local enemyPos = go.get_position()
+		local closestPlayerID = getClosestPlayerID(enemyPos)
+		local closestPlayerPos = getPlayerPos(closestPlayerID)
+		local distanceToClosestPlayer = vmath.length(closestPlayerPos - enemyPos)
 
-		local positionDiffrenceAbs = (closestPlayerPos - projectilePos)
+		local positionDiffrenceAbs = (closestPlayerPos - enemyPos)
 		positionDiffrenceAbs.x = math.abs(positionDiffrenceAbs.x)
 		positionDiffrenceAbs.y = math.abs(positionDiffrenceAbs.y)
 		
-		local positionDiffrence = (closestPlayerPos - projectilePos)
+		local positionDiffrence = (closestPlayerPos - enemyPos)
 		
 		local movingDir = vmath.vector3(positionDiffrence.x,positionDiffrence.y, 0)
 		movingDir = vmath.normalize(movingDir)
 
-		projectilePos = projectilePos + movingDir * (self.projectileSpeed + distanceToClosestPlayer * self.distanceToClosestPlayer) * dt
-		go.set_position(projectilePos)
+		enemyPos = enemyPos + movingDir * (self.projectileSpeed + distanceToClosestPlayer * self.projectileSpeedByDistanceMultiplier) * dt
+		go.set_position(enemyPos)
 	end	
 
 	self.projectileLife = self.projectileLife - dt
@@ -44,6 +35,13 @@ end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("collision_response") then
+		if message.group == hash("players") then
+			local enemyPos = go.get_position()
+			local closestPlayerID = getClosestPlayerID(enemyPos)
+			local playerUrl = closestPlayerID.."#player"
+			local playerHealth = go.get(playerUrl, "health")
+			go.set(playerUrl, "health", playerHealth - self.damage)
+		end
 		go.delete()
 	end
 end

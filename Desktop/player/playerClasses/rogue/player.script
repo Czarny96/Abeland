@@ -4,7 +4,6 @@ go.property("position", vmath.vector3(0, 0, 0))
 go.property("health", 60)
 go.property("movingSpeed", 210)
 
-
 function init(self)
 	msg.post(".", "acquire_input_focus")
 
@@ -54,7 +53,6 @@ function update(self, dt)
 		self.movingDir.x = 0
 	end
 
-
 	if self.movingFlag then
 		local playerPos = go.get_position()
 		local movingDir = vmath.vector3(self.movingDir.x, self.movingDir.y, 0)
@@ -67,8 +65,10 @@ function update(self, dt)
 		updateAnimation(self)
 	end
 
-
-
+	if self.health <= 0 then
+		go.delete()
+	end
+	
 	self.movingFlag = false
 	self.wallsTopCollider = false
 	self.wallsBottomCollider = false
@@ -88,7 +88,6 @@ end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("move") then
-
 		self.movingDir.x = message.x
 		self.movingDir.y = message.y
 		self.movingFlag = true

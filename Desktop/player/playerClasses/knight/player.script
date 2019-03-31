@@ -4,7 +4,6 @@ go.property("position", vmath.vector3(0, 0, 0))
 go.property("health", 200)
 go.property("movingSpeed", 180)
 
-
 function init(self)
 	msg.post(".", "acquire_input_focus")
 
@@ -18,7 +17,7 @@ function init(self)
 end
 
 local function updateAnimation(self)
-		if self.movingDir.x < -0.3 and self.movingDir.y > 0.3 then
+	if self.movingDir.x < -0.3 and self.movingDir.y > 0.3 then
 		msg.post("#sprite", "play_animation", {id = hash("player_up_left")})
 	elseif self.movingDir.x > 0.3 and self.movingDir.y > 0.3 then
 		msg.post("#sprite", "play_animation", {id = hash("player_up_right")})
@@ -54,7 +53,6 @@ function update(self, dt)
 		self.movingDir.x = 0
 	end
 
-	
 	if self.movingFlag then
 		local playerPos = go.get_position()
 		local movingDir = vmath.vector3(self.movingDir.x, self.movingDir.y, 0)
@@ -66,8 +64,10 @@ function update(self, dt)
 		go.set("#player", "position", go.get_position())
 		updateAnimation(self)
 	end
-	
 
+	if self.health <= 0 then
+		go.delete()
+	end
 	
 	self.movingFlag = false
 	self.wallsTopCollider = false
@@ -87,8 +87,7 @@ function handleCollisionWithWall(self, message_id, message, sender)
 end
 
 function on_message(self, message_id, message, sender)
-		if message_id == hash("move") then
-
+	if message_id == hash("move") then
 		self.movingDir.x = message.x
 		self.movingDir.y = message.y
 		self.movingFlag = true

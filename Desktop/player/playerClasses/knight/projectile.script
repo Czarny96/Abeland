@@ -15,7 +15,7 @@ function update(self, dt)
 
 	self.projectilelife = self.projectilelife - dt
 
-	if(self.projectilelife <= 0) then
+	if self.projectilelife <= 0 then
 		go.delete()
 	end 
 end
