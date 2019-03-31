@@ -43,6 +43,7 @@ end
 
 local function playDeathAnimation(self)
 	msg.post("#sprite", "play_animation", {id = hash("player_killed")})
+	msg.post("#death_sound", "play_sound", {gain = 0.5})
 end
 
 function update(self, dt)
