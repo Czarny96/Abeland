@@ -12,44 +12,59 @@ end
 
 function update(self, dt)
 	local enemyPos = go.get_position()
-	local playersIDs = getPlayersIDs()
-	
-	print(playersIDs[1])
-	
-	local positionDiffrenceAbs = (playerPos - enemyPos)
-	positionDiffrenceAbs.x = math.abs(positionDiffrenceAbs.x)
-	positionDiffrenceAbs.y = math.abs(positionDiffrenceAbs.y)
+	local playersPos = getPlayersPos()
 
-	local positionDiffrence = (playerPos - enemyPos)
+	if getPlayersIDs() ~= 0 then
+		local closestPlayerID = getPlayersIDs()[1]
+		local closestPlayerPos = getPlayersPos()[1]
+		local distanceToClosestPlayer = vmath.length(closestPlayerPos - enemyPos)
+		print("distanceToClosestPlayer", distanceToClosestPlayer)
 
-	local movingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
+		for i, playerPos in pairs(playersPos) do 
+			local distanceToCurrentPlayer = vmath.length(playerPos - enemyPos)
+			print("distanceToCurrentPlayer", distanceToCurrentPlayer)
+			if distanceToCurrentPlayer < distanceToClosestPlayer then
+				closestPlayerID = getPlayersIDs()[i]
+				closestPlayerPos = getPlayersPos()[i]
+				distanceToClosestPlayer = vmath.length(playerPos - enemyPos)
+			end
+		end
 
-	movingDir = vmath.normalize(movingDir)
-	
-	if positionDiffrence.x >= self.followDistance or positionDiffrence.x <= -self.followDistance 
-	or positionDiffrence.y >= self.followDistance or positionDiffrence.y <= -self.followDistance then
-		enemyPos = enemyPos + movingDir * self.movingSpeed * dt
-		go.set_position(enemyPos)
+		local positionDiffrenceAbs = closestPlayerPos - enemyPos
+		positionDiffrenceAbs.x = math.abs(positionDiffrenceAbs.x)
+		positionDiffrenceAbs.y = math.abs(positionDiffrenceAbs.y)
+
+		local positionDiffrence = closestPlayerPos - enemyPos
+
+		local movingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
+
+		movingDir = vmath.normalize(movingDir)
+
+		if positionDiffrence.x >= self.followDistance or positionDiffrence.x <= -self.followDistance 
+		or positionDiffrence.y >= self.followDistance or positionDiffrence.y <= -self.followDistance then
+			enemyPos = enemyPos + movingDir * self.movingSpeed * dt
+			go.set_position(enemyPos)
+		end
+
+		if movingDir.x < -0.3 and movingDir.y > 0.3 then
+			msg.post("#sprite", "play_animation", {id = hash("enemy_up_left")})
+		elseif movingDir.x > 0.3 and movingDir.y > 0.3 then
+			msg.post("#sprite", "play_animation", {id = hash("enemy_up_right")})
+		elseif movingDir.x < -0.3 and movingDir.y < -0.3 then
+			msg.post("#sprite", "play_animation", {id = hash("enemy_down_left")})
+		elseif movingDir.x > 0.3 and movingDir.y < -0.3 then
+			msg.post("#sprite", "play_animation", {id = hash("enemy_down_right")})
+		elseif movingDir.y > 0.3  then
+			msg.post("#sprite", "play_animation", {id = hash("enemy_up")})
+		elseif movingDir.y < -0.3  then
+			msg.post("#sprite", "play_animation", {id = hash("enemy_down")})
+		elseif movingDir.x < -0.3  then
+			msg.post("#sprite", "play_animation", {id = hash("enemy_left")})
+		elseif movingDir.x > 0.3  then
+			msg.post("#sprite", "play_animation", {id = hash("enemy_right")})
+		end
 	end
 	
-	if movingDir.x < -0.3 and movingDir.y > 0.3 then
-		msg.post("#sprite", "play_animation", {id = hash("enemy_up_left")})
-	elseif movingDir.x > 0.3 and movingDir.y > 0.3 then
-		msg.post("#sprite", "play_animation", {id = hash("enemy_up_right")})
-	elseif movingDir.x < -0.3 and movingDir.y < -0.3 then
-		msg.post("#sprite", "play_animation", {id = hash("enemy_down_left")})
-	elseif movingDir.x > 0.3 and movingDir.y < -0.3 then
-		msg.post("#sprite", "play_animation", {id = hash("enemy_down_right")})
-	elseif movingDir.y > 0.3  then
-		msg.post("#sprite", "play_animation", {id = hash("enemy_up")})
-	elseif movingDir.y < -0.3  then
-		msg.post("#sprite", "play_animation", {id = hash("enemy_down")})
-	elseif movingDir.x < -0.3  then
-		msg.post("#sprite", "play_animation", {id = hash("enemy_left")})
-	elseif movingDir.x > 0.3  then
-		msg.post("#sprite", "play_animation", {id = hash("enemy_right")})
-	end
-
 	if self.hp <= 0 then
 		go.delete()
 	end
