@@ -1,3 +1,5 @@
+require "main.globals"
+
 go.property("enemyMovingDir", vmath.vector3(0, 0, 0))
 go.property("health", 100)
 go.property("damage", 10)

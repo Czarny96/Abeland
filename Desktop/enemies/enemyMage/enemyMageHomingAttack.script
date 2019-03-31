@@ -1,3 +1,5 @@
+require "main.globals"
+
 go.property("damage", 20)
 
 function init(self)
