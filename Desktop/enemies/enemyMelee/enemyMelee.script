@@ -5,7 +5,6 @@ go.property("hp", 100)
 go.property("damage", 20)
 
 function init(self)
-	self.movingFlag = false
 	self.movingSpeed = 50
 	self.followDistance = 50
 end
@@ -18,11 +17,9 @@ function update(self, dt)
 		local closestPlayerID = getPlayersIDs()[1]
 		local closestPlayerPos = getPlayersPos()[1]
 		local distanceToClosestPlayer = vmath.length(closestPlayerPos - enemyPos)
-		print("distanceToClosestPlayer", distanceToClosestPlayer)
 
 		for i, playerPos in pairs(playersPos) do 
 			local distanceToCurrentPlayer = vmath.length(playerPos - enemyPos)
-			print("distanceToCurrentPlayer", distanceToCurrentPlayer)
 			if distanceToCurrentPlayer < distanceToClosestPlayer then
 				closestPlayerID = getPlayersIDs()[i]
 				closestPlayerPos = getPlayersPos()[i]
@@ -37,7 +34,6 @@ function update(self, dt)
 		local positionDiffrence = closestPlayerPos - enemyPos
 
 		local movingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
-
 		movingDir = vmath.normalize(movingDir)
 
 		if positionDiffrence.x >= self.followDistance or positionDiffrence.x <= -self.followDistance 

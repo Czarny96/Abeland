@@ -6,21 +6,34 @@ end
 
 function update(self, dt)
 	local projectilePos = go.get_position()
-	local playerPos = go.get("player#player", "position")
-
-	local distanceBetweenPlayerAndProjectile = vmath.length(projectilePos - playerPos)
+	local playersPos = getPlayersPos()
 	
-	
-	-- fixing moving direction for enemy to follow player
-	local positionDiffrenceAbs = (playerPos - projectilePos)
-	positionDiffrenceAbs.x = math.abs(positionDiffrenceAbs.x)
-	positionDiffrenceAbs.y = math.abs(positionDiffrenceAbs.y)
-	local positionDiffrence = (playerPos - projectilePos)
-	local movingDir = vmath.vector3(positionDiffrence.x,positionDiffrence.y, 0)
-	movingDir = vmath.normalize(movingDir)
+	if getPlayersIDs() ~= 0 then
+		local closestPlayerID = getPlayersIDs()[1]
+		local closestPlayerPos = getPlayersPos()[1]
+		local distanceToClosestPlayer = vmath.length(closestPlayerPos - projectilePos)
+		
+		for i, playerPos in pairs(playersPos) do 
+			local distanceToCurrentPlayer = vmath.length(playerPos - projectilePos)
+			if distanceToCurrentPlayer < distanceToClosestPlayer then
+				closestPlayerID = getPlayersIDs()[i]
+				closestPlayerPos = getPlayersPos()[i]
+				distanceToClosestPlayer = vmath.length(playerPos - projectilePos)
+			end
+		end
 
-	projectilePos = projectilePos + movingDir * (self.projectileSpeed + distanceBetweenPlayerAndProjectile * self.projectileSpeedByDistanceMultiplier) * dt
-	go.set_position(projectilePos)
+		local positionDiffrenceAbs = (closestPlayerPos - projectilePos)
+		positionDiffrenceAbs.x = math.abs(positionDiffrenceAbs.x)
+		positionDiffrenceAbs.y = math.abs(positionDiffrenceAbs.y)
+		
+		local positionDiffrence = (closestPlayerPos - projectilePos)
+		
+		local movingDir = vmath.vector3(positionDiffrence.x,positionDiffrence.y, 0)
+		movingDir = vmath.normalize(movingDir)
+
+		projectilePos = projectilePos + movingDir * (self.projectileSpeed + distanceToClosestPlayer * self.distanceToClosestPlayer) * dt
+		go.set_position(projectilePos)
+	end	
 
 	self.projectileLife = self.projectileLife - dt
 
