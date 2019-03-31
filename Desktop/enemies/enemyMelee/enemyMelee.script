@@ -9,8 +9,10 @@ end
 
 function update(self, dt)
 	local enemyPos = go.get_position()
-	local playerPos = go.get("player#player", "position")
-
+	local playersPos = {}
+	playersPos = returnPlayersIDs()
+	print(playersPos)
+	
 	local positionDiffrenceAbs = (playerPos - enemyPos)
 	positionDiffrenceAbs.x = math.abs(positionDiffrenceAbs.x)
 	positionDiffrenceAbs.y = math.abs(positionDiffrenceAbs.y)
