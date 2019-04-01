@@ -19,6 +19,15 @@ images {
 images {
   image: "/assets/interface/ctrl_background.png"
 }
+images {
+  image: "/assets/interface/reconnectButton.png"
+}
+images {
+  image: "/assets/interface/reconnectWindow.png"
+}
+images {
+  image: "/assets/interface/spinner.png"
+}
 margin: 0
 extrude_borders: 0
 inner_padding: 0
