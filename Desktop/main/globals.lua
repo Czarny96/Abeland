@@ -11,9 +11,15 @@ function getPlayersIDs()
 	if #returnPlayersIDs() > 0 then
 		for i, player in pairs(playersIDs) do 
 			local unhasedID = string.sub(tostring(player), 8, #tostring(player)-1)
-			table.insert(tableOfPlayersIDs, unhasedID)
+			if go.get(unhasedID.."#player", "isKilled") == false then
+				table.insert(tableOfPlayersIDs, unhasedID)
+			end
 		end
-		return tableOfPlayersIDs
+		if #tableOfPlayersIDs > 0 then
+			return tableOfPlayersIDs
+		else
+			return 0
+		end
 	else
 		return 0
 	end
