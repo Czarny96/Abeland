@@ -7,12 +7,18 @@ local SERVER_PORT = 5555
 local clientHandler = nil
 
 local reconnectTimer = 0
+local tryToReconnect = false
 
 local frame = ""
 
 function init(self)
 
-	-- server discovery
+	runP2PDiscovery(self)
+	
+end
+
+function runP2PDiscovery(self)
+	SERVER_IP = nil
 	self.p2p = p2p_discovery.create(P2P_PORT)
 
 
@@ -21,7 +27,6 @@ function init(self)
 		SERVER_IP =  ip
 		connectToServer(self, ip, SERVER_PORT)
 	end)
-	
 end
 
 function onData(data)
@@ -32,7 +37,7 @@ function onData(data)
 		end
 	elseif data == "flush" then
 		if clientHandler then
-			clientHandler.flush()
+			--clientHandler.flush()
 		end
 	end
 end
@@ -43,12 +48,15 @@ function connectToServer(self, ip, port)
 	function()
 		self.client = nil
 		clientHandler = nil
+		--SERVER_IP = nil
+		runP2PDiscovery(self)
 		--gui.set_text(gui.get_node("connectionText"), "Disconnected")
 		msg.post("/go#ctrlGui", "setConnectionText", {text = "Disconnected"})
 	end)
 	if client then
 		self.client = client
 		clientHandler = client
+		tryToReconnect = false
 		--gui.set_text(gui.get_node("connectionText"), "Connected")
 		msg.post("/go#ctrlGui", "setConnectionText", {text = "Connected"})
 	else
@@ -70,9 +78,8 @@ function update(self, dt)
 
 	reconnectTimer = reconnectTimer + dt
 	-- server dc'ed and ip is known, so try to reconnect
-	if not self.client and SERVER_IP ~= nil and reconnectTimer > 5 then
+	if not self.client and SERVER_IP ~= nil and reconnectTimer > 5 and tryToReconnect then
 		reconnectTimer = 0
-		print("RECONNECTING")
 		connectToServer(self, SERVER_IP, SERVER_PORT)
 	end
 
@@ -87,6 +94,8 @@ function on_message(self, message_id, message, sender)
 	-- Remove this function if not needed
 	if message_id == hash("setControllerData") then
 		frame = message.frame
+	elseif message_id == hash("reconnect") then
+		tryToReconnect = true
 	end
 
 end
