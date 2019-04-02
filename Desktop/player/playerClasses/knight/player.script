@@ -109,13 +109,13 @@ function on_message(self, message_id, message, sender)
 		end
 
 		if message_id == hash("desactivate") then
-			msg.post("#sprite", "play_animation", {id = hash("player_afk")})
+			sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 0.4))
 		end
 
 		if message_id == hash("activate") then
-			msg.post("#sprite", "play_animation", {id = hash("player_down")})
+			sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 1))
 		end
-
+		
 		if message_id == hash("contact_point_response") then	
 			if message.group == hash("walls") then
 				if sender.fragment == hash("wallsTopCollider") then
