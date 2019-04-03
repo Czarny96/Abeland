@@ -1,7 +1,7 @@
 animations {
   id: "player_up"
   images {
-    image: "/assets/prototypes/player_prot_up.png"
+    image: "/assets/prototypes/mage/player_prot_up.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 8
@@ -11,7 +11,7 @@ animations {
 animations {
   id: "player_down"
   images {
-    image: "/assets/prototypes/player_prot_down.png"
+    image: "/assets/prototypes/mage/player_prot_down.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 8
@@ -21,7 +21,7 @@ animations {
 animations {
   id: "player_left"
   images {
-    image: "/assets/prototypes/player_prot_left.png"
+    image: "/assets/prototypes/mage/player_prot_left.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 8
@@ -41,7 +41,7 @@ animations {
 animations {
   id: "player_right"
   images {
-    image: "/assets/prototypes/player_prot_right.png"
+    image: "/assets/prototypes/mage/player_prot_right.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 8
@@ -51,7 +51,7 @@ animations {
 animations {
   id: "player_up_left"
   images {
-    image: "/assets/prototypes/player_prot_up_left.png"
+    image: "/assets/prototypes/mage/player_prot_up_left.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 8
@@ -61,7 +61,7 @@ animations {
 animations {
   id: "player_down_right"
   images {
-    image: "/assets/prototypes/player_prot_down_right.png"
+    image: "/assets/prototypes/mage/player_prot_down_right.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 8
@@ -71,7 +71,7 @@ animations {
 animations {
   id: "player_up_right"
   images {
-    image: "/assets/prototypes/player_prot_up_right.png"
+    image: "/assets/prototypes/mage/player_prot_up_right.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 8
@@ -81,7 +81,7 @@ animations {
 animations {
   id: "player_down_left"
   images {
-    image: "/assets/prototypes/player_prot_down_left.png"
+    image: "/assets/prototypes/mage/player_prot_down_left.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 8
