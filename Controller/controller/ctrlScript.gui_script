@@ -1,6 +1,8 @@
 
 local scalingButton = require "util/scalingButton"
 
+local deadZone = 0.25
+
 local leftJoystick = {
 	defaultPos = vmath.vector3(),
 	touchPos = vmath.vector3(),
@@ -100,7 +102,19 @@ function hideReconnectWindow()
 	hideSpinner()
 end
 
+function applyDeadZone(joystick)
+	local joystickLen = vmath.length(vmath.vector3(joystick.value.x, joystick.value.y, 0))
+	if joystickLen < deadZone then
+		joystick.value.x = 0
+		joystick.value.y = 0
+	end
+end
+
+
 function createFrame(self)
+	applyDeadZone(leftJoystick)
+	applyDeadZone(rightJoystick)
+	
 	local frame = string.format("%.6f;%.6f;%.6f;%.6f", 
 		leftJoystick.value.x, leftJoystick.value.y, 
 		rightJoystick.value.x, rightJoystick.value.y)
