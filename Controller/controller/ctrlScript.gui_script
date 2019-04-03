@@ -283,17 +283,17 @@ function on_input(self, action_id, action)
 		end
 	elseif action_id == hash("mouse_left") then
 
-		for k, button in pairs(self.guiButtons) do
-			button.mouseUpdate(action)
-		end
+		--for k, button in pairs(self.guiButtons) do
+		--	button.mouseUpdate(action)
+		--end
 		
-		if reconnectWindowIsVisible then
-			return
-		end
+		--if reconnectWindowIsVisible then
+		--	return
+		--end
 		
-		for k, button in pairs(self.gameButtons) do
-			button.mouseUpdate(action)
-		end
+		--for k, button in pairs(self.gameButtons) do
+		--	button.mouseUpdate(action)
+		--end
 	elseif action_id == hash("key_back") then
 		os.exit()
 	end
