@@ -61,7 +61,7 @@ local function on_client_connected(ip, port, client)
 		currentPlayers = currentPlayers + 1
 		
 		-- WARNING: Temporally fixed to call one factory, until mechanism to chose class at the controller side is avaible
-		createdPlayersTable[trueClientIP] = translationLayer.createPlayerObject("go#knightFactory", vmath.vector3(147, 297, 0))
+		createdPlayersTable[trueClientIP] = translationLayer.createPlayerObject("go#archerFactory", vmath.vector3(147, 297, 0))
 		createdPlayerInactivityTable[createdPlayersTable[trueClientIP]] = {0.0, false , 0.0}
 	else
 		print("To many clients, cannot connected another one")

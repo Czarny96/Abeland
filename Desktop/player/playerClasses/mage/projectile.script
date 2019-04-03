@@ -8,21 +8,17 @@ function init(self)
 end
 
 function update(self, dt)
-	local l_projectilePos = go.get_position()
-	l_projectilePos = l_projectilePos + self.projectileDir * self.speed * dt
-	go.set_position(l_projectilePos)
-	
+	go.set_position(go.get_position()+ self.projectileDir * self.speed * dt)
 
 	self.projectilelife = self.projectilelife - dt
-
-	if(self.projectilelife <= 0) then
+	if self.projectilelife <= 0 then
 		go.delete()
 	end 
 end
 
 function on_message(self, message_id, message, sender)
+	--Destroy on hit
 	if message_id == hash("collision_response") then
 		go.delete()
 	end
 end
-

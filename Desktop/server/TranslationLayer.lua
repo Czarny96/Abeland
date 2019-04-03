@@ -46,11 +46,19 @@ function M.translateFrameToPlayer(frame, playerObjectID)
 
 	movmentX = tonumber(fields[1])
 	movmentY = tonumber(fields[2])
+
+	shootingX = tonumber(fields[3])
+	shootingY = tonumber(fields[4])
 	
 
 	--Sending move command to playerObjet
-	if movmentX ~= 0 or movmentY ~=0 then
+	if movmentX ~= 0 or movmentY ~= 0 then
 		msg.post(playerObjectID, "move", {x = movmentX, y=movmentY})
+	end
+
+	--Sending shoot command to playerObject
+	if shootingX ~= 0 or shootingY ~=0 then
+		msg.post(playerObjectID, "shoot", {x = shootingX, y = shootingY})
 	end
 
 	--Button interpretation
