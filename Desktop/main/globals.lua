@@ -10,7 +10,7 @@ function getPlayersIDs()
 
 	if #returnPlayersIDs() > 0 then
 		for i, player in pairs(playersIDs) do 
-			local unhasedID = string.sub(tostring(player), 8, #tostring(player)-1)
+			local unhasedID = unhash(player)
 			if go.get(unhasedID.."#player", "isKilled") == false then
 				table.insert(tableOfPlayersIDs, unhasedID)
 			end
@@ -68,4 +68,9 @@ end
 function getPlayerPos(id)
 	local playerPos = go.get(id.."#player", "position")
 	return playerPos
+end
+
+-- Get hash as string
+function unhash(hash)
+	return string.sub(tostring(hash), 8, #tostring(hash)-1)
 end

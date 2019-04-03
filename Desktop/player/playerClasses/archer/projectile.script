@@ -2,6 +2,7 @@
 go.property("projectileDir", vmath.vector3())
 go.property("range", 200)
 go.property("speed", 500)
+go.property("damage", 25)
 
 function init(self)
 	self.projectilelife = self.range / self.speed

@@ -1,6 +1,5 @@
 --ARCHER
 go.property("shootingDelay", 0.35)
-go.property("damage", 20)
 
 function init(self)
 	self.shootingTimer = 0

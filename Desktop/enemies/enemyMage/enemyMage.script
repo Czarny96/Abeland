@@ -7,8 +7,8 @@ go.property("isKilled", false)
 
 function init(self)
 	self.movingSpeed = 50
-	self.followDistance = 500
-	self.runAwayDistance = 300
+	self.followDistance = 300
+	self.runAwayDistance = 200
 	self.killedTimer = 0
 end
 
@@ -84,10 +84,8 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash("collision_response") and self.isKilled == false then
 		if message.group == hash("attacks") then
-			local enemyUrl = msg.url()
-			local enemyHp = go.get(enemyUrl, "hp")
-			local attackDmg = go.get("player#playerAttack", "damage")
-			go.set(enemyUrl, "hp", enemyHp - attackDmg)
+			local attackDmg = go.get(unhash(message.other_id).."#rangeAttack", "damage")
+			self.health = self.health - attackDmg
 		end
 		if message.group == hash("players") then
 			local enemyPos = go.get_position()

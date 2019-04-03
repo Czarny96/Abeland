@@ -1,6 +1,5 @@
 --KNIGHT
-go.property("shootingDelay", 0.25)
-go.property("damage", 30)
+go.property("shootingDelay", 0.25) 
 
 function init(self)
 	self.shootingTimer = 0
@@ -13,7 +12,7 @@ function update(self, dt)
 	if self.isShooting and self.shootingTimer <= 0 then
 		self.shootingDir = vmath.normalize(self.shootingDir)
 		local l_angle = math.atan2(self.shootingDir.y, self.shootingDir.x)
-		factory.create("#attackFactory", nil, vmath.quat_rotation_z(l_angle), { projectileDir = self.shootingDir })
+		factory.create("#attackFactory", nil, vmath.quat_rotation_z(l_angle), { projectileDir = self.shootingDir, makerID = msg.url() })
 		self.shootingTimer = self.shootingDelay
 	else
 		self.shootingTimer = self.shootingTimer - dt

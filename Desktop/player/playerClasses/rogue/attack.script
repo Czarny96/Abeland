@@ -1,6 +1,5 @@
 --ROGUE
 go.property("shootingDelay", 1.0)
-go.property("damage", 40)
 
 function init(self)
 	self.shootingTimer = 0
