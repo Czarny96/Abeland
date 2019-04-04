@@ -98,6 +98,28 @@ animations {
   flip_horizontal: 0
   flip_vertical: 0
 }
+animations {
+  id: "player_afk"
+  images {
+    image: "/assets/prototypes/archer/player_prot_afk_1.png"
+  }
+  images {
+    image: "/assets/prototypes/archer/player_prot_afk_2.png"
+  }
+  images {
+    image: "/assets/prototypes/archer/player_prot_afk_3.png"
+  }
+  images {
+    image: "/assets/prototypes/archer/player_prot_afk_4.png"
+  }
+  images {
+    image: "/assets/prototypes/archer/player_prot_afk_5.png"
+  }
+  playback: PLAYBACK_LOOP_PINGPONG
+  fps: 8
+  flip_horizontal: 0
+  flip_vertical: 0
+}
 margin: 0
 extrude_borders: 1
 inner_padding: 0
