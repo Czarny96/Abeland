@@ -8,17 +8,18 @@ local PORT = 50000
 
 local dtPassed = 0
 
-
 local function msgActivePlayersChange()
 	--TODO setup receiver
 	msg.post(receiver, "playersChange",clientsManager.returnActivePlayersIDs())
 end
 
 local function on_data(data, ip, port, client)
-	--print("TCP server received data '" .. data .. "' from " .. trueClientIP .. ":" .. trueClientPort)
+
 	--potential choke point
 	clientsManager.resetPlayerInactivityTimeCounter(ip)
-	clientsManager.translateDataToPlayer(data, ip)
+	if data ~= "0.000000;0.000000;0.000000;0.000000;0" then
+		clientsManager.translateDataToPlayer(data, ip)
+	end
 
 	if  not clientsManager.isPlayerActive(ip) then
 		clientsManager.activatePlayer(ip)
@@ -40,6 +41,8 @@ end
 
 
 function init(self)
+	-- DEBUG: profiler init
+	-- msg.post("@system:", "toggle_profile")
 	-- tcp server init
 	server = tcpServer.create(TCP_SERVER_PORT, on_data, on_client_connected, on_client_disconnected)
 	self.server = server
@@ -85,6 +88,7 @@ function update(self, dt)
 	if self.server then
 		self.server.update()	
 	end
+	
 end
 
 function on_message(self, message_id, message, sender)

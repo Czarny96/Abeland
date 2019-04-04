@@ -75,7 +75,7 @@ function M.addPlayer(playerIP,client)
 	if amountOfCurrentPlayers < ALLOWED_MAX_PLAYERS then 
 		-- WARNING: Temporally fixed to call one factory, until mechanism to chose class at the controller side is avaible
 		factoryObjectID = translationLayer.createPlayerObject("go#archerFactory", vmath.vector3(147, 297, 0))
-		-- key: playerIP values: 1 - client; 2 - factoryObjectID; 3 - inactivity time counter; 4 - is player inactive?
+		-- key: playerIP values: 1 - client; 2 - factoryObjectID; 3 - inactivity time counter; 4 - is player inactive?; 
 		playersTable[playerIP] = {client,factoryObjectID,0.0,true}
 		amountOfCurrentPlayers = amountOfCurrentPlayers + 1 
 	end
