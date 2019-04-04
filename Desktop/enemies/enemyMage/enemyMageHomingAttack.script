@@ -42,7 +42,8 @@ function on_message(self, message_id, message, sender)
 			local closestPlayerID = getClosestPlayerID(enemyPos)
 			local playerUrl = closestPlayerID.."#player"
 			local playerHealth = go.get(playerUrl, "health")
-			go.set(playerUrl, "health", playerHealth - self.damage)
+			--Send message about dealt damage
+			msg.post(playerUrl,"hit", {dmg = self.damage})
 		end
 		go.delete()
 	end

@@ -10,6 +10,7 @@ go.property("movingSpeed", 150)
 go.property("isKilled", false)
 
 function init(self)
+	label.set_text("#label_hp", self.health)
 	--Local Properties
 	self.isMoving = false
 	--Local Colliders
@@ -108,6 +109,12 @@ function on_message(self, message_id, message, sender)
 			self.isMoving = true
 		end
 
+		--Got Hit
+		if message_id == hash("hit") then
+			self.health = self.health - message.dmg
+			label.set_text("#label_hp", self.health)
+		end
+		
 		--Kill
 		if message_id == hash("kill") then
 			go.delete()

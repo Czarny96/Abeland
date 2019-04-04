@@ -9,6 +9,7 @@ function init(self)
 	self.movingSpeed = 50
 	self.followDistance = 50
 	self.killedTimer = 0
+	label.set_text("#label_hp", self.health)
 end
 
 local function updateAnimation(self)
@@ -82,13 +83,14 @@ function on_message(self, message_id, message, sender)
 		if message.group == hash("attacks") then
 			local attackDmg = go.get(unhash(message.other_id).."#rangeAttack", "damage")
 			self.health = self.health - attackDmg
+			label.set_text("#label_hp", self.health)
 		end
 		if message.group == hash("players") then
 			local enemyPos = go.get_position()
 			local closestPlayerID = getClosestPlayerID(enemyPos)
 			local playerUrl = closestPlayerID.."#player"
-			local playerHealth = go.get(playerUrl, "health")
-			go.set(playerUrl, "health", playerHealth - self.damage)
+			--Send message about dealt damage
+			msg.post(playerUrl,"hit", {dmg = self.damage})
 		end
 	end
 end

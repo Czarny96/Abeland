@@ -1,4 +1,4 @@
---KNIGHT
+--MAGE
 
 --Class Properties
 go.property("movingDir", vmath.vector3(0, 0, 0))
@@ -10,6 +10,7 @@ go.property("movingSpeed", 120)
 go.property("isKilled", false)
 
 function init(self)
+	label.set_text("#label_hp", self.health)
 	--Local Properties
 	self.isMoving = false
 	--Local Colliders
@@ -106,6 +107,12 @@ function on_message(self, message_id, message, sender)
 		self.movingDir.x = message.x
 		self.movingDir.y = message.y
 		self.isMoving = true
+	end
+
+	--Got Hit
+	if message_id == hash("hit") then
+		self.health = self.health - message.dmg
+		label.set_text("#label_hp", self.health)
 	end
 
 	--Kill

@@ -1,4 +1,4 @@
---ARCHER
+--ROGUE
 go.property("projectileDir", vmath.vector3())
 go.property("range", 60)
 go.property("speed", 700)
