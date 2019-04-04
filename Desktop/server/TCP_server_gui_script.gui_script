@@ -1,94 +1,51 @@
 local tcpServer = require "defnet.tcp_server"
 local p2pDiscovery = require "defnet.p2p_discovery"
-local translationLayer = require "server.TranslationLayer"
+
+local clientsManager = require "server.clientsManager"
 
 local TCP_SERVER_PORT = 5555
 local PORT = 50000
 
-local clientsTable = {}
-local createdPlayersTable = {}
-local createdPlayerInactivityTable = {}
-local currentPlayers = 0
 local dtPassed = 0
-local serverHandler = nil
-local unansweredMessages = 0
 
--- For rudy, to get playersIDs
-function returnPlayersIDs()
-	local playerIDs = {}
-	for ip,player in pairs(createdPlayersTable) do
-		table.insert(playerIDs, player)
-	end
-	return playerIDs
+local function msgActivePlayersChange()
+	--TODO setup receiver
+	msg.post(receiver, "playersChange",clientsManager.returnActivePlayersIDs())
 end
-
-local function inactivePlayerHandler(objectID)
-	if createdPlayerInactivityTable[objectID][2] == false then
-		createdPlayerInactivityTable[objectID][2] = true 
-		translationLayer.desactivatePlayer(objectID)
-	else
-		
-		translationLayer.activatePlayer(objectID)
-		createdPlayerInactivityTable[objectID][2] = false 
-	end
-end
-
 
 local function on_data(data, ip, port, client)
-	
-	-- Name "true" is used, because ip recived in function is ip belonging to the server
-	local trueClientIP, trueClientPort = client:getpeername()
-	--print("TCP server received data '" .. data .. "' from " .. trueClientIP .. ":" .. trueClientPort)
-	translationLayer.translateFrameToPlayer(data, createdPlayersTable[trueClientIP])
-	createdPlayerInactivityTable[createdPlayersTable[trueClientIP]][1] = 0.0
-	createdPlayerInactivityTable[createdPlayersTable[trueClientIP]][3] = 0
-	if createdPlayerInactivityTable[createdPlayersTable[trueClientIP]][2] == true then
-		serverHandler.flushClient(client)
-		serverHandler.send("flush\n\r", client)
-		inactivePlayerHandler(createdPlayersTable[trueClientIP])
-		
+
+	--potential choke point
+	clientsManager.resetPlayerInactivityTimeCounter(ip)
+	if data ~= "0.000000;0.000000;0.000000;0.000000;0" then
+		clientsManager.translateDataToPlayer(data, ip)
+	end
+
+	if  not clientsManager.isPlayerActive(ip) then
+		clientsManager.activatePlayer(ip)
+		msgActivePlayersChange()
 	end
 	
 end 
 
 local function on_client_connected(ip, port, client) 
-	-- Name "true" is used, because ip recived in function is ip belonging to the server
-	local trueClientIP, trueClientPort = client:getpeername()
-	print("Client connected from " .. trueClientIP .. ":" .. trueClientPort)
-
-	if currentPlayers < 4 then
-		clientsTable[trueClientIP] = client
-		currentPlayers = currentPlayers + 1
-		
-		-- WARNING: Temporally fixed to call one factory, until mechanism to chose class at the controller side is avaible
-		createdPlayersTable[trueClientIP] = translationLayer.createPlayerObject("go#archerFactory", vmath.vector3(147, 297, 0))
-		createdPlayerInactivityTable[createdPlayersTable[trueClientIP]] = {0.0, false , 0.0}
-	else
-		print("To many clients, cannot connected another one")
-	end
-	
+	clientsManager.addPlayer(ip, client, factoryObjectID)
+	msgActivePlayersChange()
 end
 
 local function on_client_disconnected(ip, port, client)
-	-- Name "true" is used, because ip recived in function is ip belonging to the server
-	local trueClientIP, trueClientPort = client:getpeername()
-	print("Client disconnected from " .. trueClientIP .. ":" .. trueClientPort)
-	currentPlayers = currentPlayers - 1
-	clientsTable[trueClientIP] =  nil
-	--TODO: decide what to do when player disconnects
-	translationLayer.RemovePlayerObject(createdPlayersTable[trueClientIP])
-	createdPlayersTable[trueClientIP] = nil
+	clientsManager.removePlayer(ip)
+	msgActivePlayersChange()
+
 end
 
 
 function init(self)
-	-- Add initialization code here
-	msg.post(".", "acquire_input_focus")
-
+	-- DEBUG: profiler init
+	-- msg.post("@system:", "toggle_profile")
 	-- tcp server init
 	server = tcpServer.create(TCP_SERVER_PORT, on_data, on_client_connected, on_client_disconnected)
 	self.server = server
-	serverHandler = server
 	self.server.start()
 
 	-- broadcast init
@@ -98,8 +55,6 @@ function init(self)
 end
 
 function final(self)
-	-- Add finalization code here
-	msg.post(".", "release_input_focus")
 	if self.server then
 		self.server.stop()
 	end
@@ -110,26 +65,22 @@ function update(self, dt)
 	self.p2p.update()
 	
 	--TODO: adjust clocking for optimal user experience
-	if  currentPlayers > 0 and dtPassed > 0.01 then
-		for ip,client in pairs(clientsTable) do
-			if createdPlayerInactivityTable[createdPlayersTable[ip]][2]==false then
-				if createdPlayerInactivityTable[createdPlayersTable[ip]][3] < 0.1 then
-					self.server.send("btn_data\n\r", client)
-				end
-				createdPlayerInactivityTable[createdPlayersTable[ip]][3] = createdPlayerInactivityTable[createdPlayersTable[ip]][3] + dt
-				createdPlayerInactivityTable[createdPlayersTable[ip]][1] = createdPlayerInactivityTable[createdPlayersTable[ip]][1] + dt
-			end
+	if  clientsManager.isAnyPlayer() and dtPassed > 0.016 then
+		for ip,client in pairs(clientsManager.returnActiveClients()) do
+			self.server.send("btn_data\n\r", client)
+			clientsManager.incrementPlayerInactivityTimeCounterByDT(ip,dt)
 		end
 		dtPassed = 0
 	else
 		dtPassed = dtPassed + dt
 	end
 
-	if  currentPlayers > 0 then
-		for ip,player in pairs(createdPlayersTable) do
+	if  clientsManager.isAnyPlayer() then
+		for ip,player in pairs(clientsManager.returnActivePlayersIDs()) do
 			-- Value to adjust
-			if createdPlayerInactivityTable[player][1] > 1 and createdPlayerInactivityTable[player][2] == false then
-				inactivePlayerHandler(player)
+			if clientsManager.getPlayerInactivityTimeCounter(ip) > 1 and clientsManager.isPlayerActive(ip) then
+				clientsManager.desactivatePlayer(ip)
+				msgActivePlayersChange()
 			end
 		end
 	end
@@ -137,15 +88,11 @@ function update(self, dt)
 	if self.server then
 		self.server.update()	
 	end
+	
 end
 
 function on_message(self, message_id, message, sender)
 	-- Add message-handling code here
-	-- Remove this function if not needed
-end
-
-function on_input(self, action_id, action)
-	-- Add input-handling code here
 	-- Remove this function if not needed
 end
 

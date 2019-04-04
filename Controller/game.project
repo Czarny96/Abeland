@@ -1,6 +1,6 @@
 [project]
 title = Controller
-dependencies = https://github.com/maxtorion/LuaSec_Mod_for_Abeland/archive/master.zip,https://github.com/britzl/defold-luasocket/archive/0.11.zip
+dependencies = https://github.com/britzl/defold-luasocket/archive/0.11.zip
 
 [bootstrap]
 main_collection = /main/main.collectionc
