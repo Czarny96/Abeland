@@ -1,6 +1,6 @@
 local tcpServer = require "defnet.tcp_server"
 local p2pDiscovery = require "defnet.p2p_discovery"
-local translationLayer = require "server.TranslationLayer"
+
 local clientsManager = require "server.clientsManager"
 
 local TCP_SERVER_PORT = 5555
@@ -18,27 +18,22 @@ end
 
 local function on_data(data, ip, port, client)
 	--print("TCP server received data '" .. data .. "' from " .. trueClientIP .. ":" .. trueClientPort)
-	translationLayer.translateFrameToPlayer(data,clientsManager.getPlayerID(ip) )
 	clientsManager.resetPlayerInactivityTimeCounter(ip)
+	clientsManager.translateDataToPlayer(data, ip)
 	if  not clientsManager.isPlayerActive(ip) then
 		clientsManager.activatePlayer(ip)
-		translationLayer.activatePlayer(clientsManager.getPlayerID(ip))
+		
 	end
 	
 end 
 
 local function on_client_connected(ip, port, client) 
-	-- WARNING: Temporally fixed to call one factory, until mechanism to chose class at the controller side is avaible
-	factoryObjectID = translationLayer.createPlayerObject("go#archerFactory", vmath.vector3(147, 297, 0))
 	clientsManager.addPlayer(ip, client, factoryObjectID)
-
 	--TODO: Add message to inform, that players amount changed
 end
 
 local function on_client_disconnected(ip, port, client)
-	translationLayer.RemovePlayerObject(clientsManager.returnPlayerValues(ip)[2])
 	clientsManager.removePlayer(ip)
-	
 	--TODO: Add message to inform, that players amount changed
 
 end
@@ -84,7 +79,6 @@ function update(self, dt)
 			if clientsManager.getPlayerInactivityTimeCounter(ip) > 1 and clientsManager.isPlayerActive(ip) then
 				-- to consider coroutine
 				clientsManager.desactivatePlayer(ip)
-				translationLayer.desactivatePlayer(clientsManager.getPlayerID(ip))
 			end
 		end
 	end
