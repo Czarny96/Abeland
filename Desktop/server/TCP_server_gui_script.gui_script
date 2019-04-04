@@ -7,34 +7,34 @@ local TCP_SERVER_PORT = 5555
 local PORT = 50000
 
 local dtPassed = 0
-local serverHandler = nil
 
 
--- For rudy, to get playersIDs
--- Must not return Inactive players
-function returnPlayersIDs()
-	return clientsManager.returnActivePlayersIDs()
+local function msgActivePlayersChange()
+	--TODO setup receiver
+	msg.post(receiver, "playersChange",clientsManager.returnActivePlayersIDs())
 end
 
 local function on_data(data, ip, port, client)
 	--print("TCP server received data '" .. data .. "' from " .. trueClientIP .. ":" .. trueClientPort)
+	--potential choke point
 	clientsManager.resetPlayerInactivityTimeCounter(ip)
 	clientsManager.translateDataToPlayer(data, ip)
+
 	if  not clientsManager.isPlayerActive(ip) then
 		clientsManager.activatePlayer(ip)
-		
+		msgActivePlayersChange()
 	end
 	
 end 
 
 local function on_client_connected(ip, port, client) 
 	clientsManager.addPlayer(ip, client, factoryObjectID)
-	--TODO: Add message to inform, that players amount changed
+	msgActivePlayersChange()
 end
 
 local function on_client_disconnected(ip, port, client)
 	clientsManager.removePlayer(ip)
-	--TODO: Add message to inform, that players amount changed
+	msgActivePlayersChange()
 
 end
 
@@ -43,7 +43,6 @@ function init(self)
 	-- tcp server init
 	server = tcpServer.create(TCP_SERVER_PORT, on_data, on_client_connected, on_client_disconnected)
 	self.server = server
-	serverHandler = server
 	self.server.start()
 
 	-- broadcast init
@@ -77,8 +76,8 @@ function update(self, dt)
 		for ip,player in pairs(clientsManager.returnActivePlayersIDs()) do
 			-- Value to adjust
 			if clientsManager.getPlayerInactivityTimeCounter(ip) > 1 and clientsManager.isPlayerActive(ip) then
-				-- to consider coroutine
 				clientsManager.desactivatePlayer(ip)
+				msgActivePlayersChange()
 			end
 		end
 	end
