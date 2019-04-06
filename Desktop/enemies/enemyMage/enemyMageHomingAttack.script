@@ -48,5 +48,8 @@ function on_message(self, message_id, message, sender)
 		end
 		go.delete()
 	end
+	if message_id == hash("contact_point_response") then
+		go.delete()
+	end
 end
 

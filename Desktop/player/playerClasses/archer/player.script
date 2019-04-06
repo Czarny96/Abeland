@@ -12,6 +12,7 @@ go.property("isVulnerable", true)
 
 function init(self)
 	label.set_text("#label_hp", self.health)
+	self.position = go.get_position()
 	--Local Properties
 	self.isMoving = false
 	--Local Colliders
@@ -86,8 +87,6 @@ function update(self, dt)
 		end
 	end
 
-	--Resetting flags
-	self.isMoving = false
 	--Vulnerable flag
 	if self.nonVulnerableTimer <= 0 then
 		self.isVulnerable = true
@@ -145,7 +144,6 @@ function on_message(self, message_id, message, sender)
 		msg.post("#sprite", "play_animation", {id = hash("player_afk")})
 	end
 
-
 	--Colliders
 	if message_id == hash("contact_point_response") then	
 		--Walls
@@ -162,8 +160,5 @@ function on_message(self, message_id, message, sender)
 				self.wallsCollider.right = true
 			end
 		end
-
-			--Enemies
-			--TODO
-		end
 	end
+end

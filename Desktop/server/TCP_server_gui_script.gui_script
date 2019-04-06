@@ -10,13 +10,10 @@ local PORT = 50000
 local dtPassed = 0
 
 local function msgActivePlayersChange()
-	--TODO setup receiver
-	print("zmiana liczby aktywnych graczy")
 	playersManager.setActivePlayersIDs(clientsManager.returnActivePlayersIDs())
 end
 
 local function on_data(data, ip, port, client)
-
 	--potential choke point
 	clientsManager.resetPlayerInactivityTimeCounter(ip)
 	if data ~= "0.000000;0.000000;0.000000;0.000000;0" then
@@ -27,7 +24,6 @@ local function on_data(data, ip, port, client)
 		clientsManager.activatePlayer(ip)
 		msgActivePlayersChange()
 	end
-	
 end 
 
 local function on_client_connected(ip, port, client) 
@@ -38,9 +34,7 @@ end
 local function on_client_disconnected(ip, port, client)
 	clientsManager.removePlayer(ip)
 	msgActivePlayersChange()
-
 end
-
 
 function init(self)
 	-- DEBUG: profiler init
@@ -90,7 +84,6 @@ function update(self, dt)
 	if self.server then
 		self.server.update()	
 	end
-	
 end
 
 function on_message(self, message_id, message, sender)

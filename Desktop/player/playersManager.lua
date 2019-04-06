@@ -13,7 +13,6 @@ local playersIDs = {}
 function M.setActivePlayersIDs(newPlayersIDs)
 	local newTable = {}
 	for i, player in pairs(newPlayersIDs) do 
-		print("nowa tablica graczy")
 		table.insert(newTable, globals.unhash(player))
 	end
 	if #newTable > 0 then
