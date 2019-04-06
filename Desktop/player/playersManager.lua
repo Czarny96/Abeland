@@ -24,8 +24,14 @@ end
 
 -- Get unhashed playersIDs
 function M.getActivePlayersIDs()
-	if #playersIDs > 0 then
-		return playersIDs
+	local alivePlayersTable = {}
+	for i, player in pairs(playersIDs) do 
+		if go.get(playersIDs[i].."#player", "isKilled") == false then
+			table.insert(alivePlayersTable, globals.unhash(player))
+		end
+	end
+	if #alivePlayersTable > 0 then
+		return alivePlayersTable
 	else
 		return 0
 	end

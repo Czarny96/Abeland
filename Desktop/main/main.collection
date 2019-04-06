@@ -43,8 +43,28 @@ instances {
   id: "enemyMage"
   prototype: "/enemies/enemyMage/enemyMage.go"
   position {
-    x: 132.0
-    y: 448.0
+    x: 525.0
+    y: 356.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "enemyMelee"
+  prototype: "/enemies/enemyMelee/enemyMelee.go"
+  position {
+    x: 444.0
+    y: 496.0
     z: 0.0
   }
   rotation {
