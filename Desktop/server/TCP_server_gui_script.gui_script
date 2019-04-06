@@ -12,7 +12,6 @@ local dtPassed = 0
 local function msgActivePlayersChange()
 	--TODO setup receiver
 	print("zmiana liczby aktywnych graczy")
-	print(#clientsManager.returnActivePlayersIDs())
 	playersManager.setActivePlayersIDs(clientsManager.returnActivePlayersIDs())
 end
 

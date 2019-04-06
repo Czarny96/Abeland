@@ -4,31 +4,29 @@
 -- in any script using the functions.
 
 local clientsManager = require "server.clientsManager"
+local globals = require "main.globals"
 
 local M = {}
 local playersIDs = {}
 
 -- Set active playersIDs
 function M.setActivePlayersIDs(newPlayersIDs)
-	playersIDs = newPlayersIDs
+	local newTable = {}
+	for i, player in pairs(newPlayersIDs) do 
+		print("nowa tablica graczy")
+		table.insert(newTable, globals.unhash(player))
+	end
+	if #newTable > 0 then
+		playersIDs = newTable
+	else
+		playersIDs = {}
+	end
 end
 
 -- Get unhashed playersIDs
 function M.getActivePlayersIDs()
-	local tableOfPlayersIDs = {}
-
 	if #playersIDs > 0 then
-		for i, player in pairs(playersIDs) do 
-			local unhasedID = unhash(player)
-			if go.get(unhasedID.."#player", "isKilled") == false then
-				table.insert(tableOfPlayersIDs, unhasedID)
-			end
-		end
-		if #tableOfPlayersIDs > 0 then
-			return tableOfPlayersIDs
-		else
-			return 0
-		end
+		return playersIDs
 	else
 		return 0
 	end
@@ -51,7 +49,7 @@ end
 
 -- Get closes player ID to position given
 function M.getClosestPlayerID(pos)
-	local playersPos = M.getActivePlayersPos()
+	local playersPos = M.getPlayersPos()
 	
 	if playersIDs ~= 0 then
 		local closestPlayerID = playersIDs[1]
@@ -72,7 +70,7 @@ function M.getClosestPlayerID(pos)
 end
 
 -- Get player position of given ID
-function M.getActivePlayersPos(id)
+function M.getPlayerPos(id)
 	local playerPos = go.get(id.."#player", "position")
 	return playerPos
 end
