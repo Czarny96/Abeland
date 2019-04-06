@@ -1,4 +1,5 @@
-require "main.globals"
+local globals = require "main.globals"
+local playersManager = require "player.playersManager"
 
 go.property("enemyMovingDir", vmath.vector3(0, 0, 0))
 go.property("health", 100)
@@ -41,10 +42,12 @@ local function playDeathAnimation(self)
 end
 
 function update(self, dt)
-	if getPlayersIDs() ~= 0 and self.isKilled == false then
+	--print(playersManager.getActivePlayersIDs())
+	
+	if playersManager.getActivePlayersIDs() ~= 0 and self.isKilled == false then
 		local enemyPos = go.get_position()
-		local closestPlayerID = getClosestPlayerID(enemyPos)
-		local closestPlayerPos = getPlayerPos(closestPlayerID)
+		local closestPlayerID = playersManager.getClosestPlayerID(enemyPos)
+		local closestPlayerPos = playersManager.getPlayerPos(closestPlayerID)
 		local distanceToClosestPlayer = vmath.length(closestPlayerPos - enemyPos)
 		
 		local positionDiffrenceAbs = (closestPlayerPos - enemyPos)
@@ -85,13 +88,13 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash("collision_response") and self.isKilled == false then
 		if message.group == hash("attacks") then
-			local attackDmg = go.get(unhash(message.other_id).."#rangeAttack", "damage")
+			local attackDmg = go.get(globals.unhash(message.other_id).."#rangeAttack", "damage")
 			self.health = self.health - attackDmg
 			label.set_text("#label_hp", self.health)
 		end
 		if message.group == hash("players") then
 			local enemyPos = go.get_position()
-			local closestPlayerID = getClosestPlayerID(enemyPos)
+			local closestPlayerID = playersManager.getClosestPlayerID(enemyPos)
 			local playerUrl = closestPlayerID.."#player"
 			--Send message about dealt damage
 			msg.post(playerUrl,"hit", {dmg = self.damage})

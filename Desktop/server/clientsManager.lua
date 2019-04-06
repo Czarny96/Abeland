@@ -1,7 +1,8 @@
 -- Put functions in this file to use them in several other scripts.
 -- To get access to the functions, you need to put:
--- require "my_directory.my_file"
+-- require "server.clientsManager"
 -- in any script using the functions.
+
 local M = {}
 
 local playersTable = {}
@@ -86,6 +87,5 @@ function M.removePlayer(playerIP)
 	mountOfCurrentPlayers = amountOfCurrentPlayers - 1 
 	translationLayer.RemovePlayerObject(M.getPlayerID(playerIP))
 end
-
 
 return M

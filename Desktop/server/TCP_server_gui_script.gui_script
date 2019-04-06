@@ -2,6 +2,7 @@ local tcpServer = require "defnet.tcp_server"
 local p2pDiscovery = require "defnet.p2p_discovery"
 
 local clientsManager = require "server.clientsManager"
+local playersManager = require "player.playersManager"
 
 local TCP_SERVER_PORT = 5555
 local PORT = 50000
@@ -10,7 +11,9 @@ local dtPassed = 0
 
 local function msgActivePlayersChange()
 	--TODO setup receiver
-	msg.post(receiver, "playersChange",clientsManager.returnActivePlayersIDs())
+	print("zmiana liczby aktywnych graczy")
+	print(#clientsManager.returnActivePlayersIDs())
+	playersManager.setActivePlayersIDs(clientsManager.returnActivePlayersIDs())
 end
 
 local function on_data(data, ip, port, client)

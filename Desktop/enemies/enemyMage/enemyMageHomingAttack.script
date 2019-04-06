@@ -1,4 +1,5 @@
-require "main.globals"
+local globals = require "main.globals"
+local playersManager = require "player.playersManager"
 
 go.property("damage", 20)
 
@@ -9,10 +10,10 @@ function init(self)
 end
 
 function update(self, dt)
-	if getPlayersIDs() ~= 0 then
+	if playersManager.getActivePlayersIDs() ~= 0 then
 		local enemyPos = go.get_position()
-		local closestPlayerID = getClosestPlayerID(enemyPos)
-		local closestPlayerPos = getPlayerPos(closestPlayerID)
+		local closestPlayerID = playersManager.getClosestPlayerID(enemyPos)
+		local closestPlayerPos = playersManager.getPlayerPos(closestPlayerID)
 		local distanceToClosestPlayer = vmath.length(closestPlayerPos - enemyPos)
 
 		local positionDiffrenceAbs = (closestPlayerPos - enemyPos)
@@ -39,7 +40,7 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("collision_response") then
 		if message.group == hash("players") then
 			local enemyPos = go.get_position()
-			local closestPlayerID = getClosestPlayerID(enemyPos)
+			local closestPlayerID = playersManager.getClosestPlayerID(enemyPos)
 			local playerUrl = closestPlayerID.."#player"
 			local playerHealth = go.get(playerUrl, "health")
 			--Send message about dealt damage
