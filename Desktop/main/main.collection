@@ -3,7 +3,7 @@ instances {
   id: "ground"
   prototype: "/arena/ground.go"
   position {
-    x: -20.0
+    x: 0.0
     y: -20.0
     z: -1.0
   }
@@ -23,7 +23,7 @@ instances {
   id: "walls"
   prototype: "/arena/walls.go"
   position {
-    x: -20.0
+    x: 0.0
     y: -20.0
     z: 1.0
   }
@@ -43,8 +43,8 @@ instances {
   id: "enemyMage"
   prototype: "/enemies/enemyMage/enemyMage.go"
   position {
-    x: 525.0
-    y: 356.0
+    x: 945.0
+    y: 497.0
     z: 0.0
   }
   rotation {
@@ -63,8 +63,8 @@ instances {
   id: "enemyMelee"
   prototype: "/enemies/enemyMelee/enemyMelee.go"
   position {
-    x: 444.0
-    y: 496.0
+    x: 491.0
+    y: 811.0
     z: 0.0
   }
   rotation {
