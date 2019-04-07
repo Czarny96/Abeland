@@ -41,18 +41,18 @@ function string:split(sep)
 end
 
 function M.translateFrameToPlayer(frame, playerObjectID)
-	movment = nil
+	movement = nil
 	fields = frame:split()
 
-	movmentX = tonumber(fields[1])
-	movmentY = tonumber(fields[2])
+	movementX = tonumber(fields[1])
+	movementY = tonumber(fields[2])
 
 	shootingX = tonumber(fields[3])
 	shootingY = tonumber(fields[4])
 	
 
 	--Sending move command to playerObjet
-	msg.post(playerObjectID, "move", {x = movmentX, y=movmentY})
+	msg.post(playerObjectID, "move", {x = movementX, y = movementY})
 
 	--Sending shoot command to playerObject
 	if shootingX ~= 0 or shootingY ~=0 then
