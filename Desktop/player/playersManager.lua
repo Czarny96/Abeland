@@ -26,7 +26,8 @@ end
 function M.getActivePlayersIDs()
 	local alivePlayersTable = {}
 	for i, player in pairs(playersIDs) do 
-		if go.get(playersIDs[i].."#player", "isKilled") == false then
+		local playerUrl = msg.url(nil, player, "player")
+		if go.get(playerUrl, "isKilled") == false then
 			table.insert(alivePlayersTable, globals.unhash(player))
 		end
 	end
@@ -40,10 +41,10 @@ end
 -- Get all players positions
 function M.getPlayersPos()
 	local tableOfPlayersPos = {}
-
 	if playersIDs ~= 0 then
 		for i, player in pairs(playersIDs) do 
-			local playerPos = go.get(playersIDs[i].."#player", "position")
+			local playerUrl = msg.url(nil, player, "player")
+			local playerPos = go.get(playerUrl, "position")
 			table.insert(tableOfPlayersPos, playerPos)
 		end
 		return tableOfPlayersPos
@@ -55,7 +56,6 @@ end
 -- Get closes player ID to position given
 function M.getClosestPlayerID(pos)
 	local playersPos = M.getPlayersPos()
-	
 	if playersIDs ~= 0 then
 		local closestPlayerID = playersIDs[1]
 		local distanceToClosestPlayer = vmath.length(playersPos[1] - pos)
@@ -76,7 +76,8 @@ end
 
 -- Get player position of given ID
 function M.getPlayerPos(id)
-	local playerPos = go.get(id.."#player", "position")
+	local playerUrl = msg.url(nil, id, "player")
+	local playerPos = go.get(playerUrl, "position")
 	return playerPos
 end
 
