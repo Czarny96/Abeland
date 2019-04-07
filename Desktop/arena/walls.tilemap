@@ -1,8 +1,8 @@
 tile_set: "/arena/arena.tilesource"
 layers {
   id: "openGates"
-  z: -0.1
-  is_visible: 1
+  z: 0.0
+  is_visible: 0
   cell {
     x: 12
     y: 0
