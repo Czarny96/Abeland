@@ -17,6 +17,10 @@ function init(self)
 	label.set_text("#label_hp", self.health)
 end
 
+function final(self)
+
+end	
+
 local function updateAnimation(self)
 	if self.enemyMovingDir.x < -0.3 and self.enemyMovingDir.y > 0.3 then
 		msg.post("#sprite", "play_animation", {id = hash("enemy_mage_up_left")})
@@ -45,12 +49,14 @@ local function playDeathAnimation(self)
 end
 
 function update(self, dt)
-	if playersManager.getActivePlayersIDs() ~= 0 and self.isKilled == false then
+	local temp = playersManager.getActivePlayersIDs()
+	if temp ~= 0 and self.isKilled == false then
+
 		local enemyPos = go.get_position()
 		local closestPlayerID = playersManager.getClosestPlayerID(enemyPos)
 		local closestPlayerPos = playersManager.getPlayerPos(closestPlayerID)
 		local distanceToClosestPlayer = vmath.length(closestPlayerPos - enemyPos)
-		
+
 		local positionDiffrenceAbs = closestPlayerPos - enemyPos
 		positionDiffrenceAbs.x = math.abs(positionDiffrenceAbs.x)
 		positionDiffrenceAbs.y = math.abs(positionDiffrenceAbs.y)
@@ -58,7 +64,7 @@ function update(self, dt)
 		local positionDiffrence = closestPlayerPos - enemyPos
 
 		self.enemyMovingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
-				
+
 		--Collisions with arena walls
 		if (self.wallsCollider.top and self.enemyMovingDir.y > 0) or (self.wallsCollider.bottom and self.enemyMovingDir.y < 0) then
 			self.enemyMovingDir.y = 0
@@ -68,7 +74,7 @@ function update(self, dt)
 		end
 
 		self.enemyMovingDir = vmath.normalize(self.enemyMovingDir)
-		
+
 		if distanceToClosestPlayer >= self.followDistance then
 			enemyPos = enemyPos + self.enemyMovingDir * self.movingSpeed * dt
 			go.set_position(enemyPos)
@@ -85,7 +91,7 @@ function update(self, dt)
 			updateAnimation(self)
 		end
 	end
-	
+
 	if self.health <= 0 then
 		if self.isKilled == false then
 			playDeathAnimation(self)
@@ -110,16 +116,18 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash("collision_response") and self.isKilled == false then
 		if message.group == hash("attacks") then
-			local attackDmg = go.get(globals.unhash(message.other_id).."#rangeAttack", "damage")
+			local scriptUrl = msg.url(nil, message.other_id, "rangeAttack")
+			local attackDmg = go.get(scriptUrl, "damage")		
 			self.health = self.health - attackDmg
 			label.set_text("#label_hp", self.health)
 		end
 		if message.group == hash("players") then
 			local enemyPos = go.get_position()
 			local closestPlayerID = playersManager.getClosestPlayerID(enemyPos)
-			local playerUrl = closestPlayerID.."#player"
+			--local playerUrl = closestPlayerID.."#player"
+			local scriptUrl = msg.url(nil, closestPlayerID, "player")
 			--Send message about dealt damage
-			msg.post(playerUrl,"hit", {dmg = self.damage})
+			msg.post(scriptUrl,"hit", {dmg = self.damage})
 		end
 	end
 	if message_id == hash("contact_point_response") then	

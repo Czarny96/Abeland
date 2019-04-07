@@ -13,7 +13,7 @@ local playersIDs = {}
 function M.setActivePlayersIDs(newPlayersIDs)
 	local newTable = {}
 	for i, player in pairs(newPlayersIDs) do 
-		table.insert(newTable, globals.unhash(player))
+		table.insert(newTable, player)
 	end
 	if #newTable > 0 then
 		playersIDs = newTable
@@ -25,9 +25,9 @@ end
 -- Get unhashed playersIDs
 function M.getActivePlayersIDs()
 	local alivePlayersTable = {}
-	for i, player in pairs(playersIDs) do 
-		local playerUrl = msg.url(nil, player, "player")
-		if go.get(playerUrl, "isKilled") == false then
+	for i, player in pairs(playersIDs) do
+		local scriptUrl = msg.url(nil, player, "player")
+		if go.get(scriptUrl, "isKilled") == false then
 			table.insert(alivePlayersTable, globals.unhash(player))
 		end
 	end
@@ -41,10 +41,11 @@ end
 -- Get all players positions
 function M.getPlayersPos()
 	local tableOfPlayersPos = {}
+
 	if playersIDs ~= 0 then
 		for i, player in pairs(playersIDs) do 
-			local playerUrl = msg.url(nil, player, "player")
-			local playerPos = go.get(playerUrl, "position")
+			local scriptUrl = msg.url(nil, player, "player")
+			local playerPos = go.get(scriptUrl, "position")
 			table.insert(tableOfPlayersPos, playerPos)
 		end
 		return tableOfPlayersPos
@@ -56,13 +57,14 @@ end
 -- Get closes player ID to position given
 function M.getClosestPlayerID(pos)
 	local playersPos = M.getPlayersPos()
+
 	if playersIDs ~= 0 then
 		local closestPlayerID = playersIDs[1]
 		local distanceToClosestPlayer = vmath.length(playersPos[1] - pos)
 
 		for i, playerPos in pairs(playersPos) do 
 			local distanceToCurrentPlayer = vmath.length(playerPos - pos)
-			
+
 			if distanceToCurrentPlayer < distanceToClosestPlayer then
 				closestPlayerID = playersIDs[i]
 				distanceToClosestPlayer = vmath.length(playerPos - pos)
@@ -76,8 +78,8 @@ end
 
 -- Get player position of given ID
 function M.getPlayerPos(id)
-	local playerUrl = msg.url(nil, id, "player")
-	local playerPos = go.get(playerUrl, "position")
+	local scriptUrl = msg.url(nil, id, "player")
+	local playerPos = go.get(scriptUrl, "position")
 	return playerPos
 end
 

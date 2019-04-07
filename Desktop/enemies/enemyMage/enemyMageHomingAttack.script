@@ -19,9 +19,9 @@ function update(self, dt)
 		local positionDiffrenceAbs = (closestPlayerPos - enemyPos)
 		positionDiffrenceAbs.x = math.abs(positionDiffrenceAbs.x)
 		positionDiffrenceAbs.y = math.abs(positionDiffrenceAbs.y)
-		
+
 		local positionDiffrence = (closestPlayerPos - enemyPos)
-		
+
 		local movingDir = vmath.vector3(positionDiffrence.x,positionDiffrence.y, 0)
 		movingDir = vmath.normalize(movingDir)
 
@@ -41,10 +41,11 @@ function on_message(self, message_id, message, sender)
 		if message.group == hash("players") then
 			local enemyPos = go.get_position()
 			local closestPlayerID = playersManager.getClosestPlayerID(enemyPos)
-			local playerUrl = closestPlayerID.."#player"
-			local playerHealth = go.get(playerUrl, "health")
+			--local playerUrl = closestPlayerID.."#player"
+			local scriptUrl = msg.url(nil, closestPlayerID, "player")
+			local playerHealth = go.get(scriptUrl, "health")
 			--Send message about dealt damage
-			msg.post(playerUrl,"hit", {dmg = self.damage})
+			msg.post(scriptUrl,"hit", {dmg = self.damage})
 		end
 		go.delete()
 	end
@@ -52,4 +53,3 @@ function on_message(self, message_id, message, sender)
 		go.delete()
 	end
 end
-
