@@ -1,6 +1,6 @@
 components {
-  id: "walls"
-  component: "/arena/walls.tilemap"
+  id: "topWalls"
+  component: "/arena/topWalls.tilemap"
   position {
     x: 0.0
     y: 0.0
@@ -14,15 +14,15 @@ components {
   }
 }
 embedded_components {
-  id: "playerCollider"
+  id: "attacksCollider"
   type: "collisionobject"
-  data: "collision_shape: \"/arena/walls.tilemap\"\n"
+  data: "collision_shape: \"/arena/topWalls.tilemap\"\n"
   "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
   "mass: 0.0\n"
   "friction: 0.1\n"
   "restitution: 0.5\n"
   "group: \"walls\"\n"
-  "mask: \"players\"\n"
+  "mask: \"attacks\"\n"
   "linear_damping: 0.0\n"
   "angular_damping: 0.0\n"
   "locked_rotation: false\n"
@@ -42,7 +42,7 @@ embedded_components {
 embedded_components {
   id: "enemyCollider"
   type: "collisionobject"
-  data: "collision_shape: \"/arena/walls.tilemap\"\n"
+  data: "collision_shape: \"/arena/topWalls.tilemap\"\n"
   "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
   "mass: 0.0\n"
   "friction: 0.1\n"
@@ -66,15 +66,15 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "attacksCollider"
+  id: "playerCollider"
   type: "collisionobject"
-  data: "collision_shape: \"/arena/walls.tilemap\"\n"
+  data: "collision_shape: \"/arena/topWalls.tilemap\"\n"
   "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
   "mass: 0.0\n"
   "friction: 0.1\n"
   "restitution: 0.5\n"
   "group: \"walls\"\n"
-  "mask: \"attacks\"\n"
+  "mask: \"players\"\n"
   "linear_damping: 0.0\n"
   "angular_damping: 0.0\n"
   "locked_rotation: false\n"
