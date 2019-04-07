@@ -3,8 +3,8 @@ instances {
   id: "ground"
   prototype: "/arena/ground.go"
   position {
-    x: 0.0
-    y: -10.0
+    x: -32.0
+    y: -24.0
     z: -1.0
   }
   rotation {
@@ -23,8 +23,8 @@ instances {
   id: "walls"
   prototype: "/arena/walls.go"
   position {
-    x: 0.0
-    y: -10.0
+    x: -32.0
+    y: -24.0
     z: 1.0
   }
   rotation {
@@ -103,9 +103,9 @@ instances {
   id: "topWalls"
   prototype: "/arena/topWalls.go"
   position {
-    x: 0.0
-    y: -10.0
-    z: -0.75
+    x: -32.0
+    y: -24.0
+    z: -0.5
   }
   rotation {
     x: 0.0
