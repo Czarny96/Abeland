@@ -2,7 +2,6 @@
 -- To get access to the functions, you need to put:
 -- require "my_directory.my_file"
 -- in any script using the functions.
-
 -- Get unhashed playersIDs
 function getPlayersIDs()
 	local playersIDs = returnPlayersIDs()
@@ -29,7 +28,6 @@ end
 function getPlayersPos()
 	local playersIDs = getPlayersIDs()
 	local tableOfPlayersPos = {}
-
 	if playersIDs ~= 0 then
 		for i, player in pairs(playersIDs) do 
 			local playerPos = go.get(playersIDs[i].."#player", "position")

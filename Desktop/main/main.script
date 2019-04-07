@@ -1,6 +1,7 @@
+require "debugging/debugging"
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	
 end
 
 function on_input(self, action_id, action)
@@ -9,6 +10,11 @@ function on_input(self, action_id, action)
 		--change factory to change player class on mouse click)
 		factory.create("#archerFactory", vmath.vector3(360,360,0), nil,nil)
 	end
+	
+	if action_id == hash("read-file") and action.pressed then
+		ReadFiles("log.txt")
+	end
+	
 end
 
 function on_message(self, message_id, message, sender)
@@ -20,3 +26,5 @@ function on_message(self, message_id, message, sender)
 		factory.create("#mageFactory", vmath.vector3(360,360,0), nil,nil)
 	end
 end
+
+

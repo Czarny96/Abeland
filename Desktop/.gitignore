@@ -8,3 +8,8 @@ Thumbs.db
 .project
 .cproject
 builtins
+
+
+
+/debugging/logs/*
+!.gitkeep

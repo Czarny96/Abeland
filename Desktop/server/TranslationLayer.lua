@@ -6,7 +6,6 @@
 
 -- THOU I COMMAND, THAT TRANSLATION LAYER SHALL BE STATELESS
 -- Programer Genesis 1:2
-
 local M = {}
 
 function M.createPlayerObject(factoryReference, spawnLocation)
