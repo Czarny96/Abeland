@@ -52,9 +52,7 @@ function M.translateFrameToPlayer(frame, playerObjectID)
 	
 
 	--Sending move command to playerObjet
-	if movmentX ~= 0 or movmentY ~= 0 then
-		msg.post(playerObjectID, "move", {x = movmentX, y=movmentY})
-	end
+	msg.post(playerObjectID, "move", {x = movmentX, y=movmentY})
 
 	--Sending shoot command to playerObject
 	if shootingX ~= 0 or shootingY ~=0 then

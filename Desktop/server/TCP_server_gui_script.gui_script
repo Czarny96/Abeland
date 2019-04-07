@@ -16,9 +16,8 @@ end
 local function on_data(data, ip, port, client)
 	--potential choke point
 	clientsManager.resetPlayerInactivityTimeCounter(ip)
-	if data ~= "0.000000;0.000000;0.000000;0.000000;0" then
-		clientsManager.translateDataToPlayer(data, ip)
-	end
+
+	clientsManager.translateDataToPlayer(data, ip)
 
 	if  not clientsManager.isPlayerActive(ip) then
 		clientsManager.activatePlayer(ip)
