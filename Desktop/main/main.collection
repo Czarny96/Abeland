@@ -3,8 +3,8 @@ instances {
   id: "ground"
   prototype: "/arena/ground.go"
   position {
-    x: -20.0
-    y: -20.0
+    x: -32.0
+    y: -24.0
     z: -1.0
   }
   rotation {
@@ -23,9 +23,89 @@ instances {
   id: "walls"
   prototype: "/arena/walls.go"
   position {
-    x: -20.0
-    y: -20.0
+    x: -32.0
+    y: -24.0
     z: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "enemyMage"
+  prototype: "/enemies/enemyMage/enemyMage.go"
+  position {
+    x: 945.0
+    y: 497.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "enemyMelee"
+  prototype: "/enemies/enemyMelee/enemyMelee.go"
+  position {
+    x: 491.0
+    y: 811.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "main"
+  prototype: "/main/main.go"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "topWalls"
+  prototype: "/arena/topWalls.go"
+  position {
+    x: -32.0
+    y: -24.0
+    z: -0.5
   }
   rotation {
     x: 0.0

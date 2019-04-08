@@ -1,4 +1,5 @@
-require "main.globals"
+local globals = require "main.globals"
+local playersManager = require "player.playersManager"
 
 go.property("enemyMovingDir", vmath.vector3(0, 0, 0))
 go.property("health", 100)
@@ -6,9 +7,12 @@ go.property("damage", 20)
 go.property("isKilled", false)
 
 function init(self)
+	--Local settings
 	self.movingSpeed = 50
 	self.followDistance = 50
 	self.killedTimer = 0
+	--Local Colliders
+	self.wallsCollider = {top = false, bottom = false,left = false,right = false}
 	label.set_text("#label_hp", self.health)
 end
 
@@ -40,12 +44,12 @@ local function playDeathAnimation(self)
 end
 
 function update(self, dt)
-	if getPlayersIDs() ~= 0 and self.isKilled == false then
+	if playersManager.getActivePlayersIDs() ~= 0 and self.isKilled == false then
 		local enemyPos = go.get_position()
-		local closestPlayerID = getClosestPlayerID(enemyPos)
-		local closestPlayerPos = getPlayerPos(closestPlayerID)
+		local closestPlayerID = playersManager.getClosestPlayerID(enemyPos)
+		local closestPlayerPos = playersManager.getPlayerPos(closestPlayerID)
 		local distanceToClosestPlayer = vmath.length(closestPlayerPos - enemyPos)
-		
+
 		local positionDiffrenceAbs = closestPlayerPos - enemyPos
 		positionDiffrenceAbs.x = math.abs(positionDiffrenceAbs.x)
 		positionDiffrenceAbs.y = math.abs(positionDiffrenceAbs.y)
@@ -53,16 +57,24 @@ function update(self, dt)
 		local positionDiffrence = closestPlayerPos - enemyPos
 
 		self.enemyMovingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
+
+		--Collisions with arena walls
+		if (self.wallsCollider.top and self.enemyMovingDir.y > 0) or (self.wallsCollider.bottom and self.enemyMovingDir.y < 0) then
+			self.enemyMovingDir.y = 0
+		end
+		if (self.wallsCollider.left and self.enemyMovingDir.x < 0) or (self.wallsCollider.right and self.enemyMovingDir.x > 0) then
+			self.enemyMovingDir.x = 0
+		end
+
 		self.enemyMovingDir = vmath.normalize(self.enemyMovingDir)
 
-		if positionDiffrence.x >= self.followDistance or positionDiffrence.x <= -self.followDistance 
-		or positionDiffrence.y >= self.followDistance or positionDiffrence.y <= -self.followDistance then
+		if distanceToClosestPlayer >= self.followDistance then
 			enemyPos = enemyPos + self.enemyMovingDir * self.movingSpeed * dt
 			go.set_position(enemyPos)
 			updateAnimation(self)
 		end
 	end
-	
+
 	if self.health <= 0 then
 		if self.isKilled == false then
 			playDeathAnimation(self)
@@ -76,21 +88,44 @@ function update(self, dt)
 			self.killedTimer = self.killedTimer - dt
 		end
 	end
+
+	--Collider flags
+	self.wallsCollider.top = false
+	self.wallsCollider.bottom = false
+	self.wallsCollider.left = false
+	self.wallsCollider.right = false
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("collision_response") and self.isKilled == false then
 		if message.group == hash("attacks") then
-			local attackDmg = go.get(unhash(message.other_id).."#rangeAttack", "damage")
+			local scriptUrl = msg.url(nil, message.other_id, "rangeAttack")
+			local attackDmg = go.get(scriptUrl, "damage")		
 			self.health = self.health - attackDmg
 			label.set_text("#label_hp", self.health)
 		end
 		if message.group == hash("players") then
 			local enemyPos = go.get_position()
-			local closestPlayerID = getClosestPlayerID(enemyPos)
-			local playerUrl = closestPlayerID.."#player"
+			local closestPlayerID = playersManager.getClosestPlayerID(enemyPos)
+			--local playerUrl = closestPlayerID.."#player"
+			local scriptUrl = msg.url(nil, closestPlayerID, "player")
 			--Send message about dealt damage
-			msg.post(playerUrl,"hit", {dmg = self.damage})
+			msg.post(scriptUrl,"hit", {dmg = self.damage})
+		end
+	end
+	if message_id == hash("contact_point_response") then	
+		--Walls
+		if message.group == hash("walls") then
+			if sender.fragment == hash("wallsTopCollider") then
+				self.wallsCollider.top = true
+			elseif sender.fragment == hash("wallsBottomCollider") then
+				self.wallsCollider.bottom = true
+			end
+			if sender.fragment == hash("wallsLeftCollider") then
+				self.wallsCollider.left = true
+			elseif sender.fragment == hash("wallsRightCollider") then
+				self.wallsCollider.right = true
+			end
 		end
 	end
 end

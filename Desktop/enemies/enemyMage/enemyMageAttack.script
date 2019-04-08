@@ -1,15 +1,19 @@
+local playersManager = require "player.playersManager"
+
 go.property("damage", 25)
 go.property("shootingDelay", 3)
 
 function init(self)
 	self.shootingTimer = 0
 	self.isEnemyMageKilled = false
+	self.activePlayerNumber = 0
 end
 
 function update(self, dt)
 	self.isEnemyMageKilled = go.get("/enemyMage#enemy", "isKilled")
-
-	if self.isEnemyMageKilled == false then
+	self.activePlayers = playersManager.getActivePlayersIDs()
+	
+	if self.isEnemyMageKilled == false and self.activePlayers ~= 0 then
 		if self.shootingTimer >= self.shootingDelay then
 			factory.create("#enemyMageHomingAttackFactory", nil)
 			self.shootingTimer = 0

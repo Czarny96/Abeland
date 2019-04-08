@@ -5,13 +5,14 @@ go.property("movingDir", vmath.vector3(0, 0, 0))
 go.property("position", vmath.vector3(0, 0, 0))
 go.property("health", 100)
 go.property("movingSpeed", 150)
-
+go.property("move", vmath.vector3(0,0,0))
 --Flags
 go.property("isKilled", false)
 go.property("isVulnerable", true)
 
 function init(self)
 	label.set_text("#label_hp", self.health)
+	self.position = go.get_position()
 	--Local Properties
 	self.isMoving = false
 	--Local Colliders
@@ -61,7 +62,7 @@ function update(self, dt)
 	--Movement
 	if self.isMoving then
 		local playerPos = go.get_position()
-		local movingDir = vmath.vector3(self.movingDir.x, self.movingDir.y,0)
+		local movingDir = self.move --vmath.vector3(self.movingDir.x, self.movingDir.y,0)
 		if movingDir ~= vmath.vector3(0,0,0) then
 			self.movingDir = vmath.normalize(movingDir)
 		end
@@ -86,8 +87,6 @@ function update(self, dt)
 		end
 	end
 
-	--Resetting flags
-	self.isMoving = false
 	--Vulnerable flag
 	if self.nonVulnerableTimer <= 0 then
 		self.isVulnerable = true
@@ -114,7 +113,11 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("move") then
 		self.movingDir.x = message.x
 		self.movingDir.y = message.y
-		self.isMoving = true
+		if self.movingDir.x ~= 0 or self.movingDir.y ~= 0 then
+			self.isMoving = true
+		else
+			self.isMoving = false
+		end
 		self.isVulnerable = true
 	end
 
@@ -145,7 +148,6 @@ function on_message(self, message_id, message, sender)
 		msg.post("#sprite", "play_animation", {id = hash("player_afk")})
 	end
 
-
 	--Colliders
 	if message_id == hash("contact_point_response") then	
 		--Walls
@@ -162,8 +164,5 @@ function on_message(self, message_id, message, sender)
 				self.wallsCollider.right = true
 			end
 		end
-
-			--Enemies
-			--TODO
-		end
 	end
+end

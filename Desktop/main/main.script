@@ -5,10 +5,8 @@ function init(self)
 end
 
 function on_input(self, action_id, action)
-	--to test if it works (it does)
-	if action_id == hash("click") and action.pressed then
-		--change factory to change player class on mouse click)
-		factory.create("#archerFactory", vmath.vector3(360,360,0), nil,nil)
+	if action_id == hash("esc") and action.pressed then
+		os.exit()
 	end
 	
 	if action_id == hash("read-file") and action.pressed then
@@ -19,11 +17,13 @@ end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("createKnight") then
-		factory.create("#knightFactory", vmath.vector3(render.get_width()/2,render.get_height()/2,0), nil,nil)
+		factory.create("#knightFactory", vmath.vector3(render.get_width()/2, render.get_height()/2,0), nil, nil)
 	elseif message_id == hash("createArcher") then
-		factory.create("#archerFactory", vmath.vector3(render.get_width()/2,render.get_height()/2,0), nil,nil)
+		factory.create("#archerFactory", vmath.vector3(render.get_width()/2, render.get_height()/2,0), nil, nil)
 	elseif message_id == hash("createMage") then
-		factory.create("#mageFactory", vmath.vector3(360,360,0), nil,nil)
+		factory.create("#mageFactory", vmath.vector3(render.get_width()/2, render.get_height()/2,0), nil, nil)
+	elseif message_id == hash("createRogue") then
+		factory.create("#rogueFactory", vmath.vector3(render.get_width()/2, render.get_height()/2,0), nil, nil)
 	end
 end
 

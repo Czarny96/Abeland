@@ -11,6 +11,7 @@ go.property("isKilled", false)
 
 function init(self)
 	label.set_text("#label_hp", self.health)
+	self.position = go.get_position()
 	--Local Properties
 	self.isMoving = false
 	--Local Colliders
