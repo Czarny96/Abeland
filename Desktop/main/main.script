@@ -1,3 +1,5 @@
+require "debugging/debugging"
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
 end
@@ -6,6 +8,11 @@ function on_input(self, action_id, action)
 	if action_id == hash("esc") and action.pressed then
 		os.exit()
 	end
+	
+	if action_id == hash("read-file") and action.pressed then
+		ReadFiles("log.txt")
+	end
+	
 end
 
 function on_message(self, message_id, message, sender)
@@ -19,3 +26,5 @@ function on_message(self, message_id, message, sender)
 		factory.create("#rogueFactory", vmath.vector3(render.get_width()/2, render.get_height()/2,0), nil, nil)
 	end
 end
+
+
