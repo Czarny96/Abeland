@@ -4,7 +4,7 @@ instances {
   prototype: "/arena/ground.go"
   position {
     x: -32.0
-    y: -24.0
+    y: -40.0
     z: -1.0
   }
   rotation {
@@ -24,7 +24,7 @@ instances {
   prototype: "/arena/walls.go"
   position {
     x: -32.0
-    y: -24.0
+    y: -40.0
     z: 1.0
   }
   rotation {
@@ -104,7 +104,7 @@ instances {
   prototype: "/arena/topWalls.go"
   position {
     x: -32.0
-    y: -24.0
+    y: -40.0
     z: -0.5
   }
   rotation {
