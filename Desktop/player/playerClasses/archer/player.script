@@ -115,10 +115,13 @@ function on_message(self, message_id, message, sender)
 		self.movingDir.y = message.y
 		if self.movingDir.x ~= 0 or self.movingDir.y ~= 0 then
 			self.isMoving = true
-		else
+			if self.nonVulnerableTimer > 0.25 then
+			self.nonVulnerableTimer = 0.25
+		end
+	else
 			self.isMoving = false
 		end
-		self.isVulnerable = true
+		
 	end
 
 	--Invulnerability (all enemy interactions put here)
@@ -139,10 +142,13 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("desactivate") then
 		sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 0.33))
 		self.isVulnerable = false
+		self.nonVulnerableTimer = 50
 	end
 
 	--Activate if player came back
 	if message_id == hash("activate") then
+		self.nonVulnerableTimer = 50
+		self.isVulnerable = false
 		self.nonOperativeTimer = 2
 		sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 1))
 		msg.post("#sprite", "play_animation", {id = hash("player_afk")})
