@@ -94,8 +94,8 @@ function M.create(port)
 				local data, server_ip, server_port = listener:receivefrom()
 				if data and data == message then
 					callback(server_ip, server_port)
-					state = STATE_DISCONNECTED
-					break
+					--state = STATE_DISCONNECTED
+					--break
 				end
 				--print("listening")
 				coroutine.yield()

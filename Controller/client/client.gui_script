@@ -4,71 +4,66 @@ local p2p_discovery = require "defnet.p2p_discovery"
 local P2P_PORT = 50000
 local SERVER_IP =  nil
 local SERVER_PORT = 5555
-local clientHandler = nil
+
+local client = nil
 
 local reconnectTimer = 0
 local tryToReconnect = false
 
+-- BUGFIX #2
+-- Timer used for fixing bug with non-existing server. UDP datagrams can be received 
+-- long time after server dc'ed and client thinks, that server is up.
+local broadcastTimer = 3
+
 local frame = ""
 
 function init(self)
-
-	runP2PDiscovery(self)
-	
-end
-
-function runP2PDiscovery(self)
-	SERVER_IP = nil
 	self.p2p = p2p_discovery.create(P2P_PORT)
-
-
+	
 	self.p2p.listen("findme", function(ip, port)
-		print("Found server", ip, port)
-		SERVER_IP =  ip
-		connectToServer(self, ip, SERVER_PORT)
+		-- see note above (BUGFIX #2)
+		if broadcastTimer > 3 and not SERVER_IP then
+			SERVER_IP = ip
+		end
 	end)
 end
 
 function onData(data)
 	if data == "btn_data" then
 		msg.post("/go#ctrlGui", "dataRequest")
-		if clientHandler then
-			clientHandler.send(frame)
-		end
-	elseif data == "flush" then
-		if clientHandler then
-			--clientHandler.flush()
+		if client then
+			client.send(frame)
 		end
 	end
 end
 
+function onDisconnection()
+	print("Disconnected")
+	client = nil
+	SERVER_IP = nil
+	broadcastTimer = 0
+	msg.post("/go#ctrlGui", "setConnectionText", {text = "Disconnected"})
+end
+
 function connectToServer(self, ip, port)
-	local client, err = tcp_client.create(ip, port,
-	onData,
-	function()
-		self.client = nil
-		clientHandler = nil
-		--SERVER_IP = nil
-		runP2PDiscovery(self)
-		--gui.set_text(gui.get_node("connectionText"), "Disconnected")
-		msg.post("/go#ctrlGui", "setConnectionText", {text = "Disconnected"})
-	end)
+	
+	local err
+	client, err = tcp_client.create(ip, port, onData, onDisconnection)
+	
 	if client then
-		self.client = client
-		clientHandler = client
+		print("Connected")
 		tryToReconnect = false
-		--gui.set_text(gui.get_node("connectionText"), "Connected")
 		msg.post("/go#ctrlGui", "setConnectionText", {text = "Connected"})
 	else
+		print("Connection failed. How?")
 		print(err)
-		--gui.set_text(gui.get_node("connectionText"), "Connection failed")
 		msg.post("/go#ctrlGui", "setConnectionText", {text = "Connection failed"})
 	end
 end
 
 function final(self)
-	if self.client then
-		self.client.destroy()
+	if client then
+		client.destroy()
 	end
 end
 
@@ -77,14 +72,15 @@ function update(self, dt)
 	self.p2p.update()
 
 	reconnectTimer = reconnectTimer + dt
+	broadcastTimer = broadcastTimer + dt
 	-- server dc'ed and ip is known, so try to reconnect
-	if not self.client and SERVER_IP ~= nil and reconnectTimer > 5 and tryToReconnect then
+	if not client and SERVER_IP and reconnectTimer > 2 and tryToReconnect then
 		reconnectTimer = 0
 		connectToServer(self, SERVER_IP, SERVER_PORT)
 	end
 
-	if self.client then
-		self.client.update()
+	if client then
+		client.update()
 	end
 	-- END OF SERVER LOGIC
 end
@@ -95,6 +91,7 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("setControllerData") then
 		frame = message.frame
 	elseif message_id == hash("reconnect") then
+		print("Reconnect clicked")
 		tryToReconnect = true
 	end
 

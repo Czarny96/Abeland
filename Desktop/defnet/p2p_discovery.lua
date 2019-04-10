@@ -29,6 +29,8 @@ function M.create(port)
 
 	local listen_co
 	local broadcast_co
+	
+	local broadcastSendTimer = 0
 
 	--- Start broadcasting a message for others to discover
 	-- @param message
@@ -110,8 +112,10 @@ function M.create(port)
 		state = STATE_DISCONNECTED
 	end
 
-	function instance.update()
-		if broadcast_co then
+	function instance.update(dt)
+		broadcastSendTimer = broadcastSendTimer + dt
+		if broadcast_co and broadcastSendTimer > 1 then
+			broadcastSendTimer = 0
 			if coroutine.status(broadcast_co) == "suspended" then
 				coroutine.resume(broadcast_co)
 			end
