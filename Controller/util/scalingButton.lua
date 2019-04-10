@@ -21,6 +21,12 @@ function M.create(nodeId, buttonId, onReleaseCallback, onClickCallback)
 	button.touchId = -1
 	-- END OF FIELDS
 
+	function button.reset()
+		button.isPressed = false
+		button.touchId = -1
+		gui.set_scale(button.node, vmath.vector3(1.0))
+	end
+
 	-- FUNCTIONS
 	function button.multitouchUpdate(touchData)
 

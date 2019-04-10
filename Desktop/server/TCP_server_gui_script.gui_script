@@ -57,7 +57,7 @@ end
 
 function update(self, dt)
 	-- Add update code here
-	self.p2p.update()
+	self.p2p.update(dt)
 	
 	--TODO: adjust clocking for optimal user experience
 	if  clientsManager.isAnyPlayer() and dtPassed > 0.016 then

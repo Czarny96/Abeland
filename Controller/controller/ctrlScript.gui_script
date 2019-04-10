@@ -40,8 +40,6 @@ function init(self)
 	-- I did this, so it's not necessary to edit setJoystickPosition function
 	rightJoystick.touchPos = rightJoystick.defaultPos 
 
-
-
 	self.gameButtons = {
 		blue = scalingButton.create("blueButton", 1, buttonReleased, buttonPressed),
 		green = scalingButton.create("greenButton", 2, buttonReleased, buttonPressed),
@@ -54,28 +52,46 @@ function init(self)
 	}
 
 	
-	hideReconnectWindow(self)
+	--hideReconnectWindow(self)
 	showReconnectWindow(self)
 end
 
 function buttonPressed(hashedNodeId)
-
+	if hashedNodeId == hash("blueButton") then
+		print("Blue button pressed")
+	end
 end
 
 function buttonReleased(hashedNodeId)
 	if hashedNodeId == hash("reconnectButton") then
 		msg.post("/go#client", "reconnect")
 		showSpinner()
+	elseif hashedNodeId == hash("blueButton") then
+		print("Blue button released")
 	end
 end
 
-function showReconnectWindow()
+function showReconnectWindow(self)
 	reconnectWindowIsVisible = true
 	local node = gui.get_node("reconnectScreen")
 	gui.set_position(node, vmath.vector3(1920/2, 1080/2, 0))
 	gui.set_scale(node, vmath.vector3(0.9, 0.9, 1))
 	gui.animate(node, gui.PROP_SCALE, vmath.vector3(1, 1, 1), gui.EASING_INOUTCUBIC, 0.5)
-	--gui.set_text(node, text)
+
+	-- reset state of joystick and buttons
+	for k, button in pairs(self.guiButtons) do
+		button.reset()
+	end
+	local joystick = gui.get_node("joystick_front")
+	gui.set_position(joystick, leftJoystick.defaultPos)
+	joystick = gui.get_node("joystick_back")
+	gui.set_position(joystick, leftJoystick.defaultPos)
+
+	joystick = gui.get_node("right_joystick_front")
+	gui.set_position(joystick, rightJoystick.defaultPos)
+	joystick = gui.get_node("right_joystick_back")
+	gui.set_position(joystick, rightJoystick.defaultPos)
+	
 	hideSpinner()
 end
 
@@ -166,7 +182,7 @@ function on_message(self, message_id, message, sender)
 		if message.text == "Connected" then
 			hideReconnectWindow()
 		elseif message.text == "Disconnected" then
-			showReconnectWindow()
+			showReconnectWindow(self)
 		elseif message.text == "Connection failed" then
 			
 		end
