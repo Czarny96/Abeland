@@ -1,29 +1,22 @@
-function init(self)
-	-- Add initialization code here
-	-- Remove this function if not needed
-end
-
-function final(self)
-	-- Add finalization code here
-	-- Remove this function if not needed
-end
-
-function update(self, dt)
-	-- Add update code here
-	-- Remove this function if not needed
-end
-
 function on_message(self, message_id, message, sender)
-	-- Add message-handling code here
-	-- Remove this function if not needed
+	if message_id == hash("close") then
+		--top gate
+		--bottom gate
+		tilemap.set_tile("#walls", "walls", 13, 2, 93)
+		tilemap.set_tile("#walls", "walls", 14, 2, 94)
+		tilemap.set_tile("#walls", "walls", 15, 2, 30)
+		tilemap.set_tile("#walls", "walls", 16, 2, 31)
+		tilemap.set_tile("#walls", "walls", 17, 2, 94)
+		tilemap.set_tile("#walls", "walls", 18, 2, 95)
+	else if message_id == hash("open") then
+		--top gate
+		--bottom gate
+		tilemap.set_tile("#walls", "walls", 13, 2, 96)
+		tilemap.set_tile("#walls", "walls", 14, 2, 97)
+		tilemap.set_tile("#walls", "walls", 15, 2, 97)
+		tilemap.set_tile("#walls", "walls", 16, 2, 97)
+		tilemap.set_tile("#walls", "walls", 17, 2, 97)
+		tilemap.set_tile("#walls", "walls", 18, 2, 96)
+	end
 end
-
-function on_input(self, action_id, action)
-	-- Add input-handling code here
-	-- Remove this function if not needed
-end
-
-function on_reload(self)
-	-- Add reload-handling code here
-	-- Remove this function if not needed
 end

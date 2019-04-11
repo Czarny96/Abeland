@@ -263,12 +263,12 @@ convex_hulls {
 convex_hulls {
   index: 210
   count: 6
-  collision_group: ""
+  collision_group: "openGates"
 }
 convex_hulls {
   index: 216
   count: 6
-  collision_group: ""
+  collision_group: "openGates"
 }
 convex_hulls {
   index: 222
@@ -318,12 +318,12 @@ convex_hulls {
 convex_hulls {
   index: 256
   count: 4
-  collision_group: ""
+  collision_group: "openGates"
 }
 convex_hulls {
   index: 260
   count: 4
-  collision_group: ""
+  collision_group: "openGates"
 }
 convex_hulls {
   index: 264
@@ -373,12 +373,12 @@ convex_hulls {
 convex_hulls {
   index: 298
   count: 6
-  collision_group: ""
+  collision_group: "openGates"
 }
 convex_hulls {
   index: 304
   count: 6
-  collision_group: ""
+  collision_group: "openGates"
 }
 convex_hulls {
   index: 310
@@ -428,17 +428,17 @@ convex_hulls {
 convex_hulls {
   index: 348
   count: 6
-  collision_group: ""
+  collision_group: "openGates"
 }
 convex_hulls {
   index: 354
   count: 4
-  collision_group: ""
+  collision_group: "openGates"
 }
 convex_hulls {
   index: 358
   count: 6
-  collision_group: ""
+  collision_group: "openGates"
 }
 convex_hulls {
   index: 364
@@ -483,23 +483,24 @@ convex_hulls {
 convex_hulls {
   index: 396
   count: 6
-  collision_group: ""
+  collision_group: "openGates"
 }
 convex_hulls {
   index: 402
   count: 4
-  collision_group: ""
+  collision_group: "openGates"
 }
 convex_hulls {
   index: 406
   count: 6
-  collision_group: ""
+  collision_group: "openGates"
 }
 convex_hulls {
   index: 412
   count: 0
   collision_group: ""
 }
+collision_groups: "openGates"
 collision_groups: "walls"
 extrude_borders: 0
 inner_padding: 0
