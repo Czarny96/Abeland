@@ -2,7 +2,43 @@ require "debugging/debugging"
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
+
+	-- start game with splash screen
+	goToSplashScreen()
+
+	-- disable (don't render and don't update) other components
+	msg.post("/menu#mainMenu", "disable")
 end
+
+-- GAME STATE GLOBAL FUNCTIONS:
+function goToSplashScreen()
+	print("Entering splash screen")
+	msg.post("/menu#splashScreen", "enable")
+end
+
+function goToMainMenu()
+	print("Entering main menu")
+	msg.post("/menu#mainMenu", "enable")
+	msg.post("/menu#splashScreen", "disable")
+end
+
+function goToChampionSelect()
+	print("Entering champion select")
+end
+
+function goToSettings()
+	print("Entering settings")
+end
+
+function showInGameMenu()
+	print("Show in game menu")
+end
+
+function hideInGameMenu()
+	print("Hide in game menu")
+end
+
+-- END OF GAME STATE FUNCTIONS
 
 function on_input(self, action_id, action)
 	if action_id == hash("esc") and action.pressed then

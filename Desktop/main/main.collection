@@ -1,31 +1,11 @@
 name: "main"
 instances {
-  id: "ground"
-  prototype: "/arena/ground.go"
+  id: "main"
+  prototype: "/main/main.go"
   position {
-    x: -32.0
-    y: -40.0
-    z: -1.0
-  }
-  rotation {
     x: 0.0
     y: 0.0
     z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
-  id: "walls"
-  prototype: "/arena/walls.go"
-  position {
-    x: -32.0
-    y: -40.0
-    z: 1.0
   }
   rotation {
     x: 0.0
@@ -80,12 +60,12 @@ instances {
   }
 }
 instances {
-  id: "main"
-  prototype: "/main/main.go"
+  id: "ground"
+  prototype: "/arena/ground.go"
   position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: -32.0
+    y: -40.0
+    z: -1.0
   }
   rotation {
     x: 0.0
@@ -106,6 +86,26 @@ instances {
     x: -32.0
     y: -40.0
     z: -0.5
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "walls"
+  prototype: "/arena/walls.go"
+  position {
+    x: -32.0
+    y: -40.0
+    z: 1.0
   }
   rotation {
     x: 0.0
@@ -140,3 +140,78 @@ collection_instances {
   }
 }
 scale_along_z: 0
+embedded_instances {
+  id: "gameContent"
+  children: "enemyMage"
+  children: "enemyMelee"
+  children: "ground"
+  children: "topWalls"
+  children: "walls"
+  data: ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "menu"
+  data: "components {\n"
+  "  id: \"splashScreen\"\n"
+  "  component: \"/menu/splashScreen/splashScreen.gui\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "components {\n"
+  "  id: \"mainMenu\"\n"
+  "  component: \"/menu/mainMenu/mainMenu.gui\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}

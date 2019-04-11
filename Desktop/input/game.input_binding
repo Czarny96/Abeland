@@ -2,8 +2,15 @@ key_trigger {
   input: KEY_F1
   action: "read-file"
 }
-
 key_trigger {
   input: KEY_ESC
   action: "esc"
+}
+key_trigger {
+  input: KEY_ENTER
+  action: "kb_enter"
+}
+mouse_trigger {
+  input: MOUSE_BUTTON_LEFT
+  action: "mouse_left"
 }
