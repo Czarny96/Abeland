@@ -10,7 +10,7 @@ function init(self)
 end
 
 local function secondPhaseFinished(self)
-	goToMainMenu()
+	g_goToMainMenu()
 end
 
 local function firstPhaseFinished(self, node)

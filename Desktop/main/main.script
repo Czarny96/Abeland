@@ -3,42 +3,60 @@ require "debugging/debugging"
 function init(self)
 	msg.post(".", "acquire_input_focus")
 
-	-- start game with splash screen
-	goToSplashScreen()
+	-- disable (don't render and don't update) other menu components
+	msg.post("/menu", "disable")
 
-	-- disable (don't render and don't update) other components
-	msg.post("/menu#mainMenu", "disable")
+	-- start game with splash screen
+	g_goToSplashScreen()
 end
 
--- GAME STATE GLOBAL FUNCTIONS:
-function goToSplashScreen()
+-- GAME STATE GLOBAL FUNCTIONS AND VARIABLES:
+g_gameStateEnum = {
+	splashScreen = {},
+	mainMenu = {},
+	settings = {},
+	championSelect = {},
+	inGame = {}
+}
+
+g_gameState = g_gameStateEnum.splashScreen
+
+g_inGameMenuVisible = false
+
+function g_goToSplashScreen()
 	print("Entering splash screen")
+	g_gameState = g_gameStateEnum.splashScreen
 	msg.post("/menu#splashScreen", "enable")
 end
 
-function goToMainMenu()
+function g_goToMainMenu()
 	print("Entering main menu")
+	g_gameState = g_gameStateEnum.mainMenu
 	msg.post("/menu#mainMenu", "enable")
 	msg.post("/menu#splashScreen", "disable")
 end
 
-function goToChampionSelect()
+function g_goToChampionSelect()
 	print("Entering champion select")
+	g_gameState = g_gameStateEnum.championSelect
 end
 
-function goToSettings()
+function g_goToSettings()
 	print("Entering settings")
+	g_gameState = g_gameStateEnum.settings
 end
 
-function showInGameMenu()
+function g_showInGameMenu()
 	print("Show in game menu")
+	g_inGameMenuVisible = true
 end
 
-function hideInGameMenu()
+function g_hideInGameMenu()
 	print("Hide in game menu")
+	g_inGameMenuVisible = false
 end
 
--- END OF GAME STATE FUNCTIONS
+-- END OF GAME STATE FUNCTIONS AND VARIABLES
 
 function on_input(self, action_id, action)
 	if action_id == hash("esc") and action.pressed then

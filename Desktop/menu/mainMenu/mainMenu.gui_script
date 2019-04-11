@@ -10,6 +10,9 @@ local exitNode = nil
 
 local blackBoxNode = nil
 
+-- don't react after clicking button
+local lockActions = false
+
 local function buttonPressed(hashedNodeId)
 
 end
@@ -17,12 +20,16 @@ end
 local function buttonReleased(hashedNodeId)
 	if hashedNodeId == hash("NewGame") then
 		print("Clicked new game")
+		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
+		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
+		gui.EASING_LINEAR, 1, 0, function() g_goToChampionSelect() end)
+		
 	elseif hashedNodeId == hash("Settings") then
 		print("Clicked settings")
 	elseif hashedNodeId == hash("Exit") then
 		print("Clicked exit")
-		gui.set_color(blackBoxNode, vmath.vector4(0,0,0,0))
-		
+		lockActions = true
+		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
 		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
 					gui.EASING_LINEAR, 1, 0, function() os.exit() end)
 	end
@@ -49,8 +56,10 @@ function init(self)
 end
 
 local function start(self)
+	lockActions = false
+
+	-- screen is going from black to white
 	gui.set_color(blackBoxNode, vmath.vector4(0,0,0,1))
-	
 	gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,0), gui.EASING_LINEAR, 1)
 end
 
@@ -78,6 +87,11 @@ function on_input(self, action_id, action)
 	-- Add input-handling code here
 	-- Remove this function if not needed
 	if action_id == hash("mouse_left") then
+		
+		if lockActions then
+			return
+		end
+		
 		for idx, button in pairs(self.buttonHolder) do
 			button.mouseUpdate(action)
 		end
