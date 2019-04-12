@@ -7,10 +7,18 @@ key_trigger {
   action: "esc"
 }
 key_trigger {
+  input: KEY_SPACE
+  action: "temp"
+}
+key_trigger {
+  input: KEY_A
+  action: "wave"
+
   input: KEY_ENTER
   action: "kb_enter"
 }
 mouse_trigger {
   input: MOUSE_BUTTON_LEFT
   action: "mouse_left"
+
 }

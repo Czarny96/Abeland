@@ -46,15 +46,20 @@ function M.translateFrameToPlayer(frame, playerObjectID)
 	movementX = tonumber(fields[1])
 	movementY = tonumber(fields[2])
 
-	shootingX = tonumber(fields[3])
-	shootingY = tonumber(fields[4])
-	
+	if fields[3] ~= nil then
+		shootingX = tonumber(fields[3])
+		shootingY = tonumber(fields[4])
+	else
+		shootingX = 0
+		shootingY = 0
+	end
 
 	--Sending move command to playerObjet
 	msg.post(playerObjectID, "move", {x = movementX, y = movementY})
 
 	--Sending shoot command to playerObject
-	if shootingX ~= 0 or shootingY ~=0 then
+	if shootingX > 0.4 or shootingX < -0.4 or shootingY > 0.4 or shootingY < -0.4 then
+		print(shootingX .. "\t" .. shootingY)
 		msg.post(playerObjectID, "shoot", {x = shootingX, y = shootingY})
 	end
 

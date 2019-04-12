@@ -31,9 +31,21 @@ animations {
 animations {
   id: "player_afk"
   images {
-    image: "/assets/prototypes/obstacle_prot.png"
+    image: "/assets/prototypes/mage/player_prot_afk_1.png"
   }
-  playback: PLAYBACK_LOOP_FORWARD
+  images {
+    image: "/assets/prototypes/mage/player_prot_afk_2.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/player_prot_afk_3.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/player_prot_afk_4.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/player_prot_afk_5.png"
+  }
+  playback: PLAYBACK_LOOP_PINGPONG
   fps: 8
   flip_horizontal: 0
   flip_vertical: 0
@@ -101,7 +113,7 @@ animations {
 animations {
   id: "player_killed"
   images {
-    image: "/assets/prototypes/player_killed.png"
+    image: "/assets/prototypes/mage/player_prot_dead.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 60

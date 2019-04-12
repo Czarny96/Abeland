@@ -1,5 +1,46 @@
 name: "main"
 instances {
+  id: "ground"
+  prototype: "/arena/tiles/ground.go"
+  position {
+    x: -32.0
+    y: -32.0
+    z: -1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "walls"
+  prototype: "/arena/tiles/walls.go"
+  position {
+    x: -32.0
+    y: -32.0
+    z: 1.0
+
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
   id: "main"
   prototype: "/main/main.go"
   position {
@@ -20,12 +61,12 @@ instances {
   }
 }
 instances {
-  id: "enemyMage"
-  prototype: "/enemies/enemyMage/enemyMage.go"
+  id: "topWalls"
+  prototype: "/arena/tiles/topWalls.go"
   position {
-    x: 945.0
-    y: 497.0
-    z: 0.0
+    x: -32.0
+    y: -32.0
+    z: -0.5
   }
   rotation {
     x: 0.0
@@ -39,29 +80,9 @@ instances {
     z: 1.0
   }
 }
-instances {
-  id: "enemyMelee"
-  prototype: "/enemies/enemyMelee/enemyMelee.go"
-  position {
-    x: 491.0
-    y: 811.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
-  id: "ground"
-  prototype: "/arena/ground.go"
+collection_instances {
+  id: "TCP_server"
+  collection: "/server/TCP_server.collection"
   position {
     x: -32.0
     y: -40.0
@@ -79,6 +100,7 @@ instances {
     z: 1.0
   }
 }
+
 instances {
   id: "topWalls"
   prototype: "/arena/topWalls.go"
@@ -119,9 +141,10 @@ instances {
     z: 1.0
   }
 }
+
 collection_instances {
-  id: "TCP_server"
-  collection: "/server/TCP_server.collection"
+  id: "spawnPoints"
+  collection: "/arena/enemySpawnPoints/spawnPoints.collection"
   position {
     x: 0.0
     y: 0.0

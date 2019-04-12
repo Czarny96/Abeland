@@ -1,0 +1,2 @@
+prototype: "/enemies/enemyMage/enemyMage.go"
+load_dynamically: false

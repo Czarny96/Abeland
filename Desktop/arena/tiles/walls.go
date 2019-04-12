@@ -1,6 +1,6 @@
 components {
   id: "walls"
-  component: "/arena/walls.tilemap"
+  component: "/arena/tiles/walls.tilemap"
   position {
     x: 0.0
     y: 0.0
@@ -31,7 +31,7 @@ components {
 embedded_components {
   id: "playerCollider"
   type: "collisionobject"
-  data: "collision_shape: \"/arena/walls.tilemap\"\n"
+  data: "collision_shape: \"/arena/tiles/walls.tilemap\"\n"
   "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
   "mass: 0.0\n"
   "friction: 0.1\n"
@@ -57,7 +57,7 @@ embedded_components {
 embedded_components {
   id: "enemyCollider"
   type: "collisionobject"
-  data: "collision_shape: \"/arena/walls.tilemap\"\n"
+  data: "collision_shape: \"/arena/tiles/walls.tilemap\"\n"
   "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
   "mass: 0.0\n"
   "friction: 0.1\n"
@@ -83,7 +83,7 @@ embedded_components {
 embedded_components {
   id: "attacksCollider"
   type: "collisionobject"
-  data: "collision_shape: \"/arena/walls.tilemap\"\n"
+  data: "collision_shape: \"/arena/tiles/walls.tilemap\"\n"
   "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
   "mass: 0.0\n"
   "friction: 0.1\n"

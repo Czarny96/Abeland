@@ -81,17 +81,17 @@ animations {
 animations {
   id: "player_attack1"
   images {
-    image: "/assets/prototypes/attack_prot.png"
+    image: "/assets/prototypes/archer/arrow.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 8
-  flip_horizontal: 0
+  flip_horizontal: 1
   flip_vertical: 0
 }
 animations {
   id: "player_killed"
   images {
-    image: "/assets/prototypes/player_killed.png"
+    image: "/assets/prototypes/archer/player_prot_dead.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 60

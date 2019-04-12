@@ -61,10 +61,7 @@ function update(self, dt)
 	--Movement
 	if self.isMoving then
 		local playerPos = go.get_position()
-		local movingDir = self.move --vmath.vector3(self.movingDir.x, self.movingDir.y,0)
-		if movingDir ~= vmath.vector3(0,0,0) then
-			self.movingDir = vmath.normalize(movingDir)
-		end
+		local movingDir = vmath.vector3(self.movingDir.x, self.movingDir.y,0)
 		playerPos = playerPos + self.movingDir * self.movingSpeed * dt
 		go.set_position(playerPos)
 		go.set("#player", "position", go.get_position())
