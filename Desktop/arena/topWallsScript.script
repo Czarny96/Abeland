@@ -1,16 +1,12 @@
 function on_message(self, message_id, message, sender)
-	if message_id == hash("close") then
-		--top gate
-		--bottom gate
+	if message_id == hash("closeTop") then
 		tilemap.set_tile("#walls", "walls", 13, 2, 93)
 		tilemap.set_tile("#walls", "walls", 14, 2, 94)
 		tilemap.set_tile("#walls", "walls", 15, 2, 30)
 		tilemap.set_tile("#walls", "walls", 16, 2, 31)
 		tilemap.set_tile("#walls", "walls", 17, 2, 94)
 		tilemap.set_tile("#walls", "walls", 18, 2, 95)
-	else if message_id == hash("open") then
-		--top gate
-		--bottom gate
+	elseif message_id == hash("openTop") then
 		tilemap.set_tile("#walls", "walls", 13, 2, 96)
 		tilemap.set_tile("#walls", "walls", 14, 2, 97)
 		tilemap.set_tile("#walls", "walls", 15, 2, 97)
@@ -18,5 +14,4 @@ function on_message(self, message_id, message, sender)
 		tilemap.set_tile("#walls", "walls", 17, 2, 97)
 		tilemap.set_tile("#walls", "walls", 18, 2, 96)
 	end
-end
 end
