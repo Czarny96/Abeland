@@ -7,14 +7,6 @@ key_trigger {
   action: "esc"
 }
 key_trigger {
-  input: KEY_SPACE
-  action: "temp"
-}
-key_trigger {
-  input: KEY_A
-  action: "wave"
-
-key_trigger {
   input: KEY_ENTER
   action: "kb_enter"
 }
