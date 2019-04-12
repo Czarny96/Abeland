@@ -5,9 +5,18 @@ function init(self)
 
 	-- disable (don't render and don't update) other menu components
 	msg.post("/menu", "disable")
-
+	
 	-- start game with splash screen
 	g_goToSplashScreen()
+
+	-- HOW TO POPULATE DATA INTO CHAMPION SELECT SCREEN:
+	local playerList = {
+		{nick="blablador", ip="192.168.0.50", lockedIn=false, playerClass="Archer"}, 
+		{nick="dogtor", ip="192.168.0.51", lockedIn=true, playerClass="Mage"}
+	}
+	msg.post("/menu#championSelect", "playerUpdate", {players=playerList})
+	-- DELETE THIS EXAMPLE
+	
 end
 
 -- GAME STATE GLOBAL FUNCTIONS AND VARIABLES:
@@ -26,19 +35,22 @@ g_inGameMenuVisible = false
 function g_goToSplashScreen()
 	print("Entering splash screen")
 	g_gameState = g_gameStateEnum.splashScreen
+	msg.post("/menu", "disable")
 	msg.post("/menu#splashScreen", "enable")
 end
 
 function g_goToMainMenu()
 	print("Entering main menu")
 	g_gameState = g_gameStateEnum.mainMenu
+	msg.post("/menu", "disable")
 	msg.post("/menu#mainMenu", "enable")
-	msg.post("/menu#splashScreen", "disable")
 end
 
 function g_goToChampionSelect()
 	print("Entering champion select")
 	g_gameState = g_gameStateEnum.championSelect
+	msg.post("/menu", "disable")
+	msg.post("/menu#championSelect", "enable")
 end
 
 function g_goToSettings()
@@ -55,7 +67,6 @@ function g_hideInGameMenu()
 	print("Hide in game menu")
 	g_inGameMenuVisible = false
 end
-
 -- END OF GAME STATE FUNCTIONS AND VARIABLES
 
 function on_input(self, action_id, action)

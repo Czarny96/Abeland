@@ -20,6 +20,7 @@ end
 local function buttonReleased(hashedNodeId)
 	if hashedNodeId == hash("NewGame") then
 		print("Clicked new game")
+		lockActions = true
 		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
 		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
 		gui.EASING_LINEAR, 1, 0, function() g_goToChampionSelect() end)

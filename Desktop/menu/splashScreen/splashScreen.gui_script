@@ -7,6 +7,10 @@ function init(self)
 	-- Add initialization code here
 	-- Remove this function if not needed
 	self.splashScreenNode = gui.get_node("splashImage")
+
+	local tab = { {x=1}, {x=2} }
+	pprint(tab)
+	
 end
 
 local function secondPhaseFinished(self)
