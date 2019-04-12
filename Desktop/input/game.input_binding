@@ -14,11 +14,11 @@ key_trigger {
   input: KEY_A
   action: "wave"
 
+key_trigger {
   input: KEY_ENTER
   action: "kb_enter"
 }
 mouse_trigger {
   input: MOUSE_BUTTON_LEFT
   action: "mouse_left"
-
 }

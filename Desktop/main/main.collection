@@ -4,29 +4,8 @@ instances {
   prototype: "/arena/tiles/ground.go"
   position {
     x: -32.0
-    y: -32.0
+    y: -40.0
     z: -1.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
-  id: "walls"
-  prototype: "/arena/tiles/walls.go"
-  position {
-    x: -32.0
-    y: -32.0
-    z: 1.0
-
   }
   rotation {
     x: 0.0
@@ -65,7 +44,7 @@ instances {
   prototype: "/arena/tiles/topWalls.go"
   position {
     x: -32.0
-    y: -32.0
+    y: -40.0
     z: -0.5
   }
   rotation {
@@ -101,26 +80,6 @@ collection_instances {
   }
 }
 
-instances {
-  id: "topWalls"
-  prototype: "/arena/topWalls.go"
-  position {
-    x: -32.0
-    y: -40.0
-    z: -0.5
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
 instances {
   id: "walls"
   prototype: "/arena/walls.go"
