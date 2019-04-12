@@ -1,0 +1,12 @@
+images {
+  image: "/assets/gui/emptyButton.png"
+}
+images {
+  image: "/assets/gui/mainMenuBg.png"
+}
+images {
+  image: "/assets/gui/splashScreen.png"
+}
+margin: 10
+extrude_borders: 0
+inner_padding: 0

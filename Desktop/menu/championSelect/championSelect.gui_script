@@ -1,0 +1,127 @@
+local scalingButton = require "util/scalingButton"
+
+--[[
+
+HOW TO UPDATE PLAYERS' STATUS:
+1. Make a structure:
+
+playerList = {
+	{nick="blablador", ip="192.168.0.50", lockedIn=false, playerClass="Archer"}, 
+	{nick="dogtor", ip="192.168.0.51", lockedIn=true, playerClass="Mage"}, 
+	{}, {}, {}, ..., {}
+}
+
+NOTE: you can do 'playerList=nil' if noone is connected
+
+2. Do: msg.post("/menu#championSelect", "playerUpdate", {players=playerList})
+3. ???
+
+--]]
+
+local playerListNode = nil
+local playerList = nil
+
+local blackBoxNode = nil
+
+local lockActions = nil
+
+local function buttonPressed(hashedNodeId)
+
+end
+
+local function buttonReleased(hashedNodeId)
+	if hashedNodeId == hash("Back") then
+		lockActions = true
+		print("Clicked back")
+		
+		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
+		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
+		gui.EASING_LINEAR, 1, 0, function() g_goToMainMenu() end)
+	elseif hashedNodeId == hash("Start") then
+		lockActions = true
+		
+		print("Clicked start")
+		print("Current players: ")
+		pprint(playerList)
+		
+		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
+		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
+		gui.EASING_LINEAR, 1, 0, function() msg.post("/menu", "disable") end)
+	end
+end
+
+local function updatePlayerList(players)
+	playerList = players
+	local output = ""
+	if players then
+		for i, player in pairs(players) do
+			
+			output = output .. player.nick .. ":" .. player.ip .. "  -  " .. player.playerClass
+			
+			if player.lockedIn then
+				output = output .. " <LOCKED IN>"
+			end
+			
+			output = output .. "\n"
+		end
+	else
+		output = "none"
+	end
+	gui.set_text(playerListNode, output)
+end
+
+local function start()
+	lockActions = false
+
+	-- screen is going from black to white
+	gui.set_color(blackBoxNode, vmath.vector4(0,0,0,1))
+	gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,0), gui.EASING_LINEAR, 1)
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	
+	blackBoxNode = gui.get_node("blackBox")
+	playerListNode = gui.get_node("playerList")
+	
+	self.buttonHolder = {
+		backButton = scalingButton.create("Back", buttonReleased, buttonPressed),
+		startButton = scalingButton.create("Start", buttonReleased, buttonPressed)
+	}
+end
+
+function final(self)
+	
+end
+
+function update(self, dt)
+	
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("enable") then
+		start(self)
+	elseif message_id == hash("disable") then
+
+	elseif message_id == hash("playerUpdate") then
+		updatePlayerList(message.players)
+
+	end
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("mouse_left") then
+
+		if lockActions then
+			return
+		end
+
+		for idx, button in pairs(self.buttonHolder) do
+			button.mouseUpdate(action)
+		end
+	end
+end
+
+function on_reload(self)
+	
+end
