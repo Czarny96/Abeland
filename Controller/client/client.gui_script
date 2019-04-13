@@ -28,7 +28,7 @@ function init(self)
 	end)
 end
 
-function onData(data)
+local function onData(data)
 	if data == "btn_data" then
 		msg.post("/go#ctrlGui", "dataRequest")
 		if client then
@@ -37,7 +37,7 @@ function onData(data)
 	end
 end
 
-function onDisconnection()
+local function onDisconnection()
 	print("Disconnected")
 	client = nil
 	SERVER_IP = nil
@@ -45,7 +45,7 @@ function onDisconnection()
 	msg.post("/go#ctrlGui", "setConnectionText", {text = "Disconnected"})
 end
 
-function connectToServer(self, ip, port)
+local function connectToServer(self, ip, port)
 	
 	local err
 	client, err = tcp_client.create(ip, port, onData, onDisconnection)

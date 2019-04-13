@@ -56,13 +56,13 @@ function init(self)
 	showReconnectWindow(self)
 end
 
-function buttonPressed(hashedNodeId)
+local function buttonPressed(hashedNodeId)
 	if hashedNodeId == hash("blueButton") then
 		print("Blue button pressed")
 	end
 end
 
-function buttonReleased(hashedNodeId)
+local function buttonReleased(hashedNodeId)
 	if hashedNodeId == hash("reconnectButton") then
 		msg.post("/go#client", "reconnect")
 		showSpinner()
@@ -71,7 +71,7 @@ function buttonReleased(hashedNodeId)
 	end
 end
 
-function showReconnectWindow(self)
+local function showReconnectWindow(self)
 	reconnectWindowIsVisible = true
 	local node = gui.get_node("reconnectScreen")
 	gui.set_position(node, vmath.vector3(1920/2, 1080/2, 0))
@@ -95,7 +95,7 @@ function showReconnectWindow(self)
 	hideSpinner()
 end
 
-function showSpinner()
+local function showSpinner()
 	local node = gui.get_node("reconnectSpinner")
 	local color = gui.get_color(node)
 	color.w = 1
@@ -103,7 +103,7 @@ function showSpinner()
 	rotatingSpinner = true
 end
 
-function hideSpinner()
+local function hideSpinner()
 	local node = gui.get_node("reconnectSpinner")
 	local color = gui.get_color(node)
 	color.w = 0
@@ -111,14 +111,14 @@ function hideSpinner()
 	rotatingSpinner = false
 end
 
-function hideReconnectWindow()
+local function hideReconnectWindow()
 	reconnectWindowIsVisible = false
 	local node = gui.get_node("reconnectScreen")
 	gui.set_position(node, vmath.vector3(1000)) -- move it far far away
 	hideSpinner()
 end
 
-function applyDeadZone(joystick)
+local function applyDeadZone(joystick)
 	local joystickLen = vmath.length(vmath.vector3(joystick.value.x, joystick.value.y, 0))
 	if joystickLen < deadZone then
 		joystick.value.x = 0
@@ -127,7 +127,7 @@ function applyDeadZone(joystick)
 end
 
 
-function createFrame(self)
+local function createFrame(self)
 	applyDeadZone(leftJoystick)
 	applyDeadZone(rightJoystick)
 	
@@ -190,7 +190,7 @@ function on_message(self, message_id, message, sender)
 
 end
 
-function setJoystickPosition(x, y, joystick)
+local function setJoystickPosition(x, y, joystick)
 
 	local button = nil
 	if joystick == leftJoystick then
@@ -218,7 +218,7 @@ function setJoystickPosition(x, y, joystick)
 
 end
 
-function isTouchedInJoystickArea(x, y, joystick)
+local function isTouchedInJoystickArea(x, y, joystick)
 	if x > joystick.area.left and x < joystick.area.right and y < joystick.area.top and y > joystick.area.bottom then
 		return true
 	end
