@@ -44,6 +44,10 @@ function M.getPlayerInactivityTimeCounter(playerIP)
 	return playersTable[playerIP][3]
 end
 
+function M.setPlayerNick(nick,playerIP)
+	playersTable[playerIP][6] = nick
+end
+
 function M.getPlayerID(playerIP)
 	return playersTable[playerIP][2]
 end
@@ -76,8 +80,8 @@ function M.addPlayer(playerIP,client)
 	if amountOfCurrentPlayers < ALLOWED_MAX_PLAYERS then 
 		-- WARNING: Temporally fixed to call one factory, until mechanism to chose class at the controller side is avaible
 		factoryObjectID = translationLayer.createPlayerObject("go#archerFactory", vmath.vector3(147, 297, 0))
-		-- key: playerIP values: 1 - client; 2 - factoryObjectID; 3 - inactivity time counter; 4 - is player inactive?; 
-		playersTable[playerIP] = {client,factoryObjectID,0.0,true}
+		-- key: playerIP values: 1 - client; 2 - factoryObjectID; 3 - inactivity time counter; 4 - is player inactive?;  5 - nick; 6 - class
+		playersTable[playerIP] = {client,factoryObjectID,0.0,true,"",""}
 		amountOfCurrentPlayers = amountOfCurrentPlayers + 1 
 	end
 end
@@ -86,6 +90,19 @@ function M.removePlayer(playerIP)
 	playersTable[playerIP] = nil
 	mountOfCurrentPlayers = amountOfCurrentPlayers - 1 
 	translationLayer.RemovePlayerObject(M.getPlayerID(playerIP))
+end
+
+function M.addNickToPlayer(data,playerIP)
+	nick = translationLayer.getNickFromFrame(data)
+	M.setPlayerNick(nick,playerIP)
+end
+
+function M.generatePlayersList()
+	local playerList = {}
+	for ip,values in pairs(playersTable) do
+		table.insert(playerList, {nick=values[5], ip=ip, lockedIn=false, playerClass=values[6]}) 
+	end
+	return playerList
 end
 
 return M

@@ -9,14 +9,6 @@ function init(self)
 	-- start game with splash screen
 	g_goToSplashScreen()
 
-	-- HOW TO POPULATE DATA INTO CHAMPION SELECT SCREEN:
-	local playerList = {
-		{nick="blablador", ip="192.168.0.50", lockedIn=false, playerClass="Archer"}, 
-		{nick="dogtor", ip="192.168.0.51", lockedIn=true, playerClass="Mage"}
-	}
-	msg.post("/menu#championSelect", "playerUpdate", {players=playerList})
-	-- DELETE THIS EXAMPLE
-	
 end
 
 -- GAME STATE GLOBAL FUNCTIONS AND VARIABLES:

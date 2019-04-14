@@ -47,6 +47,8 @@ local function buttonReleased(hashedNodeId)
 		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
 		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
 		gui.EASING_LINEAR, 1, 0, function() msg.post("/menu", "disable") end)
+		
+		msg.post("/TCP_server/go#TCP_server_gui","startGame")
 	end
 end
 
