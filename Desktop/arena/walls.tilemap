@@ -1,4 +1,4 @@
-tile_set: "/arena/arena.tilesource"
+tile_set: "/arena/tiles/arena.tilesource"
 layers {
   id: "walls"
   z: 0.0

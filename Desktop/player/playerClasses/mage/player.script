@@ -156,7 +156,7 @@ function on_message(self, message_id, message, sender)
 	--Colliders
 	if message_id == hash("contact_point_response") then	
 		--Walls
-		if message.group == hash("walls") then
+		if message.group == hash("walls") or message.group == hash("walls") then
 			if sender.fragment == hash("wallsTopCollider") then
 				self.wallsCollider.top = true
 			elseif sender.fragment == hash("wallsBottomCollider") then
