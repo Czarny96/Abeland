@@ -59,7 +59,7 @@ local function connectToServer(self, ip, port)
 		if g_username == "" then
 			g_username = "-nameless-"
 		end
-		client.send("N;" .. g_username .. "/n/r")
+		client.send("N;" .. g_username .. "\n\r")
 	else
 		print("Connection failed. How?")
 		print(err)
