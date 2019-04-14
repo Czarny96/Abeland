@@ -6,10 +6,12 @@
 local globals = require "main.globals"
 
 local M = {}
+
+-- This array keeps track of all active players ID
 local playersIDs = {}
 
--- Set active playersIDs
 function M.setActivePlayersIDs(newPlayersIDs)
+-- Set active playersIDs
 	local newTable = {}
 	for i, player in pairs(newPlayersIDs) do 
 		table.insert(newTable, player)
@@ -21,8 +23,8 @@ function M.setActivePlayersIDs(newPlayersIDs)
 	end
 end
 
--- Get unhashed playersIDs
 function M.getActivePlayersIDs()
+-- Get unhashed playersIDs
 	local alivePlayersTable = {}
 	for i, player in pairs(playersIDs) do
 		local scriptUrl = msg.url(nil, player, "player")
@@ -37,8 +39,8 @@ function M.getActivePlayersIDs()
 	end
 end
 
--- Get all players positions
 function M.getPlayersPos()
+-- Get all players positions
 	local tableOfPlayersPos = {}
 
 	if playersIDs ~= 0 then
@@ -53,8 +55,8 @@ function M.getPlayersPos()
 	end
 end
 
--- Get closes player ID to position given
 function M.getClosestPlayerID(pos)
+-- Get closes player ID to position given
 	local playersPos = M.getPlayersPos()
 
 	if playersIDs ~= 0 then
@@ -75,8 +77,8 @@ function M.getClosestPlayerID(pos)
 	end
 end
 
--- Get player position of given ID
 function M.getPlayerPos(id)
+-- Get player position of given ID
 	local scriptUrl = msg.url(nil, id, "player")
 	local playerPos = go.get(scriptUrl, "position")
 	return playerPos
