@@ -3,6 +3,7 @@ local p2pDiscovery = require "defnet.p2p_discovery"
 
 local clientsManager = require "server.clientsManager"
 local playersManager = require "player.playersManager"
+local sessionGenerator = require "server.sessionGenerator"
 
 local TCP_SERVER_PORT = 5555
 local PORT = 50000
@@ -64,30 +65,36 @@ function update(self, dt)
 		for ip,client in pairs(clientsManager.returnActiveClients()) do
 			self.server.send("btn_data\n\r", client)
 			clientsManager.incrementPlayerInactivityTimeCounterByDT(ip,dt)
-		end
-		dtPassed = 0
-	else
-		dtPassed = dtPassed + dt
-	end
-
-	if  clientsManager.isAnyPlayer() then
-		for ip,player in pairs(clientsManager.returnActivePlayersIDs()) do
-			-- Value to adjust
 			if clientsManager.getPlayerInactivityTimeCounter(ip) > 1 and clientsManager.isPlayerActive(ip) then
 				clientsManager.desactivatePlayer(ip)
 				msgActivePlayersChange()
 			end
 		end
+		dtPassed = 0
+	else
+		dtPassed = dtPassed + dt
 	end
 	
 	if self.server then
 		self.server.update()	
 	end
+
+	if self.currentSession then
+		self.currentSession.update()
+	end
 end
 
 function on_message(self, message_id, message, sender)
-	-- Add message-handling code here
-	-- Remove this function if not needed
+	if message_id == hash("startGame") then
+		if not self.currentSession then
+			self.currentSession = sessionGenerator.create()
+			self.currentSession.start()
+		end
+	elseif message_id == hash("endGame") then
+		if self.currentSession then
+			self.currentSession.destroy()
+		end
+	end
 end
 
 function on_reload(self)
