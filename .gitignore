@@ -39,3 +39,19 @@ luac.out
 *.x86_64
 *.hex
 
+# Defold temp files
+/.internal
+/build
+.externalToolBuilders
+.DS_Store
+Thumbs.db
+.lock-wscript
+*.pyc
+.project
+.cproject
+builtins
+
+
+
+/debugging/logs/*
+!.gitkeep
