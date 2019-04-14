@@ -30,7 +30,7 @@ end
 
 local function onData(data)
 	if data == "btn_data" then
-		msg.post("/go#ctrlGui", "dataRequest")
+		msg.post("/menu#ctrlGui", "dataRequest")
 		if client then
 			client.send(frame)
 		end
@@ -42,7 +42,7 @@ local function onDisconnection()
 	client = nil
 	SERVER_IP = nil
 	broadcastTimer = 0
-	msg.post("/go#ctrlGui", "setConnectionText", {text = "Disconnected"})
+	msg.post("/menu#ctrlGui", "setConnectionText", {text = "Disconnected"})
 end
 
 local function connectToServer(self, ip, port)
@@ -53,11 +53,11 @@ local function connectToServer(self, ip, port)
 	if client then
 		print("Connected")
 		tryToReconnect = false
-		msg.post("/go#ctrlGui", "setConnectionText", {text = "Connected"})
+		msg.post("/menu#ctrlGui", "setConnectionText", {text = "Connected"})
 	else
 		print("Connection failed. How?")
 		print(err)
-		msg.post("/go#ctrlGui", "setConnectionText", {text = "Connection failed"})
+		msg.post("/menu#ctrlGui", "setConnectionText", {text = "Connection failed"})
 	end
 end
 

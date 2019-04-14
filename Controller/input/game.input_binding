@@ -2,6 +2,10 @@ key_trigger {
   input: KEY_BACK
   action: "key_back"
 }
+key_trigger {
+  input: KEY_BACKSPACE
+  action: "key_backspace"
+}
 mouse_trigger {
   input: MOUSE_BUTTON_LEFT
   action: "mouse_left"

@@ -5,7 +5,7 @@ fonts {
 }
 textures {
   name: "ctrl_buttons"
-  texture: "/controller/ctrlButtons.atlas"
+  texture: "/atlas/content.atlas"
 }
 background_color {
   x: 0.0
