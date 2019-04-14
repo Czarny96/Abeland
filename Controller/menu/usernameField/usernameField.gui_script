@@ -1,23 +1,5 @@
 local scalingButton = require "util/scalingButton"
 
---[[
-
-HOW TO UPDATE PLAYERS' STATUS:
-1. Make a structure:
-
-playerList = {
-	{nick="blablador", ip="192.168.0.50", lockedIn=false, playerClass="Archer"}, 
-	{nick="dogtor", ip="192.168.0.51", lockedIn=true, playerClass="Mage"}, 
-	{}, {}, {}, ..., {}
-}
-
-NOTE: you can do 'playerList=nil' if noone is connected
-
-2. Do: msg.post("/menu#championSelect", "playerUpdate", {players=playerList})
-3. ???
-
---]]
-
 local usernameTextNode = nil
 local textFieldNode = nil
 
@@ -25,7 +7,7 @@ local blackBoxNode = nil
 
 local lockActions = nil
 
-local textFieldFocused = false
+g_textFieldFocused = false
 
 local function buttonPressed(hashedNodeId)
 
@@ -104,31 +86,34 @@ function on_input(self, action_id, action)
 		end
 		if gui.pick_node(textFieldNode, action.x, action.y) then
 			if action.pressed then
-				textFieldFocused = true
+				g_textFieldFocused = true
 				gui.set_color(textFieldNode, vmath.vector4(0.5, 0.5, 0.5, 1.0))
 				gui.show_keyboard(gui.KEYBOARD_TYPE_PASSWORD, false)
 			end
 		else
-			textFieldFocused = false
+			g_textFieldFocused = false
 			gui.set_color(textFieldNode, vmath.vector4(1.0, 1.0, 1.0, 1.0))
 			gui.hide_keyboard()
 		end
 	elseif action_id == hash("type") then
-		if textFieldFocused then
+		if g_textFieldFocused then
 			if string.len(g_username) < 15 then
 				g_username = g_username .. action.text 
 				gui.set_text(usernameTextNode, g_username) 
 			end
 		end
 	elseif action_id == hash("key_backspace") and action.repeated then
-		if textFieldFocused then
+		if g_textFieldFocused then
 			local l = string.len(g_username)
 			g_username = string.sub(g_username, 0, l-1) 
 			gui.set_text(usernameTextNode, g_username)
 		end
 	elseif action_id == hash("key_back") then
-		textFieldFocused = false
-		gui.set_color(textFieldNode, vmath.vector4(1.0, 1.0, 1.0, 1.0))
+		if g_textFieldFocused then
+			g_textFieldFocused = false
+			gui.set_color(textFieldNode, vmath.vector4(1.0, 1.0, 1.0, 1.0))
+			return true
+		end
 	end
 end
 
