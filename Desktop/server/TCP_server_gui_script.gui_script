@@ -3,6 +3,7 @@ local p2pDiscovery = require "defnet.p2p_discovery"
 
 local clientsManager = require "server.clientsManager"
 local playersManager = require "player.playersManager"
+
 local sessionGenerator = require "server.sessionGenerator"
 
 local TCP_SERVER_PORT = 5555
@@ -10,19 +11,26 @@ local PORT = 50000
 
 local dtPassed = 0
 
+
+
 local function msgActivePlayersChange()
+	msg.post("/menu#championSelect", "playerUpdate", {players=clientsManager.generatePlayersList()})
 	playersManager.setActivePlayersIDs(clientsManager.returnActivePlayersIDs())
 end
 
 local function on_data(data, ip, port, client)
 	--potential choke point
 	clientsManager.resetPlayerInactivityTimeCounter(ip)
-
-	clientsManager.translateDataToPlayer(data, ip)
-
+	
 	if  not clientsManager.isPlayerActive(ip) then
 		clientsManager.activatePlayer(ip)
 		msgActivePlayersChange()
+	end
+	
+	if data[1] == "M" then 
+		clientsManager.translateDataToPlayer(data, ip)
+	elseif data[1] == "N" then 
+		clientsManager.addNickToPlayer(data, ip)
 	end
 end 
 

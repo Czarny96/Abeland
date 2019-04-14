@@ -39,16 +39,22 @@ function string:split(sep)
 	return fields
 end
 
+function M.getNickFromFrame(frame)
+	fields = frame:split()
+	local nick = fields[2]
+	return nick
+end
+
 function M.translateFrameToPlayer(frame, playerObjectID)
 	movement = nil
 	fields = frame:split()
 
-	movementX = tonumber(fields[1])
-	movementY = tonumber(fields[2])
+	movementX = tonumber(fields[2])
+	movementY = tonumber(fields[3])
 
-	if fields[3] ~= nil then
-		shootingX = tonumber(fields[3])
-		shootingY = tonumber(fields[4])
+	if fields[4] ~= nil then
+		shootingX = tonumber(fields[4])
+		shootingY = tonumber(fields[5])
 	else
 		shootingX = 0
 		shootingY = 0
@@ -64,7 +70,7 @@ function M.translateFrameToPlayer(frame, playerObjectID)
 	end
 
 	--Button interpretation
-	button = tonumber(fields[5])
+	button = tonumber(fields[6])
 	if button == 1 then
 		msg.post(playerObjectID, "btnBlue")
 	elseif button == 2 then
