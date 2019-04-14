@@ -1,5 +1,6 @@
 local globals = require "main.globals"
-local playersManager = require "player.playersManager"
+local playersManager = require "managers.playersManager"
+local enemyManager = require "managers.enemyManager"
 
 go.property("enemyMovingDir", vmath.vector3(0, 0, 0))
 go.property("maxHealth", 100)
@@ -102,6 +103,7 @@ function update(self, dt)
 		end
 
 		if self.killedTimer <= 0 then
+			enemyManager.setEnemyInactive(go.get_id())
 			go.delete()
 		else
 			self.killedTimer = self.killedTimer - dt

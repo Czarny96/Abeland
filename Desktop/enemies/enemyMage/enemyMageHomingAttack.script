@@ -1,5 +1,5 @@
 local globals = require "main.globals"
-local playersManager = require "player.playersManager"
+local playersManager = require "managers.playersManager"
 
 go.property("damage", 15)
 

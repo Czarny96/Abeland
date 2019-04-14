@@ -3,7 +3,6 @@
 -- require "player.playersManager"
 -- in any script using the functions.
 
-local clientsManager = require "server.clientsManager"
 local globals = require "main.globals"
 
 local M = {}

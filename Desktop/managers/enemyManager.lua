@@ -7,29 +7,53 @@ local M = {}
 
 local globals = require "main.globals"
 
+--Enemies are split into two groups: range, malee
+--Thats why we have:
+--	4 arrays that helds enemy objects
+--		2 of each kind 
+--			1 for active 
+--			1 for inactive
+
+--This arrays keep track of all enemies in the wainting_room
 local inactiveRangeEnemiesIDs = {}
 local inactiveMaleeEnemiesIDs = {}
 
+--This arrays keep track of all enemies actively being on arena
 local activeRangeEnemiesIDs = {}
 local activeMaleeEnemiesIDs = {}
 
+--Variable for random number
 local rand
 
 function M.initializeEnemies(amount)
+--This function creates all enemy objects and puts them in the waiting_room
 	for i = 0, amount/2, 1
 	do
 		table.insert(inactiveRangeEnemiesIDs, factory.create("#enemyMaleeFactory"))
 		table.insert(inactiveMaleeEnemiesIDs, factory.create("#enemyMageFactory"))
 	end
+
+	for i, enemy in pairs(inactiveRangeEnemiesIDs)
+	do
+		go.set(enemy, "isKilled", true)
+	end
+
+	for i, enemy in pairs(inactiveMaleeEnemiesIDs)
+	do
+		go.set(enemy, "isKilled", true)
+	end
 end
 
 function M.isWaveOver()
+--This function checks if a wave is over / finished / all enemies are dead / inactive
 	if activeMaleeEnemiesIDs == {} and activeRangeEnemiesIDs == {} then
-		M.resetArena()
+		--Starts new wave
+		M.initializeWave(10, 1)
 	end
 end
 
 function M.setEnemyInactive(enemyID)
+--This function sets given enemy (enemyID) to inactive state, resurrecting and teleporting to the wainting_room
 	go.set(enemyID, "health", go.get(enemyID, "maxHealth"))
 	go.set_position(go.get_position("spawnPoints/waiting_room"), enemyID)
 
@@ -40,11 +64,15 @@ function M.setEnemyInactive(enemyID)
 		table.remove(activeMaleeEnemiesIDs, enemyID)
 		table.insert(inactiveMaleeEnemiesIDs, enemyID)
 	end
+
+	go.set(enemyID, "isKilled", true)
+	
+	M.isWaveOver()
 end
 
---Sets all enemies as inactive and teleport them to waiting room
+
 function M.resetArena()
-	--Reset both tables so all enemies will be inactive again
+--This function sets all enemies as inactive and teleport them to waiting room
 	for i, enemy in pairs(activeRangeEnemiesIDs)
 	do
 		table.insert(inactiveRangeEnemiesIDs, enemy)
@@ -58,11 +86,24 @@ function M.resetArena()
 		go.set_position(go.get_position("spawnPoints/waiting_room"),enemy)
 	end
 	activeMaleeEnemiesIDs = {}
+
+	for i, enemy in pairs(inactiveRangeEnemiesIDs)
+	do
+		go.set(enemy, "isKilled", true)
+	end
+
+	for i, enemy in pairs(inactiveMaleeEnemiesIDs)
+	do
+		go.set(enemy, "isKilled", true)
+	end
+	
+	globals.setWaveNr(1)
 end
 
---Teleports enemies to arena (behind gates / to gate_[direction]_out
+
 function M.initializeWave(rangePercent, gateAmount)
-	--distancePercent == what is a ratio of ranged attack enemies to malee attacking enemies 
+--Teleports enemies to arena (behind gates / to gate_[direction]_out
+	--rangePercent == what is a ratio of ranged attack enemies to malee attacking enemies 
 	--gateAmount == to how many of 4 gates enemies should be distributed
 
 	local enemiesAmount = globals.getWaveNr() * 20
@@ -171,6 +212,17 @@ function M.initializeWave(rangePercent, gateAmount)
 				table.insert(activeMaleeEnemiesIDs,inactiveMaleeEnemiesIDs[i+1])
 				table.remove(inactiveMaleeEnemiesIDs,i+1)
 			end
+		end
+
+
+		for i, enemy in pairs(activeRangeEnemiesIDs)
+		do
+			go.set(enemy, "isKilled", false)
+		end
+
+		for i, enemy in pairs(activeMaleeEnemiesIDs)
+		do
+			go.set(enemy, "isKilled", false)
 		end
 	end
 

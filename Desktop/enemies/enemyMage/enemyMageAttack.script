@@ -1,4 +1,4 @@
-local playersManager = require "player.playersManager"
+local playersManager = require "managers.playersManager"
 
 go.property("damage", 25)
 go.property("shootingDelay", 3)

@@ -1,8 +1,8 @@
 local tcpServer = require "defnet.tcp_server"
 local p2pDiscovery = require "defnet.p2p_discovery"
 
-local clientsManager = require "server.clientsManager"
-local playersManager = require "player.playersManager"
+local clientsManager = require "managers.clientsManager"
+local playersManager = require "managers.playersManager"
 
 local sessionGenerator = require "server.sessionGenerator"
 
