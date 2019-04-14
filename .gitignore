@@ -40,8 +40,10 @@ luac.out
 *.hex
 
 # Defold temp files
-/.internal
-/build
+/Controller/.internal
+/Controller/build
+/Desktop/.internal
+/Desktop/build
 .externalToolBuilders
 .DS_Store
 Thumbs.db
