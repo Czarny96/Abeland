@@ -5,6 +5,18 @@
 
 local M = {}
 
+--Wave counter for gameplay
+local waveNumber = 1
+
+--waveNumber getter
+function M.getWaveNr()
+	return waveNumber
+end
+--waveNumber setter
+function M.setWaveNr(waveNr)
+	waveNumber = waveNr
+end
+
 -- Get hash as string
 function M.unhash(hash)
 	return string.sub(tostring(hash), 8, #tostring(hash)-1)

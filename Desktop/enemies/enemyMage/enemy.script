@@ -2,9 +2,11 @@ local globals = require "main.globals"
 local playersManager = require "player.playersManager"
 
 go.property("enemyMovingDir", vmath.vector3(0, 0, 0))
+go.property("maxHealth", 100)
 go.property("health", 100)
 go.property("damage", 5)
 go.property("isKilled", false)
+go.property("isRanged", true)
 go.property("moveForce", vmath.vector3(0, 0, 0))
 
 function init(self)

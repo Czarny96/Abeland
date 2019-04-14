@@ -30,7 +30,7 @@ components {
 }
 components {
   id: "temp"
-  component: "/arena/enemySpawnPoints/temp.script"
+  component: "/arena/temp.script"
   position {
     x: 0.0
     y: 0.0
