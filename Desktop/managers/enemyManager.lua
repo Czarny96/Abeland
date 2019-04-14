@@ -4,19 +4,41 @@
 -- in any script using the functions.
 
 local M = {}
+
+local globals = require "main.globals"
+
 local inactiveRangeEnemiesIDs = {}
 local inactiveMaleeEnemiesIDs = {}
 
 local activeRangeEnemiesIDs = {}
 local activeMaleeEnemiesIDs = {}
+
 local rand
 
 function M.initializeEnemies(amount)
-	
 	for i = 0, amount/2, 1
 	do
 		table.insert(inactiveRangeEnemiesIDs, factory.create("#enemyMaleeFactory"))
 		table.insert(inactiveMaleeEnemiesIDs, factory.create("#enemyMageFactory"))
+	end
+end
+
+function M.isWaveOver()
+	if activeMaleeEnemiesIDs == {} and activeRangeEnemiesIDs == {} then
+		M.resetArena()
+	end
+end
+
+function M.setEnemyInactive(enemyID)
+	go.set(enemyID, "health", go.get(enemyID, "maxHealth"))
+	go.set_position(go.get_position("spawnPoints/waiting_room"), enemyID)
+
+	if go.get(enemyID, "isRanged") == true then
+		table.remove(activeRangeEnemiesIDs, enemyID)
+		table.insert(inactiveRangeEnemiesIDs, enemyID)
+	else
+		table.remove(activeMaleeEnemiesIDs, enemyID)
+		table.insert(inactiveMaleeEnemiesIDs, enemyID)
 	end
 end
 
@@ -39,13 +61,16 @@ function M.resetArena()
 end
 
 --Teleports enemies to arena (behind gates / to gate_[direction]_out
-function M.initializeWave(waveNr, rangePercent, gateAmount)
-	--waveNr == wave counter / number of wave to initialize
+function M.initializeWave(rangePercent, gateAmount)
 	--distancePercent == what is a ratio of ranged attack enemies to malee attacking enemies 
 	--gateAmount == to how many of 4 gates enemies should be distributed
 
-	local enemiesAmount = waveNr * 20
+	local enemiesAmount = globals.getWaveNr() * 20
 	local gateSide
+
+	--Set wave number counter on main screen
+	label.set_text("main:/gameContent#label_waveNr", "Wave: " .. globals.getWaveNr())
+	globals.setWaveNr(globals.getWaveNr()+1)
 	
 	if gateAmount <= 1 then
 		--Spawn enemies only at top gate
@@ -148,6 +173,7 @@ function M.initializeWave(waveNr, rangePercent, gateAmount)
 			end
 		end
 	end
+
 
 	--Somehow waiting_room gets teleported with enemies so i set its position back to where it belongs
 	go.set_position(vmath.vector3(750,-1500,0), "/spawnPoints/waiting_room")

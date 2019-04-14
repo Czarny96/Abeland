@@ -10,6 +10,14 @@ key_trigger {
   input: KEY_ENTER
   action: "kb_enter"
 }
+key_trigger {
+  input: KEY_SPACE
+  action: "temp"
+}
+key_trigger {
+  input: KEY_A
+  action: "wave"
+}
 mouse_trigger {
   input: MOUSE_BUTTON_LEFT
   action: "mouse_left"
