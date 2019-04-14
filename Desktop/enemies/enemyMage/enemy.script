@@ -45,6 +45,8 @@ local function updateAnimation(self)
 end
 
 local function playDeathAnimation(self)
+	local pos = go.get_position()
+	go.set_position(vmath.vector3(pos.x, pos.y, -0.98))
 	msg.post("#sprite", "play_animation", {id = hash("enemy_mage_killed")})
 	msg.post("#death_sound", "play_sound", {gain = 0.5})
 end
@@ -80,13 +82,17 @@ function update(self, dt)
 			enemyPos = enemyPos + self.enemyMovingDir * self.movingSpeed * dt + self.moveForce * dt
 			if self.moveForce.x > 1 then
 				self.moveForce.x = self.moveForce.x - self.moveForceReduction * dt
-			elseif self.moveForce.x < 1 then
+			elseif self.moveForce.x < -1 then
 				self.moveForce.x = self.moveForce.x + self.moveForceReduction * dt
+			else
+				self.moveForce.x = 0
 			end
 			if self.moveForce.y > 1 then
 				self.moveForce.y = self.moveForce.y - self.moveForceReduction * dt
-			elseif self.moveForce.y < 1 then
+			elseif self.moveForce.y < -1 then
 				self.moveForce.y = self.moveForce.y + self.moveForceReduction * dt
+			else
+				self.moveForce.y = 0
 			end
 			go.set_position(enemyPos)
 			updateAnimation(self)
@@ -100,13 +106,35 @@ function update(self, dt)
 			enemyPos = enemyPos + self.enemyMovingDir * -self.movingSpeed * dt + self.moveForce * dt
 			if self.moveForce.x > 1 then
 				self.moveForce.x = self.moveForce.x - self.moveForceReduction * dt
-			elseif self.moveForce.x < 1 then
+			elseif self.moveForce.x < -1 then
 				self.moveForce.x = self.moveForce.x + self.moveForceReduction * dt
+			else
+				self.moveForce.x = 0
 			end
 			if self.moveForce.y > 1 then
 				self.moveForce.y = self.moveForce.y - self.moveForceReduction * dt
-			elseif self.moveForce.y < 1 then
+			elseif self.moveForce.y < -1 then
 				self.moveForce.y = self.moveForce.y + self.moveForceReduction * dt
+			else
+				self.moveForce.y = 0
+			end
+			go.set_position(enemyPos)
+			updateAnimation(self)
+		else
+			enemyPos = enemyPos + self.moveForce * dt
+			if self.moveForce.x > 1 then
+				self.moveForce.x = self.moveForce.x - self.moveForceReduction * dt
+			elseif self.moveForce.x < -1 then
+				self.moveForce.x = self.moveForce.x + self.moveForceReduction * dt
+			else
+				self.moveForce.y = 0
+			end
+			if self.moveForce.y > 1 then
+				self.moveForce.y = self.moveForce.y - self.moveForceReduction * dt
+			elseif self.moveForce.y < -1 then
+				self.moveForce.y = self.moveForce.y + self.moveForceReduction * dt
+			else
+				self.moveForce.y = 0
 			end
 			go.set_position(enemyPos)
 			updateAnimation(self)
@@ -147,12 +175,10 @@ function on_message(self, message_id, message, sender)
 			local attackDmg = go.get(scriptUrl, "damage")		
 			self.health = self.health - attackDmg
 			label.set_text("#label_hp", self.health)
-		end
-		if message.group == hash("players") then
+			
+		elseif message.group == hash("players") then
 			local enemyPos = go.get_position()
-			local closestPlayerID = playersManager.getClosestPlayerID(enemyPos)
-			--local playerUrl = closestPlayerID.."#player"
-			local scriptUrl = msg.url(nil, closestPlayerID, "player")
+			local scriptUrl = msg.url(nil, message.other_id, "player")
 			local isPlayerVurnerable = go.get(scriptUrl, "isVulnerable")
 			--Send message about dealt damage
 			msg.post(scriptUrl,"hit", {dmg = self.damage})
@@ -163,6 +189,17 @@ function on_message(self, message_id, message, sender)
 			elseif self.moveForceTimer <= 0 then
 				self.moveForce = vmath.vector3(self.moveForce.x - self.enemyMovingDir.x * self.movingSpeed * 2.5, self.moveForce.y - self.enemyMovingDir.y * self.movingSpeed * 2.5, 0)
 				self.moveForceTimer = 0.1
+			end
+			
+		elseif message.group == hash("enemies") then
+			local enemyPos = go.get_position()
+			local otherEnemyPos = go.get_position(message.other_id)
+			local scriptUrl = msg.url(nil, message.other_id, "enemy")
+			local isOtherEnemyKilled = go.get(scriptUrl, "isKilled")
+			if isOtherEnemyKilled == false then
+				local forceDir = vmath.vector3(enemyPos.x - otherEnemyPos.x, enemyPos.y - otherEnemyPos.y, 0)
+				forceDir = vmath.normalize(forceDir)		
+				self.moveForce = vmath.vector3(self.moveForce.x + forceDir.x * self.movingSpeed, self.moveForce.y + forceDir.y * self.movingSpeed, 0)				
 			end
 		end
 	end

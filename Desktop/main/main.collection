@@ -45,7 +45,7 @@ instances {
   position {
     x: -32.0
     y: -40.0
-    z: -0.5
+    z: -0.99
   }
   rotation {
     x: 0.0
@@ -219,6 +219,106 @@ instances {
     z: 1.0
   }
 }
+instances {
+  id: "enemyMage"
+  prototype: "/enemies/enemyMage/enemyMage.go"
+  position {
+    x: 1020.0
+    y: 748.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "enemyMage1"
+  prototype: "/enemies/enemyMage/enemyMage.go"
+  position {
+    x: 1094.0
+    y: 668.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "enemyMage2"
+  prototype: "/enemies/enemyMage/enemyMage.go"
+  position {
+    x: 1107.0
+    y: 748.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "enemyMage3"
+  prototype: "/enemies/enemyMage/enemyMage.go"
+  position {
+    x: 1174.0
+    y: 674.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "enemyMage4"
+  prototype: "/enemies/enemyMage/enemyMage.go"
+  position {
+    x: 1187.0
+    y: 767.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
 collection_instances {
   id: "TCP_server"
   collection: "/server/TCP_server.collection"
@@ -242,6 +342,11 @@ collection_instances {
 scale_along_z: 0
 embedded_instances {
   id: "gameContent"
+  children: "enemyMage"
+  children: "enemyMage1"
+  children: "enemyMage2"
+  children: "enemyMage3"
+  children: "enemyMage4"
   children: "enemyMelee"
   children: "enemyMelee1"
   children: "enemyMelee2"
