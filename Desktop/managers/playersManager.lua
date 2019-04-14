@@ -4,7 +4,6 @@
 -- in any script using the functions.
 
 local globals = require "main.globals"
-local clientsManager = require "managers.clientsManager"
 
 local M = {}
 
@@ -14,10 +13,8 @@ local playersIDs = {}
 function M.setActivePlayersIDs(newPlayersIDs)
 -- Set active playersIDs
 	local newTable = {}
-	for i, player in pairs(newPlayersIDs) do 
-		if clientsManager.isPlayerActive(player) then
-			table.insert(newTable, player)
-		end
+	for i, player in pairs(newPlayersIDs) do
+		table.insert(newTable, player)
 	end
 	if #newTable > 0 then
 		playersIDs = newTable
