@@ -91,7 +91,7 @@ local function createFrame(self)
 	applyDeadZone(leftJoystick)
 	applyDeadZone(rightJoystick)
 
-	local frame = string.format("%.6f;%.6f;%.6f;%.6f", 
+	local frame = string.format("M;%.6f;%.6f;%.6f;%.6f", 
 	leftJoystick.value.x, leftJoystick.value.y, 
 	rightJoystick.value.x, rightJoystick.value.y)
 

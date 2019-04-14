@@ -54,6 +54,12 @@ local function connectToServer(self, ip, port)
 		print("Connected")
 		tryToReconnect = false
 		msg.post("/menu#ctrlGui", "setConnectionText", {text = "Connected"})
+
+		-- send username to server after succesful connection
+		if g_username == "" then
+			g_username = "-nameless-"
+		end
+		client.send("N;" .. g_username .. "/n/r")
 	else
 		print("Connection failed. How?")
 		print(err)
