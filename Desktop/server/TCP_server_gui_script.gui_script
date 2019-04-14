@@ -27,9 +27,9 @@ local function on_data(data, ip, port, client)
 		msgActivePlayersChange()
 	end
 	
-	if data[1] == "M" then 
+	if string.sub(data,1,1) == "M" then 
 		clientsManager.translateDataToPlayer(data, ip)
-	elseif data[1] == "N" then 
+	elseif string.sub(data,1,1) == "N" then 
 		clientsManager.addNickToPlayer(data, ip)
 	end
 end 
