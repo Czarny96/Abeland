@@ -3,8 +3,9 @@ local playersManager = require "player.playersManager"
 
 go.property("enemyMovingDir", vmath.vector3(0, 0, 0))
 go.property("health", 100)
-go.property("damage", 10)
+go.property("damage", 5)
 go.property("isKilled", false)
+go.property("moveForce", vmath.vector3(0, 0, 0))
 
 function init(self)
 	--Local settings
@@ -15,11 +16,11 @@ function init(self)
 	--Local Colliders
 	self.wallsCollider = {top = false, bottom = false,left = false,right = false}
 	label.set_text("#label_hp", self.health)
+	self.knockbackForce = 250
+	self.moveForceReduction = 400
+	self.knockbackTimer = 0
+	self.moveForceTimer = 0
 end
-
-function final(self)
-
-end	
 
 local function updateAnimation(self)
 	if self.enemyMovingDir.x < -0.3 and self.enemyMovingDir.y > 0.3 then
@@ -76,7 +77,17 @@ function update(self, dt)
 		self.enemyMovingDir = vmath.normalize(self.enemyMovingDir)
 
 		if distanceToClosestPlayer >= self.followDistance then
-			enemyPos = enemyPos + self.enemyMovingDir * self.movingSpeed * dt
+			enemyPos = enemyPos + self.enemyMovingDir * self.movingSpeed * dt + self.moveForce * dt
+			if self.moveForce.x > 1 then
+				self.moveForce.x = self.moveForce.x - self.moveForceReduction * dt
+			elseif self.moveForce.x < 1 then
+				self.moveForce.x = self.moveForce.x + self.moveForceReduction * dt
+			end
+			if self.moveForce.y > 1 then
+				self.moveForce.y = self.moveForce.y - self.moveForceReduction * dt
+			elseif self.moveForce.y < 1 then
+				self.moveForce.y = self.moveForce.y + self.moveForceReduction * dt
+			end
 			go.set_position(enemyPos)
 			updateAnimation(self)
 		elseif distanceToClosestPlayer <= self.runAwayDistance then
@@ -86,7 +97,17 @@ function update(self, dt)
 			if self.wallsCollider.left or self.wallsCollider.right then
 				self.enemyMovingDir.x = 0
 			end
-			enemyPos = enemyPos + self.enemyMovingDir * -self.movingSpeed * dt
+			enemyPos = enemyPos + self.enemyMovingDir * -self.movingSpeed * dt + self.moveForce * dt
+			if self.moveForce.x > 1 then
+				self.moveForce.x = self.moveForce.x - self.moveForceReduction * dt
+			elseif self.moveForce.x < 1 then
+				self.moveForce.x = self.moveForce.x + self.moveForceReduction * dt
+			end
+			if self.moveForce.y > 1 then
+				self.moveForce.y = self.moveForce.y - self.moveForceReduction * dt
+			elseif self.moveForce.y < 1 then
+				self.moveForce.y = self.moveForce.y + self.moveForceReduction * dt
+			end
 			go.set_position(enemyPos)
 			updateAnimation(self)
 		end
@@ -106,6 +127,12 @@ function update(self, dt)
 		end
 	end
 
+	if self.knockbackTimer > 0 then
+		self.knockbackTimer = self.knockbackTimer - 1 * dt
+	end
+	if self.moveForceTimer > 0 then
+		self.moveForceTimer = self.moveForceTimer - 1 * dt
+	end
 	--Collider flags
 	self.wallsCollider.top = false
 	self.wallsCollider.bottom = false
@@ -126,8 +153,17 @@ function on_message(self, message_id, message, sender)
 			local closestPlayerID = playersManager.getClosestPlayerID(enemyPos)
 			--local playerUrl = closestPlayerID.."#player"
 			local scriptUrl = msg.url(nil, closestPlayerID, "player")
+			local isPlayerVurnerable = go.get(scriptUrl, "isVulnerable")
 			--Send message about dealt damage
 			msg.post(scriptUrl,"hit", {dmg = self.damage})
+			if self.knockbackTimer <= 0 and isPlayerVurnerable then
+				self.moveForce = vmath.vector3(self.moveForce.x - self.enemyMovingDir.x * self.knockbackForce, self.moveForce.y - self.enemyMovingDir.y * self.knockbackForce, 0)
+				self.knockbackTimer = 0.5
+				self.moveForceTimer = 0.1
+			elseif self.moveForceTimer <= 0 then
+				self.moveForce = vmath.vector3(self.moveForce.x - self.enemyMovingDir.x * self.movingSpeed * 2.5, self.moveForce.y - self.enemyMovingDir.y * self.movingSpeed * 2.5, 0)
+				self.moveForceTimer = 0.1
+			end
 		end
 	end
 	if message_id == hash("contact_point_response") then	
@@ -135,13 +171,25 @@ function on_message(self, message_id, message, sender)
 		if message.group == hash("walls") then
 			if sender.fragment == hash("wallsTopCollider") then
 				self.wallsCollider.top = true
+				if self.moveForce.y > 0 then
+					self.moveForce.y = 0
+				end
 			elseif sender.fragment == hash("wallsBottomCollider") then
 				self.wallsCollider.bottom = true
+				if self.moveForce.y < 0 then
+					self.moveForce.y = 0
+				end
 			end
 			if sender.fragment == hash("wallsLeftCollider") then
 				self.wallsCollider.left = true
+				if self.moveForce.x < 0 then
+					self.moveForce.x = 0
+				end
 			elseif sender.fragment == hash("wallsRightCollider") then
 				self.wallsCollider.right = true
+				if self.moveForce.x > 0 then
+					self.moveForce.x = 0
+				end
 			end
 		end
 	end

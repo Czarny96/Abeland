@@ -111,13 +111,9 @@ function on_message(self, message_id, message, sender)
 		self.movingDir.y = message.y
 		if self.movingDir.x ~= 0 or self.movingDir.y ~= 0 then
 			self.isMoving = true
-			if self.nonVulnerableTimer > 0.25 then
-			self.nonVulnerableTimer = 0.25
-		end
-	else
+		else
 			self.isMoving = false
-		end
-		
+		end		
 	end
 
 	--Invulnerability (all enemy interactions put here)
@@ -126,6 +122,8 @@ function on_message(self, message_id, message, sender)
 		if message_id == hash("hit") then
 			self.health = self.health - message.dmg
 			label.set_text("#label_hp", self.health)
+			self.nonVulnerableTimer = 0.5
+			self.isVulnerable = false
 		end
 	end
 	

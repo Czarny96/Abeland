@@ -1,11 +1,11 @@
 local globals = require "main.globals"
 local playersManager = require "player.playersManager"
 
-go.property("damage", 20)
+go.property("damage", 15)
 
 function init(self)
 	self.projectileSpeed = 50
-	self.projectileSpeedByDistanceMultiplier = 0.3
+	self.projectileSpeedByDistanceMultiplier = 0.2
 	self.projectileLife = 10
 end
 
