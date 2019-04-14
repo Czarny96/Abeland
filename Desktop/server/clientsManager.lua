@@ -102,6 +102,7 @@ function M.generatePlayersList()
 	for ip,values in pairs(playersTable) do
 		table.insert(playerList, {nick=values[5], ip=ip, lockedIn=false, playerClass=values[6]}) 
 	end
+	return playerList
 end
 
 return M
