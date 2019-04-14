@@ -80,7 +80,7 @@ function update(self, dt)
 	end
 
 	if self.currentSession then
-		self.currentSession.update()
+		self.currentSession = self.currentSession.update()
 	end
 end
 
@@ -89,10 +89,6 @@ function on_message(self, message_id, message, sender)
 		if not self.currentSession then
 			self.currentSession = sessionGenerator.create()
 			self.currentSession.start()
-		end
-	elseif message_id == hash("endGame") then
-		if self.currentSession then
-			self.currentSession.destroy()
 		end
 	end
 end
