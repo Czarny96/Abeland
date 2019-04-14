@@ -2,12 +2,67 @@
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
+
+	-- disable (don't render and don't update) other menu components
+	msg.post("/menu", "disable")
+
+	-- start game with splash screen
+	g_goToSplashScreen()
+	
 end
 
+-- GAME STATE GLOBAL FUNCTIONS AND VARIABLES:
+g_gameStateEnum = {
+	splashScreen = {},
+	mainMenu = {},
+	usernameField = {},
+	controller = {}
+}
+
+g_gameState = g_gameStateEnum.splashScreen
+
+g_username = ""
+
+function g_goToSplashScreen()
+	print("Entering splash screen")
+	g_gameState = g_gameStateEnum.splashScreen
+	msg.post("/menu", "disable")
+	msg.post("/menu#splashScreen", "enable")
+end
+
+function g_goToMainMenu()
+	print("Entering main menu")
+	g_gameState = g_gameStateEnum.mainMenu
+	msg.post("/menu", "disable")
+	msg.post("/menu#mainMenu", "enable")
+end
+
+function g_goToUsernameField()
+	print("Entering username field")
+	g_gameState = g_gameStateEnum.usernameField
+	msg.post("/menu", "disable")
+	msg.post("/menu#usernameField", "enable")
+end
+
+function g_goToController()
+	print("Entering controller")
+	g_gameState = g_gameStateEnum.controller
+	msg.post("/menu", "disable")
+	msg.post("/menu#ctrlGui", "enable")
+end
+-- END OF GAME STATE FUNCTIONS AND VARIABLES
+
 function on_input(self, action_id, action)
-	--if action_id == hash("touch") and action.pressed then
-	--	print("Touch!")
-	--end
+	if action_id == hash("key_back") and action.pressed then
+		if g_gameState == g_gameStateEnum.controller then
+			g_goToMainMenu()
+		elseif g_gameState == g_gameStateEnum.mainMenu then
+			os.exit()
+		elseif g_gameState == g_gameStateEnum.usernameField and not g_textFieldFocused then
+			print(g_textFieldFocused)
+			g_goToMainMenu()
+		end
+	end
 end
 
 

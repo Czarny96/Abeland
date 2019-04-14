@@ -1,0 +1,101 @@
+
+local scalingButton = require "util/scalingButton"
+
+local backgroundNode = nil
+
+-- buttons
+local newGameNode = nil
+local settingsNode = nil
+local exitNode = nil
+
+local blackBoxNode = nil
+
+-- don't react after clicking button
+local lockActions = false
+
+local function buttonPressed(hashedNodeId)
+
+end
+
+local function buttonReleased(hashedNodeId)
+	if hashedNodeId == hash("NewGame") then
+		print("Clicked new game")
+		lockActions = true
+		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
+		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
+		gui.EASING_LINEAR, 0.5, 0, function() g_goToUsernameField() end)
+	elseif hashedNodeId == hash("Exit") then
+		print("Clicked exit")
+		lockActions = true
+		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
+		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
+		gui.EASING_LINEAR, 0.5, 0, function() os.exit() end)
+	end
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	
+	backgroundNode = gui.get_node("bg")
+
+	-- maybe later it will be useful...
+	--newGameNode = gui.get_node("NewGame")
+	--settingsNode = gui.get_node("Settings")
+	--exitNode = gui.get_node("Exit")
+	
+	blackBoxNode = gui.get_node("blackBox")
+
+	self.buttonHolder = {
+		newGameButton = scalingButton.create("NewGame", 0, buttonReleased, buttonPressed),
+		exitButton = scalingButton.create("Exit", 0, buttonReleased, buttonPressed)
+	}
+	
+end
+
+local function start(self)
+	lockActions = false
+
+	-- screen is going from black to white
+	gui.set_color(blackBoxNode, vmath.vector4(0,0,0,1))
+	gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,0), gui.EASING_LINEAR, 0.5)
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	-- Add update code here
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+	if message_id == hash("enable") then
+		start(self)
+	elseif message_id == hash("disable") then
+
+	end
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+	if action_id == hash("mouse_left") then
+		
+		if lockActions then
+			return
+		end
+		
+		for idx, button in pairs(self.buttonHolder) do
+			button.mouseUpdate(action)
+		end
+	end
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end

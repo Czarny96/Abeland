@@ -28,6 +28,15 @@ images {
 images {
   image: "/assets/interface/spinner.png"
 }
-margin: 0
+images {
+  image: "/assets/interface/menu_background.png"
+}
+images {
+  image: "/assets/interface/splashScreen.png"
+}
+images {
+  image: "/assets/interface/textField.png"
+}
+margin: 10
 extrude_borders: 0
 inner_padding: 0

@@ -1,0 +1,122 @@
+local scalingButton = require "util/scalingButton"
+
+local usernameTextNode = nil
+local textFieldNode = nil
+
+local blackBoxNode = nil
+
+local lockActions = nil
+
+g_textFieldFocused = false
+
+local function buttonPressed(hashedNodeId)
+
+end
+
+local function buttonReleased(hashedNodeId)
+	if hashedNodeId == hash("Back") then
+		lockActions = true
+		print("Clicked back")
+
+		gui.hide_keyboard()
+		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
+		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
+		gui.EASING_LINEAR, 0.5, 0, function() g_goToMainMenu() end)
+	elseif hashedNodeId == hash("Start") then
+		lockActions = true
+
+		gui.hide_keyboard()
+		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
+		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
+		gui.EASING_LINEAR, 0.5, 0, function() g_goToController() end)
+	end
+end
+
+local function start()
+	lockActions = false
+
+	-- screen is going from black to white
+	gui.set_color(blackBoxNode, vmath.vector4(0,0,0,1))
+	gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,0), gui.EASING_LINEAR, 0.5)
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	
+	blackBoxNode = gui.get_node("blackBox")
+	usernameTextNode = gui.get_node("usernameText")
+	textFieldNode = gui.get_node("textField")
+	
+	self.buttonHolder = {
+		backButton = scalingButton.create("Back", 0, buttonReleased, buttonPressed),
+		startButton = scalingButton.create("Start", 0, buttonReleased, buttonPressed)
+	}
+
+	gui.set_text(usernameTextNode, g_username)
+end
+
+function final(self)
+	
+end
+
+function update(self, dt)
+	
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("enable") then
+		start(self)
+	elseif message_id == hash("disable") then
+
+	elseif message_id == hash("playerUpdate") then
+		updatePlayerList(message.players)
+
+	end
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("mouse_left") then
+
+		if lockActions then
+			return
+		end
+
+		for idx, button in pairs(self.buttonHolder) do
+			button.mouseUpdate(action)
+		end
+		if gui.pick_node(textFieldNode, action.x, action.y) then
+			if action.pressed then
+				g_textFieldFocused = true
+				gui.set_color(textFieldNode, vmath.vector4(0.5, 0.5, 0.5, 1.0))
+				gui.show_keyboard(gui.KEYBOARD_TYPE_PASSWORD, false)
+			end
+		else
+			g_textFieldFocused = false
+			gui.set_color(textFieldNode, vmath.vector4(1.0, 1.0, 1.0, 1.0))
+			gui.hide_keyboard()
+		end
+	elseif action_id == hash("type") then
+		if g_textFieldFocused then
+			if string.len(g_username) < 15 then
+				g_username = g_username .. action.text 
+				gui.set_text(usernameTextNode, g_username) 
+			end
+		end
+	elseif action_id == hash("key_backspace") and action.repeated then
+		if g_textFieldFocused then
+			local l = string.len(g_username)
+			g_username = string.sub(g_username, 0, l-1) 
+			gui.set_text(usernameTextNode, g_username)
+		end
+	elseif action_id == hash("key_back") then
+		if g_textFieldFocused then
+			g_textFieldFocused = false
+			gui.set_color(textFieldNode, vmath.vector4(1.0, 1.0, 1.0, 1.0))
+			return true
+		end
+	end
+end
+
+function on_reload(self)
+	
+end
