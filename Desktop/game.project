@@ -24,3 +24,7 @@ app_icon = /assets/app_icons/appicon.ico
 [osx]
 app_icon = /assets/app_icons/appicon.icns
 
+[physics]
+max_collisions = 512
+max_contacts = 512
+

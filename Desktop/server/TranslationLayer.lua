@@ -65,7 +65,7 @@ function M.translateFrameToPlayer(frame, playerObjectID)
 
 	--Sending shoot command to playerObject
 	if shootingX > 0.4 or shootingX < -0.4 or shootingY > 0.4 or shootingY < -0.4 then
-		print(shootingX .. "\t" .. shootingY)
+		--print(shootingX .. "\t" .. shootingY)
 		msg.post(playerObjectID, "shoot", {x = shootingX, y = shootingY})
 	end
 

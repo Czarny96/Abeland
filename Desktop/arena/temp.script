@@ -1,17 +1,23 @@
 --Temporary script to test if enemies are spawned properly
 
 local enemyManager = require "managers.enemyManager"
+local isTemp = false
+local isWave = false
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
+
 end
 
 function on_input(self, action_id, action)
-	if action_id == hash("temp") then
+	if action_id == hash("temp") and isTemp == false then
 		--How much enemies are to spawn
+		isTemp = true
 		enemyManager.initializeEnemies(10)
-	elseif action_id == hash("wave") then
+		
+	elseif action_id == hash("wave") and isWave == false then
 		--Initialize wave (teleport precised amount of enemies to gates outside arena)
+		isWave = true
 		enemyManager.initializeWave(10, 1)
 	end
 end

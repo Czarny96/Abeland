@@ -5,9 +5,12 @@ go.property("movingDir", vmath.vector3(0, 0, 0))
 go.property("position", vmath.vector3(0, 0, 0))
 go.property("health", 100)
 go.property("movingSpeed", 150)
+
 --Flags
 go.property("isKilled", false)
 go.property("isVulnerable", true)
+
+local globals = require "main.globals"
 
 function init(self)
 	label.set_text("#label_hp", self.health)
@@ -47,8 +50,11 @@ local function updateAnimation(self)
 end
 
 function update(self, dt)
+	--Check if game is paused
+	if globals.getPause() then
+		return
 	--Check if player is alive
-	if self.isKilled then
+	elseif self.isKilled then
 		return
 	end
 	

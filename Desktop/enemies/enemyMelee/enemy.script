@@ -2,6 +2,7 @@
 
 local playersManager = require "managers.playersManager"
 local enemyManager = require "managers.enemyManager"
+local globals = require "main.globals"
 
 -- Global properties
 go.property("enemyMovingDir", vmath.vector3(0, 0, 0))
@@ -59,7 +60,12 @@ local function playDeathAnimation(self)
 end
 
 function update(self, dt)
-	if playersManager.getActivePlayersIDs() ~= 0 and self.isKilled == false then
+	--Checks if the game is paused
+	if globals.getPause() then
+		return
+	end
+	
+	if playersManager.getActivePlayersIDs() ~= 0 and not self.isKilled then
 
 		-- Count possition diffrence between closest player and enemy to designate enemy moving direction
 		local enemyPos = go.get_position()
@@ -134,6 +140,15 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
+	if message_id == hash("setInactive") then
+		print("SET_INACTIVE")
+		self.isKilled = true
+		self.health = self.maxHealth
+	elseif message_id == hash("setActive") then
+		print("SET_ACTIVE")
+		self.isKilled = false
+	end
+	
 	if message_id == hash("collision_response") and self.isKilled == false then
 
 		-- Collisions with other enemies
@@ -205,4 +220,5 @@ function on_message(self, message_id, message, sender)
 			end
 		end
 	end
+
 end

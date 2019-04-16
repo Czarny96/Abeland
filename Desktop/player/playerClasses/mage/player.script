@@ -8,6 +8,9 @@ go.property("movingSpeed", 120)
 
 --Flags
 go.property("isKilled", false)
+go.property("isVulnerable", true)
+
+local globals = require "main.globals"
 
 function init(self)
 	label.set_text("#label_hp", self.health)
@@ -47,8 +50,11 @@ local function updateAnimation(self)
 end
 
 function update(self, dt)
-	--Check if player is alive
-	if self.isKilled then
+	--Check if game is paused
+	if globals.getPause() then
+		return
+		--Check if player is alive
+	elseif self.isKilled then
 		return
 	end
 
@@ -114,13 +120,9 @@ function on_message(self, message_id, message, sender)
 		self.movingDir.y = message.y
 		if self.movingDir.x ~= 0 or self.movingDir.y ~= 0 then
 			self.isMoving = true
-			if self.nonVulnerableTimer > 0.25 then
-				self.nonVulnerableTimer = 0.25
-			end
 		else
 			self.isMoving = false
-		end
-
+		end		
 	end
 
 	--Invulnerability (all enemy interactions put here)
@@ -129,6 +131,8 @@ function on_message(self, message_id, message, sender)
 		if message_id == hash("hit") then
 			self.health = self.health - message.dmg
 			label.set_text("#label_hp", self.health)
+			self.nonVulnerableTimer = 0.5
+			self.isVulnerable = false
 		end
 	end
 

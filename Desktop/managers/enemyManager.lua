@@ -29,18 +29,18 @@ function M.initializeEnemies(amount)
 --This function creates all enemy objects and puts them in the waiting_room
 	for i = 0, amount/2, 1
 	do
-		table.insert(inactiveRangeEnemiesIDs, factory.create("#enemyMaleeFactory"))
-		table.insert(inactiveMaleeEnemiesIDs, factory.create("#enemyMageFactory"))
+		table.insert(inactiveRangeEnemiesIDs, factory.create("#enemyMageFactory"))
+		table.insert(inactiveMaleeEnemiesIDs, factory.create("#enemyMaleeFactory"))
 	end
 
 	for i, enemy in pairs(inactiveRangeEnemiesIDs)
 	do
-		go.set(enemy, "isKilled", true)
+		msg.post(enemy,"setInactive")
 	end
 
 	for i, enemy in pairs(inactiveMaleeEnemiesIDs)
 	do
-		go.set(enemy, "isKilled", true)
+		msg.post(enemy,"setInactive")
 	end
 end
 
@@ -54,22 +54,39 @@ end
 
 function M.setEnemyInactive(enemyID)
 --This function sets given enemy (enemyID) to inactive state, resurrecting and teleporting to the wainting_room
-	go.set(enemyID, "health", go.get(enemyID, "maxHealth"))
+	msg.post(enemy, "setInactive")
 	go.set_position(go.get_position("spawnPoints/waiting_room"), enemyID)
 
-	if go.get(enemyID, "isRanged") == true then
-		table.remove(activeRangeEnemiesIDs, enemyID)
+
+	if M.isActiveEnemyRanged(enemyID) then
+		table.remove(activeRangeEnemiesIDs, M.findIndexOfEnemy(activeRangeEnemiesIDs,enemyID))
 		table.insert(inactiveRangeEnemiesIDs, enemyID)
 	else
-		table.remove(activeMaleeEnemiesIDs, enemyID)
+		table.remove(activeMaleeEnemiesIDs, M.findIndexOfEnemy(activeMaleeEnemiesIDs,enemyID))
 		table.insert(inactiveMaleeEnemiesIDs, enemyID)
 	end
-
-	go.set(enemyID, "isKilled", true)
 	
 	M.isWaveOver()
 end
 
+function M.findIndexOfEnemy(tab,enemy)
+--This function helps to find an index of specified enemyObject in given array
+		for i, value in pairs(activeRangeEnemiesIDs) do
+		if value == enemy then 
+			return i
+		end
+	end
+end
+
+function M.isActiveEnemyRanged(enemy)
+--This function checks if given enemyObject type is ranged (true) or malee (false)
+	for i, value in pairs(activeRangeEnemiesIDs) do
+		if value == enemy then 
+			return true
+		end
+	end
+	return false
+end
 
 function M.resetArena()
 --This function sets all enemies as inactive and teleport them to waiting room
@@ -119,13 +136,13 @@ function M.initializeWave(rangePercent, gateAmount)
 		do
 			rand = math.floor(math.random(1,100))
 			if rand <= rangePercent then
-				go.set_position(go.get_position("/spawnPoints/gate_top_out"), inactiveRangeEnemiesIDs[i+1])
+				go.set_position(go.get_position("/spawnPoints/gate_top_in"), inactiveRangeEnemiesIDs[i+1])
 				table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
-				table.remove(inactiveRangeEnemiesIDs,i+1)
+				table.remove(inactiveRangeEnemiesIDs, i+1)
 			else
-				go.set_position(go.get_position("/spawnPoints/gate_top_out"), inactiveMaleeEnemiesIDs[i+1])
-				table.insert(activeMaleeEnemiesIDs,inactiveMaleeEnemiesIDs[i+1])
-				table.remove(inactiveMaleeEnemiesIDs,i+1)
+				go.set_position(go.get_position("/spawnPoints/gate_top_in"), inactiveMaleeEnemiesIDs[i+1])
+				table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i+1])
+				table.remove(inactiveMaleeEnemiesIDs, i+1)
 			end
 		end
 	elseif gateAmount == 2 then
@@ -198,7 +215,7 @@ function M.initializeWave(rangePercent, gateAmount)
 					go.set_position(go.get_position("/spawnPoints/gate_right_out"), inactiveRangeEnemiesIDs[i+1])
 				end
 				table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
-				table.remove(inactiveRangeEnemiesIDs,i+1)
+				table.remove(inactiveRangeEnemiesIDs, i+1)
 			else
 				if gateSide <= 25 then
 					go.set_position(go.get_position("/spawnPoints/gate_bottom_out"), inactiveMaleeEnemiesIDs[i+1])
@@ -209,21 +226,23 @@ function M.initializeWave(rangePercent, gateAmount)
 				else
 					go.set_position(go.get_position("/spawnPoints/gate_right_out"), inactiveMaleeEnemiesIDs[i+1])
 				end
-				table.insert(activeMaleeEnemiesIDs,inactiveMaleeEnemiesIDs[i+1])
-				table.remove(inactiveMaleeEnemiesIDs,i+1)
+				table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i+1])
+				table.remove(inactiveMaleeEnemiesIDs, i+1)
 			end
 		end
 
 
-		for i, enemy in pairs(activeRangeEnemiesIDs)
-		do
-			go.set(enemy, "isKilled", false)
-		end
+	
+	end
 
-		for i, enemy in pairs(activeMaleeEnemiesIDs)
-		do
-			go.set(enemy, "isKilled", false)
-		end
+	for i, enemy in pairs(activeRangeEnemiesIDs)
+	do
+		msg.post(enemy, "setActive")
+	end
+
+	for i, enemy in pairs(activeMaleeEnemiesIDs)
+	do
+		msg.post(enemy, "setActive")
 	end
 
 
