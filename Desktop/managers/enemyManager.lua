@@ -25,12 +25,32 @@ local activeMaleeEnemiesIDs = {}
 --Variable for random number
 local rand
 
+--Important objects URLs
+local wave_label = "main:/gameContent#label_waveNr"
+local waiting_room = "main:/spawnPoints/gate_right_out"
+local gate_top_out = "main:/spawnPoints/gate_top_out"
+local gate_top_in = "main:/spawnPoints/gate_top_in"
+local gate_bottom_out = "main:/spawnPoints/gate_bottom_out"
+local gate_bottom_in = "main:/spawnPoints/gate_bottom_in"
+local gate_left_out = "main:/spawnPoints/gate_left_out"
+local gate_left_in = "main:/spawnPoints/gate_left_in"
+local gate_right_out = "main:/spawnPoints/gate_right_out"
+local gate_right_in = "main:/spawnPoints/gate_right_in"
+
 function M.initializeEnemies(amount)
---This function creates all enemy objects and puts them in the waiting_room
+	--This function creates all enemy objects and puts them in the waiting_room
+	local enemyRanged
+	local enemyMalee
 	for i = 0, amount/2, 1
 	do
-		table.insert(inactiveRangeEnemiesIDs, factory.create("#enemyMageFactory"))
-		table.insert(inactiveMaleeEnemiesIDs, factory.create("#enemyMaleeFactory"))
+		enemyRanged = factory.create("#enemyMageFactory")
+		enemyMalee = factory.create("#enemyMaleeFactory")
+
+		go.set_position(go.get_position(waiting_room) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), enemyRanged)
+		go.set_position(go.get_position(waiting_room) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), enemyMalee)
+		
+		table.insert(inactiveRangeEnemiesIDs, enemyRanged)
+		table.insert(inactiveMaleeEnemiesIDs, enemyMalee)
 	end
 
 	for i, enemy in pairs(inactiveRangeEnemiesIDs)
@@ -55,8 +75,8 @@ end
 function M.setEnemyInactive(enemyID)
 --This function sets given enemy (enemyID) to inactive state, resurrecting and teleporting to the wainting_room
 	msg.post(enemy, "setInactive")
-	go.set_position(go.get_position("spawnPoints/waiting_room"), enemyID)
-
+  
+	go.set_position(go.get_position(waiting_room) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), enemyID)
 
 	if M.isActiveEnemyRanged(enemyID) then
 		table.remove(activeRangeEnemiesIDs, M.findIndexOfEnemy(activeRangeEnemiesIDs,enemyID))
@@ -89,30 +109,18 @@ function M.isActiveEnemyRanged(enemy)
 end
 
 function M.resetArena()
---This function sets all enemies as inactive and teleport them to waiting room
+--This function resets all enemies and wave counter to default (inactive, 1)
 	for i, enemy in pairs(activeRangeEnemiesIDs)
 	do
-		table.insert(inactiveRangeEnemiesIDs, enemy)
-		go.set_position(go.get_position("spawnPoints/waiting_room"),enemy)
+		M.setEnemyInactive(enemy)
 	end
 	activeRangeEnemiesIDs = {}
 	
 	for i, enemy in pairs(activeMaleeEnemiesIDs)
 	do
-		table.insert(inactiveMaleeEnemiesIDs, enemy)
-		go.set_position(go.get_position("spawnPoints/waiting_room"),enemy)
+		M.setEnemyInactive(enemy)
 	end
 	activeMaleeEnemiesIDs = {}
-
-	for i, enemy in pairs(inactiveRangeEnemiesIDs)
-	do
-		go.set(enemy, "isKilled", true)
-	end
-
-	for i, enemy in pairs(inactiveMaleeEnemiesIDs)
-	do
-		go.set(enemy, "isKilled", true)
-	end
 	
 	globals.setWaveNr(1)
 end
@@ -127,7 +135,7 @@ function M.initializeWave(rangePercent, gateAmount)
 	local gateSide
 
 	--Set wave number counter on main screen
-	label.set_text("main:/gameContent#label_waveNr", "Wave: " .. globals.getWaveNr())
+	label.set_text(wave_label, "Wave: " .. globals.getWaveNr())
 	globals.setWaveNr(globals.getWaveNr()+1)
 	
 	if gateAmount <= 1 then
@@ -136,11 +144,11 @@ function M.initializeWave(rangePercent, gateAmount)
 		do
 			rand = math.floor(math.random(1,100))
 			if rand <= rangePercent then
-				go.set_position(go.get_position("/spawnPoints/gate_top_in"), inactiveRangeEnemiesIDs[i+1])
+				go.set_position(go.get_position(gate_top_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveRangeEnemiesIDs[i+1])
 				table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
 				table.remove(inactiveRangeEnemiesIDs, i+1)
 			else
-				go.set_position(go.get_position("/spawnPoints/gate_top_in"), inactiveMaleeEnemiesIDs[i+1])
+				go.set_position(go.get_position(gate_top_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveMaleeEnemiesIDs[i+1])
 				table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i+1])
 				table.remove(inactiveMaleeEnemiesIDs, i+1)
 			end
@@ -153,17 +161,17 @@ function M.initializeWave(rangePercent, gateAmount)
 			gateSide = math.floor(math.random(1,100))
 			if rand <= rangePercent then
 				if gateSide <= 50 then
-					go.set_position(go.get_position("/spawnPoints/gate_bottom_out"), inactiveRangeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_top_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveRangeEnemiesIDs[i+1])
 				else
-					go.set_position(go.get_position("/spawnPoints/gate_top_out"), inactiveRangeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_bottom_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveRangeEnemiesIDs[i+1])
 				end
-								table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
+				table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
 				table.remove(inactiveRangeEnemiesIDs,i+1)
 			else
 				if gateSide <= 50 then
-					go.set_position(go.get_position("/spawnPoints/gate_bottom_out"), inactiveMaleeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_top_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveMaleeEnemiesIDs[i+1])
 				else
-					go.set_position(go.get_position("/spawnPoints/gate_top_out"), inactiveMaleeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_bottom_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveMaleeEnemiesIDs[i+1])
 				end
 				table.insert(activeMaleeEnemiesIDs,inactiveMaleeEnemiesIDs[i+1])
 				table.remove(inactiveMaleeEnemiesIDs,i+1)
@@ -178,21 +186,21 @@ function M.initializeWave(rangePercent, gateAmount)
 			gateSide = math.floor(math.random(1,100))
 			if rand <= rangePercent then
 				if gateSide <= 33 then
-					go.set_position(go.get_position("/spawnPoints/gate_bottom_out"), inactiveRangeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_top_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveRangeEnemiesIDs[i+1])
 				elseif gateSide <= 66 then
-					go.set_position(go.get_position("/spawnPoints/gate_top_out"), inactiveRangeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_bottom_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveRangeEnemiesIDs[i+1])
 				else
-					go.set_position(go.get_position("/spawnPoints/gate_left_out"), inactiveRangeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_left_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveRangeEnemiesIDs[i+1])
 				end
 				table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
 				table.remove(inactiveRangeEnemiesIDs,i+1)
 			else
 				if gateSide <= 33 then
-					go.set_position(go.get_position("/spawnPoints/gate_bottom_out"), inactiveMaleeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_top_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveMaleeEnemiesIDs[i+1])
 				elseif gateSide <= 66 then
-					go.set_position(go.get_position("/spawnPoints/gate_top_out"), inactiveMaleeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_bottom_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveMaleeEnemiesIDs[i+1])
 				else
-					go.set_position(go.get_position("/spawnPoints/gate_left_out"), inactiveMaleeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_left_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveMaleeEnemiesIDs[i+1])
 				end
 				table.insert(activeMaleeEnemiesIDs,inactiveMaleeEnemiesIDs[i+1])
 				table.remove(inactiveMaleeEnemiesIDs,i+1)
@@ -206,25 +214,25 @@ function M.initializeWave(rangePercent, gateAmount)
 			gateSide = math.floor(math.random(1,100))
 			if rand <= rangePercent then
 				if gateSide <= 25 then
-					go.set_position(go.get_position("/spawnPoints/gate_bottom_out"), inactiveRangeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_top_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveRangeEnemiesIDs[i+1])
 				elseif gateSide <= 50 then
-					go.set_position(go.get_position("/spawnPoints/gate_top_out"), inactiveRangeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_bottom_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveRangeEnemiesIDs[i+1])
 				elseif gateSide <= 75 then
-					go.set_position(go.get_position("/spawnPoints/gate_left_out"), inactiveRangeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_left_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveRangeEnemiesIDs[i+1])
 				else
-					go.set_position(go.get_position("/spawnPoints/gate_right_out"), inactiveRangeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_right_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveRangeEnemiesIDs[i+1])
 				end
 				table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
 				table.remove(inactiveRangeEnemiesIDs, i+1)
 			else
 				if gateSide <= 25 then
-					go.set_position(go.get_position("/spawnPoints/gate_bottom_out"), inactiveMaleeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_top_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveMaleeEnemiesIDs[i+1])
 				elseif gateSide <= 50 then
-					go.set_position(go.get_position("/spawnPoints/gate_top_out"), inactiveMaleeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_bottom_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100),0), inactiveMaleeEnemiesIDs[i+1])
 				elseif gateSide <= 75 then
-					go.set_position(go.get_position("/spawnPoints/gate_left_out"), inactiveMaleeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_left_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveMaleeEnemiesIDs[i+1])
 				else
-					go.set_position(go.get_position("/spawnPoints/gate_right_out"), inactiveMaleeEnemiesIDs[i+1])
+					go.set_position(go.get_position(gate_right_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveMaleeEnemiesIDs[i+1])
 				end
 				table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i+1])
 				table.remove(inactiveMaleeEnemiesIDs, i+1)
@@ -247,7 +255,7 @@ function M.initializeWave(rangePercent, gateAmount)
 
 
 	--Somehow waiting_room gets teleported with enemies so i set its position back to where it belongs
-	go.set_position(vmath.vector3(750,-1500,0), "/spawnPoints/waiting_room")
+	go.set_position(vmath.vector3(750,-1500,0), "main:/spawnPoints/waiting_room")
 --                              ,|
 --                             //|                              ,|
 --                            //,/                             -~ |

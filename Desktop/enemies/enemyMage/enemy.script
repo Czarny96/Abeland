@@ -227,6 +227,7 @@ function on_message(self, message_id, message, sender)
 			end
 		end
 	end
+
 	if message_id == hash("setInactive") then
 		self.isKilled = true
 		self.health = self.maxHealth

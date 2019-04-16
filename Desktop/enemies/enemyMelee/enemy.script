@@ -140,15 +140,6 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("setInactive") then
-		print("SET_INACTIVE")
-		self.isKilled = true
-		self.health = self.maxHealth
-	elseif message_id == hash("setActive") then
-		print("SET_ACTIVE")
-		self.isKilled = false
-	end
-	
 	if message_id == hash("collision_response") and self.isKilled == false then
 
 		-- Collisions with other enemies
@@ -221,4 +212,10 @@ function on_message(self, message_id, message, sender)
 		end
 	end
 
+	if message_id == hash("setInactive") then
+		self.isKilled = true
+		self.health = self.maxHealth
+	elseif message_id == hash("setActive") then
+		self.isKilled = false
+	end
 end
