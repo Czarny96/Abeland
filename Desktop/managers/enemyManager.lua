@@ -75,7 +75,6 @@ end
 function M.setEnemyInactive(enemyID)
 --This function sets given enemy (enemyID) to inactive state, resurrecting and teleporting to the wainting_room
 	msg.post(enemy, "setInactive")
-  
 	go.set_position(go.get_position(waiting_room) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), enemyID)
 
 	if M.isActiveEnemyRanged(enemyID) then
@@ -131,7 +130,7 @@ function M.initializeWave(rangePercent, gateAmount)
 	--rangePercent == what is a ratio of ranged attack enemies to malee attacking enemies 
 	--gateAmount == to how many of 4 gates enemies should be distributed
 
-	local enemiesAmount = globals.getWaveNr() * 20
+	local enemiesAmount = globals.getWaveNr()
 	local gateSide
 
 	--Set wave number counter on main screen
@@ -140,6 +139,7 @@ function M.initializeWave(rangePercent, gateAmount)
 	
 	if gateAmount <= 1 then
 		--Spawn enemies only at top gate
+		msg.post("/topWalls#topWallsScript", "openTop")
 		for i = 0, enemiesAmount, 1
 		do
 			rand = math.floor(math.random(1,100))
