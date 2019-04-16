@@ -66,9 +66,11 @@ end
 
 function M.isWaveOver()
 --This function checks if a wave is over / finished / all enemies are dead / inactive
-	if activeMaleeEnemiesIDs == {} and activeRangeEnemiesIDs == {} then
-		--Starts new wave
+		if next(activeMaleeEnemiesIDs) == nil or next(activeRangeEnemiesIDs) == nil then
+			--Starts new wave
 		M.initializeWave(10, 1)
+	else
+		print("NOT EMPTY?")
 	end
 end
 
