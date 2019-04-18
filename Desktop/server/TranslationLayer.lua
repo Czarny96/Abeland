@@ -68,7 +68,7 @@ function M.translateFrameToPlayer(frame, playerObjectID)
 		--print(shootingX .. "\t" .. shootingY)
 		msg.post(playerObjectID, "shoot", {x = shootingX, y = shootingY})
 	end
-
+	
 	--Button interpretation
 	button = tonumber(fields[6])
 	if button == 1 then

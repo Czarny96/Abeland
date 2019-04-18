@@ -50,6 +50,10 @@ local function updateAnimation(self)
 end
 
 function update(self, dt)
+	if playersManager.getActivePlayersIDs() == 0 and g_gameState ~= g_gameStateEnum.gameOver then
+		g_goToGameOverScreen()
+	end
+	
 	--Check if game is paused
 	if globals.getPause() then
 		return

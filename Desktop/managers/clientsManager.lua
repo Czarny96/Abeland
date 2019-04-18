@@ -45,7 +45,7 @@ function M.getPlayerInactivityTimeCounter(playerIP)
 end
 
 function M.setPlayerNick(nick,playerIP)
-	playersTable[playerIP][6] = nick
+	playersTable[playerIP][5] = nick
 end
 
 function M.getPlayerID(playerIP)
@@ -100,7 +100,7 @@ end
 function M.generatePlayersList()
 	local playerList = {}
 	for ip,values in pairs(playersTable) do
-		table.insert(playerList, {nick=values[5], ip=ip, lockedIn=false, playerClass=values[6]}) 
+		table.insert(playerList, {nick=values[5], ip=ip}) 
 	end
 	return playerList
 end

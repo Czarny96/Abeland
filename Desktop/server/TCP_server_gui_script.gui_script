@@ -11,8 +11,6 @@ local PORT = 50000
 
 local dtPassed = 0
 
-
-
 local function msgActivePlayersChange()
 	msg.post("/menu#championSelect", "playerUpdate", {players=clientsManager.generatePlayersList()})
 	playersManager.setActivePlayersIDs(clientsManager.returnActivePlayersIDs())
@@ -93,12 +91,12 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("startGame") then
+	--[[if message_id == hash("startGame") then
 		if not self.currentSession then
 			self.currentSession = sessionGenerator.create()
 			self.currentSession.start()
 		end
-	end
+	end]]
 end
 
 function on_reload(self)

@@ -1,4 +1,5 @@
 require "debugging/debugging"
+local globals = require "main.globals"
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
@@ -17,12 +18,16 @@ g_gameStateEnum = {
 	mainMenu = {},
 	settings = {},
 	championSelect = {},
-	inGame = {}
+	inGame = {},
+	gameOver = {},
+	pause = {}
 }
 
 g_gameState = g_gameStateEnum.splashScreen
 
 g_inGameMenuVisible = false
+
+g_allowOpenPauseVariable = false
 
 function g_goToSplashScreen()
 	print("Entering splash screen")
@@ -38,6 +43,11 @@ function g_goToMainMenu()
 	msg.post("/menu#mainMenu", "enable")
 end
 
+function g_goToSettings()
+	print("Entering settings")
+	g_gameState = g_gameStateEnum.settings
+end
+
 function g_goToChampionSelect()
 	print("Entering champion select")
 	g_gameState = g_gameStateEnum.championSelect
@@ -45,9 +55,18 @@ function g_goToChampionSelect()
 	msg.post("/menu#championSelect", "enable")
 end
 
-function g_goToSettings()
-	print("Entering settings")
-	g_gameState = g_gameStateEnum.settings
+function g_goToGameOverScreen()
+	print("Entering game over screen")
+	g_gameState = g_gameStateEnum.gameOver
+	msg.post("/menu", "disable")
+	msg.post("/menu#gameOver", "enable")
+end
+
+function g_goToPauseScreen()
+	print("Entering pause screen")
+	g_gameState = g_gameStateEnum.pause
+	msg.post("/menu", "disable")
+	msg.post("/menu#pauseScreen", "enable")
 end
 
 function g_showInGameMenu()
@@ -59,13 +78,35 @@ function g_hideInGameMenu()
 	print("Hide in game menu")
 	g_inGameMenuVisible = false
 end
+
+function g_allowOpenPause()
+	g_allowOpenPauseVariable = true
+end
+
+function g_doNotAllowOpenPause()
+	g_allowOpenPauseVariable = false
+end
+
+function g_setUpInGameEnum()
+	g_gameState = g_gameStateEnum.inGame
+end
+
 -- END OF GAME STATE FUNCTIONS AND VARIABLES
 
 function on_input(self, action_id, action)
-	if action_id == hash("esc") and action.pressed then
+	if action_id == hash("esc") and action.pressed and g_allowOpenPauseVariable == true and g_gameState ~= g_gameStateEnum.pause then
+		msg.post("/menu", "disable")
+		globals.setPause(true)
+		g_goToPauseScreen()
+	elseif action_id == hash("esc") and action.pressed and g_gameState == g_gameStateEnum.pause then
+		globals.setPause(false)
+		g_allowOpenPause()
+		g_setUpInGameEnum()
+		msg.post("/menu", "disable")
+	elseif action_id == hash("esc") and action.pressed then
 		os.exit()
 	end
-	
+
 	if action_id == hash("read-file") and action.pressed then
 		ReadFiles("log.txt")
 	end
@@ -83,5 +124,3 @@ function on_message(self, message_id, message, sender)
 		factory.create("#rogueFactory", vmath.vector3(render.get_width()/2, render.get_height()/2,0), nil, nil)
 	end
 end
-
-

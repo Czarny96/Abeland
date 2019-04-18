@@ -8,25 +8,20 @@ go.property("shootingDelay", 5)
 function init(self)
 	-- Local settings
 	self.isEnemyMageKilled = false
-	self.activePlayerNumber = 0
 	-- Local Timers
 	self.shootingTimer = 0
 end
 
 function update(self, dt)
-	-- If game is paused stop enemy
-	if globals.getPause() then
-		return
-	end
-	-- Create attack from factory if there is active and alive player and enemy is not killed
-	if self.shootingTimer >= self.shootingDelay then
-		self.isEnemyMageKilled = go.get("#enemy", "isKilled")
-		self.activePlayers = playersManager.getActivePlayersIDs()
-		if self.isEnemyMageKilled == false and self.activePlayers ~= 0 then
-			factory.create("#enemyMageHomingAttackFactory", nil)
+	if globals.getPause() == false then
+		if self.shootingTimer >= self.shootingDelay then
+      self.isEnemyMageKilled = go.get("#enemy", "isKilled")
+		  if self.isEnemyMageKilled == false then
+        factory.create("#enemyMageHomingAttackFactory", nil)
+      end
+			self.shootingTimer = 0
+		else
+			self.shootingTimer = self.shootingTimer + dt
 		end
-		self.shootingTimer = 0
-	else
-		self.shootingTimer = self.shootingTimer + dt
 	end	
 end

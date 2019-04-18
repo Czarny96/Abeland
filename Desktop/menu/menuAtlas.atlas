@@ -7,6 +7,18 @@ images {
 images {
   image: "/assets/gui/splashScreen.png"
 }
+images {
+  image: "/assets/prototypes/archer/choose_archer_player.png"
+}
+images {
+  image: "/assets/prototypes/mage/choose_mage_player.png"
+}
+images {
+  image: "/assets/prototypes/knight/choose_knight_player.png"
+}
+images {
+  image: "/assets/prototypes/rogue/choose_rogue_player.png"
+}
 margin: 10
 extrude_borders: 0
 inner_padding: 0

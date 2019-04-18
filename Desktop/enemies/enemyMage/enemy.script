@@ -178,7 +178,6 @@ end
 local function enemiesCollisions(self, message_id, message, sender)
 	local otherEnemyPos = go.get_position(message.other_id)
 	local otherEnemyUrl = msg.url(nil, message.other_id, "enemy")
-
 	-- Get pushed from other enemy if its not a dead body
 	local isOtherEnemyKilled = go.get(otherEnemyUrl, "isKilled")
 	if isOtherEnemyKilled == false then

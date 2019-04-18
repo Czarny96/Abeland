@@ -41,6 +41,7 @@ function M.initializeEnemies(amount)
 	--This function creates all enemy objects and puts them in the waiting_room
 	local enemyRanged
 	local enemyMalee
+
 	for i = 0, amount/2, 1
 	do
 		enemyRanged = factory.create("#enemyMageFactory")
@@ -254,7 +255,6 @@ function M.initializeWave(rangePercent, gateAmount)
 	do
 		msg.post(enemy, "setActive")
 	end
-
 
 	--Somehow waiting_room gets teleported with enemies so i set its position back to where it belongs
 	go.set_position(vmath.vector3(750,-1500,0), "main:/spawnPoints/waiting_room")
