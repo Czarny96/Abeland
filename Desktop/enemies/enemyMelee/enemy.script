@@ -240,9 +240,10 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("contact_point_response") then	
 		wallsCollisions(self, message_id, message, sender)	
 	elseif message_id == hash("setInactive") then
-		self.isKilled = true
 		self.health = self.maxHealth
+		self.isKilled = true
 	elseif message_id == hash("setActive") then
+		label.set_text("#label_hp", self.health)
 		self.isKilled = false
 	end
 end
