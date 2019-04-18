@@ -1,24 +1,32 @@
+-- ENEMY MAGE ATTACKS CREATOR
 local playersManager = require "managers.playersManager"
+local globals = require "main.globals"
 
-go.property("damage", 25)
-go.property("shootingDelay", 3)
+-- Global properties
+go.property("shootingDelay", 5)
 
 function init(self)
-	self.shootingTimer = 0
+	-- Local settings
 	self.isEnemyMageKilled = false
 	self.activePlayerNumber = 0
+	-- Local Timers
+	self.shootingTimer = 0
 end
 
 function update(self, dt)
-	self.isEnemyMageKilled = go.get("#enemy", "isKilled")
-	self.activePlayers = playersManager.getActivePlayersIDs()
-	
-	if self.isEnemyMageKilled == false and self.activePlayers ~= 0 then
-		if self.shootingTimer >= self.shootingDelay then
-			factory.create("#enemyMageHomingAttackFactory", nil)
-			self.shootingTimer = 0
-		else
-			self.shootingTimer = self.shootingTimer + dt
-		end
+	-- If game is paused stop enemy
+	if globals.getPause() then
+		return
 	end
+	-- Create attack from factory if there is active and alive player and enemy is not killed
+	if self.shootingTimer >= self.shootingDelay then
+		self.isEnemyMageKilled = go.get("#enemy", "isKilled")
+		self.activePlayers = playersManager.getActivePlayersIDs()
+		if self.isEnemyMageKilled == false and self.activePlayers ~= 0 then
+			factory.create("#enemyMageHomingAttackFactory", nil)
+		end
+		self.shootingTimer = 0
+	else
+		self.shootingTimer = self.shootingTimer + dt
+	end	
 end

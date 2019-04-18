@@ -1,51 +1,70 @@
-local globals = require "main.globals"
+-- ENEMY MAGE HOMING ATTACK
 local playersManager = require "managers.playersManager"
+local globals = require "main.globals"
 
+-- Global properties
 go.property("damage", 15)
 
 function init(self)
-	self.projectileSpeed = 50
-	self.projectileSpeedByDistanceMultiplier = 0.2
-	self.projectileLife = 10
+	-- Local Settings
+	self.projectileSpeed = 70
+	self.projectileSpeedByDistanceMultiplier = 0.0012
+	self.projectileLife = 5
+	-- Local Timers
+	self.checkClosestPlayerPosTimer = 0
+	-- ClosestPlayerID to follow
+	self.closestPlayerID = playersManager.getClosestPlayerID(go.get_position())
+end
+
+local function countDistanceAndDirection(self)
+	-- Count possition diffrence between closest player and enemy to designate enemy moving direction
+	local closestPlayerPos = playersManager.getPlayerPos(self.closestPlayerID)
+	self.distanceToClosestPlayer = math.pow((closestPlayerPos.x - self.enemyPos.x), 2) +  math.pow((closestPlayerPos.y - self.enemyPos.y), 2)
+	local positionDiffrence = closestPlayerPos - self.enemyPos
+	self.movingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
+	self.movingDir = vmath.normalize(self.movingDir)
+end
+
+local function moveEnemy(self, dt)
+	self.enemyPos = self.enemyPos + self.movingDir * (self.projectileSpeed + self.distanceToClosestPlayer * self.projectileSpeedByDistanceMultiplier) * dt
+	go.set_position(self.enemyPos)
 end
 
 function update(self, dt)
-	if playersManager.getActivePlayersIDs() ~= 0 then
-		local enemyPos = go.get_position()
-		local closestPlayerID = playersManager.getClosestPlayerID(enemyPos)
-		local closestPlayerPos = playersManager.getPlayerPos(closestPlayerID)
-		local distanceToClosestPlayer = vmath.length(closestPlayerPos - enemyPos)
-
-		local positionDiffrenceAbs = (closestPlayerPos - enemyPos)
-		positionDiffrenceAbs.x = math.abs(positionDiffrenceAbs.x)
-		positionDiffrenceAbs.y = math.abs(positionDiffrenceAbs.y)
-
-		local positionDiffrence = (closestPlayerPos - enemyPos)
-
-		local movingDir = vmath.vector3(positionDiffrence.x,positionDiffrence.y, 0)
-		movingDir = vmath.normalize(movingDir)
-
-		enemyPos = enemyPos + movingDir * (self.projectileSpeed + distanceToClosestPlayer * self.projectileSpeedByDistanceMultiplier) * dt
-		go.set_position(enemyPos)
+	-- If game is paused stop enemy
+	if globals.getPause() then
+		return
+	end
+	-- Save go position once to limit number of "go.get_position" uses 		
+	self.enemyPos = go.get_position()
+	-- Count distance and direction four times per second only to prevent huge resource consuming
+	if self.checkClosestPlayerPosTimer <= 0 then 
+		countDistanceAndDirection(self)
+		self.checkClosestPlayerPosTimer = 0.25
 	end	
-
-	self.projectileLife = self.projectileLife - dt
-
-	if(self.projectileLife <= 0) then
+	if self.projectileLife <= 0 then
 		go.delete()
+	else
+		moveEnemy(self, dt)
+		self.projectileLife = self.projectileLife - dt
+		self.checkClosestPlayerPosTimer = self.checkClosestPlayerPosTimer - dt
 	end 
+end
+
+local function playersCollision(self, message_id, message, sender)
+	local enemyPos = go.get_position()
+	local closestPlayerID = playersManager.getClosestPlayerID(enemyPos)
+	--local playerUrl = closestPlayerID.."#player"
+	local scriptUrl = msg.url(nil, closestPlayerID, "player")
+	local playerHealth = go.get(scriptUrl, "health")
+	--Send message about dealt damage
+	msg.post(scriptUrl,"hit", {dmg = self.damage})
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("collision_response") then
 		if message.group == hash("players") then
-			local enemyPos = go.get_position()
-			local closestPlayerID = playersManager.getClosestPlayerID(enemyPos)
-			--local playerUrl = closestPlayerID.."#player"
-			local scriptUrl = msg.url(nil, closestPlayerID, "player")
-			local playerHealth = go.get(scriptUrl, "health")
-			--Send message about dealt damage
-			msg.post(scriptUrl,"hit", {dmg = self.damage})
+			playersCollision(self, message_id, message, sender)
 		end
 		go.delete()
 	end

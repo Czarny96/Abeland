@@ -42,7 +42,6 @@ end
 function M.getPlayersPos()
 -- Get all players positions
 	local tableOfPlayersPos = {}
-
 	if playersIDs ~= 0 then
 		for i, player in pairs(playersIDs) do 
 			local scriptUrl = msg.url(nil, player, "player")
@@ -58,17 +57,14 @@ end
 function M.getClosestPlayerID(pos)
 -- Get closes player ID to position given
 	local playersPos = M.getPlayersPos()
-
-	if playersIDs ~= 0 then
+	if #playersPos ~= 0 then
 		local closestPlayerID = playersIDs[1]
-		local distanceToClosestPlayer = vmath.length(playersPos[1] - pos)
-
+		local distanceToClosestPlayer = math.pow((playersPos[1].x - pos.x), 2) + math.pow((playersPos[1].y - pos.y), 2)
 		for i, playerPos in pairs(playersPos) do 
-			local distanceToCurrentPlayer = vmath.length(playerPos - pos)
-
-			if distanceToCurrentPlayer < distanceToClosestPlayer then
+			local distanceToCurrentPlayer = math.pow((playersPos[i].x - pos.x), 2) + math.pow((playersPos[i].y - pos.y), 2)
+			if distanceToCurrentPlayer < distanceToClosestPlayer then			
+				distanceToClosestPlayer = distanceToCurrentPlayer
 				closestPlayerID = playersIDs[i]
-				distanceToClosestPlayer = vmath.length(playerPos - pos)
 			end
 		end
 		return closestPlayerID
