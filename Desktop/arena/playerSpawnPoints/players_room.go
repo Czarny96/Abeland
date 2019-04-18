@@ -1,34 +1,4 @@
 components {
-  id: "enemyMaleeFactory"
-  component: "/arena/enemySpawners/enemyMaleeFactory.factory"
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-components {
-  id: "enemyMageFactory"
-  component: "/arena/enemySpawners/enemyMageFactory.factory"
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-components {
   id: "temp"
   component: "/arena/temp.script"
   position {

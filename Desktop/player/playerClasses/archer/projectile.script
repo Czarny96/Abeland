@@ -9,12 +9,13 @@ function init(self)
 end
 
 function update(self, dt)
-	go.set_position(go.get_position()+ self.projectileDir * self.speed * dt)
-
-	self.projectilelife = self.projectilelife - dt
+	go.set_position(go.get_position() + self.projectileDir * self.speed * dt)
+	
 	if self.projectilelife <= 0 then
 		go.delete()
-	end
+	else
+		self.projectilelife = self.projectilelife - dt
+	end 
 end
 
 function on_message(self, message_id, message, sender)
