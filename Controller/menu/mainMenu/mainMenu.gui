@@ -46,7 +46,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "menuAtlas/menu_background"
+  texture: "menuAtlas/menu"
   id: "bg"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -135,14 +135,14 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 2.0
-    y: 2.0
+    x: 1.3
+    y: 1.3
     z: 1.0
     w: 1.0
   }
   size {
-    x: 379.0
-    y: 93.0
+    x: 631.0
+    y: 135.0
     z: 0.0
     w: 1.0
   }
@@ -154,7 +154,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "menuAtlas/reconnectButton"
+  texture: "menuAtlas/button-join-game"
   id: "NewGameImg"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -209,7 +209,7 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "Join game"
+  text: ""
   font: "menuFont"
   id: "NewGameText"
   xanchor: XANCHOR_NONE
@@ -307,14 +307,14 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 2.0
-    y: 2.0
+    x: 1.3
+    y: 1.3
     z: 1.0
     w: 1.0
   }
   size {
-    x: 379.0
-    y: 93.0
+    x: 631.0
+    y: 135.0
     z: 0.0
     w: 1.0
   }
@@ -326,7 +326,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "menuAtlas/reconnectButton"
+  texture: "menuAtlas/button-exit"
   id: "ExitImg"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -381,7 +381,7 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "Exit"
+  text: ""
   font: "menuFont"
   id: "ExitText"
   xanchor: XANCHOR_NONE

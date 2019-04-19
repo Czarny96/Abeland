@@ -2,14 +2,11 @@ local scalingButton = require "util/scalingButton"
 
 local usernameTextNode = nil
 local textFieldNode = nil
+local textFieldFocused = false
 
 local blackBoxNode = nil
 
 local lockActions = nil
-
-local playerIsReady = false
-
-g_textFieldFocused = false
 
 local function buttonPressed(hashedNodeId)
 
@@ -17,69 +14,33 @@ end
 
 local function buttonReleased(hashedNodeId)
 	if hashedNodeId == hash("Back") then
-		lockActions = true
 		print("Clicked back")
+
+		gui.hide_keyboard()
+
+		g_showConfirmationWindow()
+		--gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
+		--gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
+		--	gui.EASING_LINEAR, 0.5, 0, function() msg.post("/go#client", "disconnect") end)
+		
+	elseif hashedNodeId == hash("Start") then
+		lockActions = true
 
 		gui.hide_keyboard()
 		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
 		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
-		gui.EASING_LINEAR, 0.5, 0, function() msg.post("/go#client", "disconnect") end)
-	elseif hashedNodeId == hash("Start") then
-		
-		msg.post("/go#client", "sendReady")
-		playerIsReady = true
-		gui.set_color(gui.get_node("StartImg"), vmath.vector3(0.7, 1, 0.7))
-		--lockActions = true
-
-		--gui.hide_keyboard()
-		--gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
-		--gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
-		--gui.EASING_LINEAR, 0.5, 0, function() g_goToController() end)
-
-	elseif hashedNodeId == hash("knightButton") then
-		msg.post("/go#client", "sendPlayerClass", {playerClass = "knight"})
-	elseif hashedNodeId == hash("mageButton") then
-		msg.post("/go#client", "sendPlayerClass", {playerClass = "mage"})
-	elseif hashedNodeId == hash("rogueButton") then
-		msg.post("/go#client", "sendPlayerClass", {playerClass = "rogue"})
-	elseif hashedNodeId == hash("archerButton") then
-		msg.post("/go#client", "sendPlayerClass", {playerClass = "archer"})
+		gui.EASING_LINEAR, 0.5, 0, function() g_goToChampionSelect() end)
 	end
-end
-
-local function lockInPlayerClass(class)
-	gui.set_color(gui.get_node("knightButtonImg"), vmath.vector3(0.5))
-	gui.set_color(gui.get_node("mageButtonImg"), vmath.vector3(0.5))
-	gui.set_color(gui.get_node("rogueButtonImg"), vmath.vector3(0.5))
-	gui.set_color(gui.get_node("archerButtonImg"), vmath.vector3(0.5))
-
-	-- imo its better than 4 if's
-	gui.set_color(gui.get_node(class .. "ButtonImg"), vmath.vector3(1))
-
-	-- unlock Ready button
-	gui.set_color(gui.get_node("StartImg"), vmath.vector4(1))
-	gui.set_color(gui.get_node("StartText"), vmath.vector4(1))
 end
 
 local function start(self)
 	lockActions = false
 
-	self.playerClassLocked = nil
-	playerIsReady = false
-
 	-- reset text field and send current username to server
-	g_textFieldFocused = false
+	textFieldFocused = false
 	gui.set_color(textFieldNode, vmath.vector4(1.0, 1.0, 1.0, 1.0))
+	gui.set_text(usernameTextNode, g_username)
 	msg.post("/go#client", "sendUsername")
-
-	-- reset button colors
-	gui.set_color(gui.get_node("knightButtonImg"), vmath.vector3(1))
-	gui.set_color(gui.get_node("mageButtonImg"), vmath.vector3(1))
-	gui.set_color(gui.get_node("rogueButtonImg"), vmath.vector3(1))
-	gui.set_color(gui.get_node("archerButtonImg"), vmath.vector3(1))
-	
-	gui.set_color(gui.get_node("StartImg"), vmath.vector3(0.3))
-	gui.set_color(gui.get_node("StartText"), vmath.vector4(0.3))
 	
 	-- screen is going from black to white
 	gui.set_color(blackBoxNode, vmath.vector4(0,0,0,1))
@@ -95,15 +56,8 @@ function init(self)
 	
 	self.buttonHolder = {
 		backButton = scalingButton.create("Back", 0, buttonReleased, buttonPressed),
-		
-		knightButton = scalingButton.create("knightButton", 1, buttonReleased, buttonPressed),
-		mageButton = scalingButton.create("mageButton", 1, buttonReleased, buttonPressed),
-		rogueButton = scalingButton.create("rogueButton", 1, buttonReleased, buttonPressed),
-		archerButton = scalingButton.create("archerButton", 1, buttonReleased, buttonPressed),
-		
-		startButton = scalingButton.create("Start", 2, buttonReleased, buttonPressed)
+		startButton = scalingButton.create("Start", 0, buttonReleased, buttonPressed)
 	}
-	gui.set_text(usernameTextNode, g_username)
 end
 
 function final(self)
@@ -118,69 +72,57 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("enable") then
 		start(self)
 	elseif message_id == hash("disable") then
-
-	elseif message_id == hash("playerClassConfirm") then
-		self.playerClassLocked = message.playerClass
-
-		-- change color of buttons
-		lockInPlayerClass(message.playerClass)
+		
 	end
 end
 
 function on_input(self, action_id, action)
+	if lockActions then
+		return 
+	end
 	if action_id == hash("mouse_left") then
 
-		if lockActions then
-			return
-		end
 
 		-- BUTTONS
 		self.buttonHolder.backButton.mouseUpdate(action)
-		if self.playerClassLocked == nil then 
-			self.buttonHolder.knightButton.mouseUpdate(action)
-			self.buttonHolder.mageButton.mouseUpdate(action)
-			self.buttonHolder.rogueButton.mouseUpdate(action)
-			self.buttonHolder.archerButton.mouseUpdate(action)
-		else 
-			if not playerIsReady then
-				self.buttonHolder.startButton.mouseUpdate(action)
-			end
-		end
+		self.buttonHolder.startButton.mouseUpdate(action)
 		-- END OF BUTTONS
 		
 		if gui.pick_node(textFieldNode, action.x, action.y) then
 			if action.pressed then
-				g_textFieldFocused = true
+				textFieldFocused = true
 				gui.set_color(textFieldNode, vmath.vector4(0.5, 0.5, 0.5, 1.0))
 				gui.show_keyboard(gui.KEYBOARD_TYPE_PASSWORD, false)
 			end
 		else
-			if g_textFieldFocused then
+			if textFieldFocused then
 				msg.post("/go#client", "sendUsername")
 			end
-			g_textFieldFocused = false
+			textFieldFocused = false
 			gui.set_color(textFieldNode, vmath.vector4(1.0, 1.0, 1.0, 1.0))
 			gui.hide_keyboard()
 		end
 	elseif action_id == hash("type") then
-		if g_textFieldFocused then
+		if textFieldFocused then
 			if string.len(g_username) < 15 then
 				g_username = g_username .. action.text 
 				gui.set_text(usernameTextNode, g_username)
 			end
 		end
 	elseif action_id == hash("key_backspace") and action.repeated then
-		if g_textFieldFocused then
+		if textFieldFocused then
 			local l = string.len(g_username)
 			g_username = string.sub(g_username, 0, l-1) 
 			gui.set_text(usernameTextNode, g_username)
 		end
 	elseif action_id == hash("key_back") then
-		if g_textFieldFocused then
-			g_textFieldFocused = false
+		if textFieldFocused then
+			textFieldFocused = false
 			gui.set_color(textFieldNode, vmath.vector4(1.0, 1.0, 1.0, 1.0))
 			msg.post("/go#client", "sendUsername")
 			return true
+		else
+			g_showConfirmationWindow()
 		end
 	end
 end

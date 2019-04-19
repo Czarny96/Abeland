@@ -13,6 +13,13 @@ local dtPassed = 0
 --Proxy to access server in functions other than self
 local serverHandler = nil
 local currentSession = nil
+local startP2P = false
+
+local function sendMessageToAllActivePlayers(mess)
+	for ip,client in pairs(clientsManager.returnActiveClients()) do
+		serverHandler.send(mess.."\n\r", client)
+	end
+end
 
 function createSession()
 	if currentSession == nil then
@@ -26,22 +33,23 @@ local function msgActivePlayersChange()
 	playersManager.setActivePlayersIDs(clientsManager.returnActivePlayersIDs())
 end
 
-local function routeFrameToRespFunc(frame,ip)
-	local frameId = string.sub(data,1,1)
+local function routeFrameToRespFunc(frame,ip, client)
+	local frameId = string.sub(frame,1,1)
 
-	if frameId == "M" then 
-		clientsManager.translateDataToPlayer(data, ip)
+	if frameId == "M" and currentSession ~=nil then 
+		clientsManager.translateDataToPlayer(frame, ip)
 	elseif frameId == "N" then 
-		clientsManager.addNickToPlayer(data, ip)
+		clientsManager.addNickToPlayer(frame, ip)
 		clientsManager.sendNickToMenu(ip)
 	elseif frameId == "C" then 
-		if clientsManager.tryToLockPlayerClass(data, ip) then
-			serverHandler.send(frame, client)
+		if clientsManager.tryToLockPlayerClass(frame, ip) then
+			serverHandler.send(frame.."\n\r", client)
 			clientsManager.sendClassToMenu(ip)
 		end
 	elseif frameId == "G" then
 		clientsManager.setPlayerReadines(ip, true)
 		if clientsManager.areAllPlayersReady() then
+			startP2P = false
 			createSession()
 		end
 	end
@@ -57,11 +65,11 @@ local function on_data(data, ip, port, client)
 		msgActivePlayersChange()
 	end
 	
-	routeFrameToRespFunc(data,ip)
+	routeFrameToRespFunc(data,ip,client)
 end 
 
 local function on_client_connected(ip, port, client) 
-	clientsManager.addPlayer(ip, client, factoryObjectID)
+	clientsManager.addPlayer(ip, client)
 	msgActivePlayersChange()
 end
 
@@ -89,17 +97,13 @@ function final(self)
 	end
 end
 
-local function sendMessageToAllActivePlayers(mess)
-	for ip,client in pairs(clientsManager.returnActiveClients()) do
-		serverHandler.send(mess.."\n\r", client)
-	end
-end
-
 function update(self, dt)
 	-- Add update code here
 	
 	--TODO: start updated when inside champion select
-	self.p2p.update(dt)
+	if startP2P == true then 
+		self.p2p.update(dt)
+	end
 	
 	--TODO: adjust clocking for optimal user experience
 	if  clientsManager.isAnyPlayer() and dtPassed > 0.016 then
@@ -112,7 +116,7 @@ function update(self, dt)
 			end
 		end
 		dtPassed = 0
-	else
+	elseif currentSession~=nil then
 		dtPassed = dtPassed + dt
 	end
 	
@@ -138,7 +142,10 @@ function on_message(self, message_id, message, sender)
 			self.currentSession.setGameOverFlag(1)
 
 		end
-	end]]
+	elseif  message_id == hash("championSelect") then
+		startP2P = true
+	end
+
 end
 
 function on_reload(self)

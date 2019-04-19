@@ -11,10 +11,11 @@ go.property("isKilled", false)
 go.property("isVulnerable", true)
 
 local globals = require "main.globals"
+local playersManager = require "managers.playersManager"
 
 function init(self)
 	label.set_text("#label_hp", self.health)
-	local startPos = go.get_position()
+	local startPos = go.get_position()	
 	self.position = vmath.vector3(startPos.x, startPos.y, 0.99)
 	go.set_position(self.position)
 	--Local Properties
@@ -28,56 +29,38 @@ function init(self)
 end
 
 local function updateAnimation(self)
-	if self.movingDir.x < -0.3 and self.movingDir.y > 0.3 then
-		msg.post("#sprite", "play_animation", {id = hash("player_up_left")})
-	elseif self.movingDir.x > 0.3 and self.movingDir.y > 0.3 then
-		msg.post("#sprite", "play_animation", {id = hash("player_up_right")})
-	elseif self.movingDir.x < -0.3 and self.movingDir.y < -0.3 then
-		msg.post("#sprite", "play_animation", {id = hash("player_down_left")})
-	elseif self.movingDir.x > 0.3 and self.movingDir.y < -0.3 then
-		msg.post("#sprite", "play_animation", {id = hash("player_down_right")})
+	if self.movingDir.x < -0.3 then
+		if self.movingDir.y > 0.3 then
+			msg.post("#sprite", "play_animation", {id = hash("player_up_left")})
+		elseif self.movingDir.y < -0.3 then
+			msg.post("#sprite", "play_animation", {id = hash("player_down_left")})
+		else
+			msg.post("#sprite", "play_animation", {id = hash("player_left")})
+		end
+	elseif self.movingDir.x > 0.3 then
+		if self.movingDir.y > 0.3 then
+			msg.post("#sprite", "play_animation", {id = hash("player_up_right")})
+		elseif self.movingDir.y < -0.3 then
+			msg.post("#sprite", "play_animation", {id = hash("player_down_right")})
+		else
+			msg.post("#sprite", "play_animation", {id = hash("player_right")})
+		end
 	elseif self.movingDir.y > 0.3  then
 		msg.post("#sprite", "play_animation", {id = hash("player_up")})
 	elseif self.movingDir.y < -0.3  then
-		msg.post("#sprite", "play_animation", {id = hash("player_down")})
-	elseif self.movingDir.x < -0.3  then
-		msg.post("#sprite", "play_animation", {id = hash("player_left")})
-	elseif self.movingDir.x > 0.3  then
-		msg.post("#sprite", "play_animation", {id = hash("player_right")})
-	else 
 		msg.post("#sprite", "play_animation", {id = hash("player_down")})
 	end
 end
 
 function update(self, dt)
-	if playersManager.getActivePlayersIDs() == 0 and g_gameState ~= g_gameStateEnum.gameOver then
+	if playersManager.getActivePlayersIDs() == 0 and g_gameState == g_gameStateEnum.inGame then
 		g_goToGameOverScreen()
 	end
-	
+
 	--Check if game is paused
-	if globals.getPause() then
+	--Check if player is dead
+	if globals.getPause() or self.isKilled then
 		return
-		--Check if player is alive
-	elseif self.isKilled then
-		return
-	end
-
-	--Collisions with arena walls
-	if (self.wallsCollider.top and self.movingDir.y > 0) or (self.wallsCollider.bottom and self.movingDir.y < 0) then
-		self.movingDir.y = 0
-	end
-	if (self.wallsCollider.left and self.movingDir.x < 0) or (self.wallsCollider.right and self.movingDir.x > 0) then
-		self.movingDir.x = 0
-	end
-
-	--Movement
-	if self.isMoving then
-		local playerPos = go.get_position()
-		local movingDir = vmath.vector3(self.movingDir.x, self.movingDir.y,0)
-		playerPos = playerPos + self.movingDir * self.movingSpeed * dt
-		go.set_position(playerPos)
-		go.set("#player", "position", go.get_position())
-		updateAnimation(self)
 	end
 
 	--Death
@@ -94,9 +77,27 @@ function update(self, dt)
 				go.delete()
 			end
 		end
+	else
+		--Collisions with arena walls
+		if (self.wallsCollider.top and self.movingDir.y > 0) or (self.wallsCollider.bottom and self.movingDir.y < 0) then
+			self.movingDir.y = 0
+		end
+		if (self.wallsCollider.left and self.movingDir.x < 0) or (self.wallsCollider.right and self.movingDir.x > 0) then
+			self.movingDir.x = 0
+		end
+
+		--Movement
+		if self.isMoving then
+			local playerPos = go.get_position()
+			local movingDir = vmath.vector3(self.movingDir.x, self.movingDir.y,0)
+			playerPos = playerPos + self.movingDir * self.movingSpeed * dt
+			go.set_position(playerPos)
+			go.set("#player", "position", go.get_position())
+			updateAnimation(self)
+		end
 	end
 
-	--Vulnerable flag
+	--Vulnerability flag
 	if self.nonVulnerableTimer <= 0 then
 		self.isVulnerable = true
 	end
@@ -112,9 +113,7 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
-	if self.isKilled then
-		return
-	elseif self.nonOperativeTimer > 0 then
+	if self.isKilled or self.nonOperativeTimer > 0 then
 		return
 	end
 
@@ -127,10 +126,9 @@ function on_message(self, message_id, message, sender)
 		else
 			self.isMoving = false
 		end		
-	end
 
-	--Invulnerability (all enemy interactions put here)
-	if self.isVulnerable then
+		--Invulnerability (all enemy interactions put here)
+	elseif self.isVulnerable then
 		--Got Hit
 		if message_id == hash("hit") then
 			self.health = self.health - message.dmg
@@ -138,31 +136,27 @@ function on_message(self, message_id, message, sender)
 			self.nonVulnerableTimer = 0.5
 			self.isVulnerable = false
 		end
-	end
 
-	--Kill
-	if message_id == hash("kill") then
+		--Kill
+	elseif message_id == hash("kill") then
 		go.delete()
-	end
 
-	--AFK
-	if message_id == hash("desactivate") then
+		--AFK
+	elseif message_id == hash("desactivate") then
 		sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 0.33))
 		self.isVulnerable = false
 		self.nonVulnerableTimer = 50
-	end
 
-	--Activate if player came back
-	if message_id == hash("activate") then
+		--Activate if player came back
+	elseif message_id == hash("activate") then
 		self.nonVulnerableTimer = 50
 		self.isVulnerable = false
 		self.nonOperativeTimer = 2
 		sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 1))
 		msg.post("#sprite", "play_animation", {id = hash("player_afk")})
-	end
 
-	--Colliders
-	if message_id == hash("contact_point_response") then	
+		--Colliders
+	elseif message_id == hash("contact_point_response") then	
 		--Walls
 		if message.group == hash("walls") or message.group == hash("walls") then
 			if sender.fragment == hash("wallsTopCollider") then
@@ -177,5 +171,12 @@ function on_message(self, message_id, message, sender)
 				self.wallsCollider.right = true
 			end
 		end
+		return
+	end
+
+	if message_id == hash("start") then
+		go.set_position(go.get_position("main:/spawnPoints/spawn_mage"))
+	elseif message_id == hash("stop") then
+		go.set_position(go.get_position("main:/spawnPoints/players_room"))
 	end
 end

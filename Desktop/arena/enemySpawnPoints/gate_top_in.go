@@ -1,7 +1,7 @@
 embedded_components {
   id: "sprite"
   type: "sprite"
-  data: "tile_set: \"/arena/enemySpawnPoints/spawnPoints.atlas\"\n"
+  data: "tile_set: \"/arena/spawnPoints.atlas\"\n"
   "default_animation: \"red-arrow\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"

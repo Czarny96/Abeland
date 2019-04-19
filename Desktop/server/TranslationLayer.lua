@@ -6,15 +6,8 @@
 
 -- THOU I COMMAND, THAT TRANSLATION LAYER SHALL BE STATELESS
 -- Programer Genesis 1:2
-local M = {}
 
-function M.createPlayerObject(factoryReference, spawnLocation)
-	print("Calling chosen factory")
-	playerFactory = factoryReference
-	
-	print("Object Created")
-	return factory.create(playerFactory,spawnLocation)
-end
+local M = {}
 
 function M.RemovePlayerObject(objectID)
 	print("Removing Player Object")
@@ -71,7 +64,6 @@ function M.translateFrameToPlayer(frame, playerObjectID)
 
 	--Sending shoot command to playerObject
 	if shootingX > 0.4 or shootingX < -0.4 or shootingY > 0.4 or shootingY < -0.4 then
-		--print(shootingX .. "\t" .. shootingY)
 		msg.post(playerObjectID, "shoot", {x = shootingX, y = shootingY})
 	end
 	

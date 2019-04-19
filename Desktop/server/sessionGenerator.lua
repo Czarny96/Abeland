@@ -1,5 +1,8 @@
 -- gennerates session pattern
 
+local clientsManager = require "managers.clientsManager"
+local playersManager = require "managers.playersManager"
+local enemyManger = require "managers.enemyManager"
 local M = {}
 
 s_SessionCounter = 0
@@ -8,10 +11,6 @@ s_SessionCounter = 0
 
 --- Creates a new session
 function M.create()
-
-	
-	
-
 	local gameOverFlag = 0
 	local session = {}
 	
@@ -34,7 +33,8 @@ function M.create()
 		session.sessionID = s_SessionCounter
 		session.setGameOverFlag(0)
 		print("Creating a new session with ID: " .. session.sessionID)
-		
+		playersManager.setAllPlayersToArena()
+		enemyManger.initializeWave(10, 1)
 		return true
 	end
 
@@ -42,12 +42,14 @@ function M.create()
 	function session.destroy()
 		--Add code here to clean up session
 		print("Destroying session with ID: " .. session.sessionID)
+		playersManager.setAllPlayersToWaitingRoom()
+		enemyManger.resetArena()
 	end
 
 
 	function session.update()
 		--check if game over
-		if isGameOver() then
+		if session.isGameOver() then
 			session.destroy()
 		else
 			

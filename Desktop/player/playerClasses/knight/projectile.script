@@ -20,15 +20,18 @@ end
 function on_message(self, message_id, message, sender)
 	--Destroy on hit
 	if message_id == hash("collision_response") then
-		if message == hash("enemies") then
+		if message.group == hash("enemies") then
 			local scriptUrl = msg.url(nil, message.other_id, "enemy")
 			local isEnemyKilled = go.get(scriptUrl, "isKilled")
+			print(isEnemyKilled)
 			if isEnemyKilled == false then
 				go.delete()
 			end
 		end
 	end
 	if message_id == hash("contact_point_response") then
-		go.delete()
+		if message.group ~= hash("enemies") then
+			go.delete()
+		end
 	end
 end
