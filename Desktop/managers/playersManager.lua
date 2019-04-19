@@ -80,4 +80,9 @@ function M.getPlayerPos(id)
 	return playerPos
 end
 
+function M.setPlayerActive(class)
+	msg.post( "main:/gameContent/player_" .. class, ")
+	go.set_position(go.get_position("main:/spawnPoints/spawn_" .. class), "main:/gameContent/player_" .. class)
+end
+
 return M

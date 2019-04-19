@@ -79,6 +79,86 @@ instances {
     z: 1.0
   }
 }
+instances {
+  id: "player_archer"
+  prototype: "/player/playerClasses/archer/player.go"
+  position {
+    x: 2300.0
+    y: -1500.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "player_knight"
+  prototype: "/player/playerClasses/knight/player.go"
+  position {
+    x: 2600.0
+    y: -1500.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "player_mage"
+  prototype: "/player/playerClasses/mage/player.go"
+  position {
+    x: 2600.0
+    y: -1300.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "player_rogue"
+  prototype: "/player/playerClasses/rogue/player.go"
+  position {
+    x: 2300.0
+    y: -1300.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
 collection_instances {
   id: "TCP_server"
   collection: "/server/TCP_server.collection"
@@ -101,7 +181,7 @@ collection_instances {
 }
 collection_instances {
   id: "spawnPoints"
-  collection: "/arena/enemySpawnPoints/spawnPoints.collection"
+  collection: "/arena/spawnPoints.collection"
   position {
     x: 0.0
     y: 0.0
@@ -123,6 +203,10 @@ scale_along_z: 0
 embedded_instances {
   id: "gameContent"
   children: "ground"
+  children: "player_archer"
+  children: "player_knight"
+  children: "player_mage"
+  children: "player_rogue"
   children: "topWalls"
   children: "walls"
   data: "embedded_components {\n"
