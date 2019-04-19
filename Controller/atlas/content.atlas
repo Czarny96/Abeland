@@ -106,6 +106,12 @@ images {
 images {
   image: "/assets/interface/champion_select/button-ready-selected.png"
 }
+images {
+  image: "/assets/interface/menu/button-empty-red.png"
+}
+images {
+  image: "/assets/interface/menu/button-empty-green.png"
+}
 margin: 10
 extrude_borders: 0
 inner_padding: 0

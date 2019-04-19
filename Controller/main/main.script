@@ -27,6 +27,7 @@ g_username = ""
 
 g_connectingWindowIsOn = false
 g_dcWindowIsOn = false
+g_confirmationWindowIsOn = false
 
 function g_goToSplashScreen()
 	print("Entering splash screen")
