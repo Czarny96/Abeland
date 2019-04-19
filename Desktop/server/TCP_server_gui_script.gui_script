@@ -15,6 +15,12 @@ local serverHandler = nil
 local currentSession = nil
 local startP2P = false
 
+local function sendMessageToAllActivePlayers(mess)
+	for ip,client in pairs(clientsManager.returnActiveClients()) do
+		serverHandler.send(mess.."\n\r", client)
+	end
+end
+
 function createSession()
 	if currentSession == nil then
 		currentSession = sessionGenerator.create()
@@ -91,12 +97,6 @@ function final(self)
 	end
 end
 
-local function sendMessageToAllActivePlayers(mess)
-	for ip,client in pairs(clientsManager.returnActiveClients()) do
-		serverHandler.send(mess.."\n\r", client)
-	end
-end
-
 function update(self, dt)
 	-- Add update code here
 	
@@ -116,7 +116,7 @@ function update(self, dt)
 			end
 		end
 		dtPassed = 0
-	else
+	elseif currentSession~=nil then
 		dtPassed = dtPassed + dt
 	end
 	

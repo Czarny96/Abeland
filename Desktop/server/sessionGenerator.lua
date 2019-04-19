@@ -47,7 +47,7 @@ function M.create()
 
 	function session.update()
 		--check if game over
-		if isGameOver() then
+		if session.isGameOver() then
 			session.destroy()
 		else
 			
