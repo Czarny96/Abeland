@@ -37,7 +37,7 @@ local function routeFrameToRespFunc(frame,ip)
 		clientsManager.sendNickToMenu(ip)
 	elseif frameId == "C" then 
 		if clientsManager.tryToLockPlayerClass(frame, ip) then
-			serverHandler.send(frame, client)
+			serverHandler.send(frame.."\n\r", client)
 			clientsManager.sendClassToMenu(ip)
 		end
 	elseif frameId == "G" then
