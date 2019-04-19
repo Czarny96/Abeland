@@ -2,7 +2,7 @@
 -- To get access to the functions, you need to put:
 -- require "player.playersManager"
 -- in any script using the functions.
-
+local clientsManager = require "managers.clientsManager"
 local globals = require "main.globals"
 
 local M = {}
@@ -80,9 +80,26 @@ function M.getPlayerPos(id)
 	return playerPos
 end
 
-function M.setPlayerActive(class)
-	msg.post( "main:/gameContent/player_" .. class, "")
-	go.set_position(go.get_position("main:/spawnPoints/spawn_" .. class), "main:/gameContent/player_" .. class)
+function M.setAllPlayersToArena()
+	for i, player in pairs(clientsManager.getAllPlayers()) do
+		M.setPlayerToArena(player[2])
+	end
+end
+
+function M.setAllPlayersToWaitingRoom()
+	for i, player in pairs(clientsManager.getAllPlayers()) do
+		M.setPlayerToWaitingRoom(player[2])
+	end
+end
+
+function M.setPlayerToArena(playerURL)
+	local url = msg.url(playerURL .."#player")
+	print(url)
+	msg.post(playerURL .."#player", "start")
+end
+
+function M.setPlayerToWaitingRoom(playerURL)
+	msg.post("/player_" .. class .."#player", "stop")
 end
 
 return M

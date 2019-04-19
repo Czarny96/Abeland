@@ -14,6 +14,10 @@ function M.getAmountOfCurrentPlayers()
 	return amountOfCurrentPlayers
 end
 
+function M.getAllPlayers()
+	return playersTable
+end
+
 function M.isPlayerActive(playerIP)
 	return playersTable[playerIP][4] == true
 end

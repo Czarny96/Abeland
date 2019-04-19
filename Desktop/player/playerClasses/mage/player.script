@@ -171,5 +171,12 @@ function on_message(self, message_id, message, sender)
 				self.wallsCollider.right = true
 			end
 		end
+		return
+	end
+
+	if message_id == hash("start") then
+		go.set_position(go.get_position("main:/spawnPoints/spawn_mage"))
+	elseif message_id == hash("stop") then
+		go.set_position(go.get_position("main:/spawnPoints/players_room"))
 	end
 end

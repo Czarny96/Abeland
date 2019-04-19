@@ -9,14 +9,6 @@
 
 local M = {}
 
-function M.createPlayerObject(factoryReference, spawnLocation)
-	print("Calling chosen factory")
-	playerFactory = factoryReference
-	
-	print("Object Created")
-	return factory.create(playerFactory,spawnLocation)
-end
-
 function M.RemovePlayerObject(objectID)
 	print("Removing Player Object")
 	--TODO: Inside palyer must be a part of code whtich allows to self destruction

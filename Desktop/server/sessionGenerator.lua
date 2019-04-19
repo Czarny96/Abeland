@@ -1,5 +1,8 @@
 -- gennerates session pattern
 
+local clientsManager = require "managers.clientsManager"
+local playersManager = require "managers.playersManager"
+
 local M = {}
 
 s_SessionCounter = 0
@@ -8,10 +11,6 @@ s_SessionCounter = 0
 
 --- Creates a new session
 function M.create()
-
-	
-	
-
 	local gameOverFlag = 0
 	local session = {}
 	
@@ -34,7 +33,10 @@ function M.create()
 		session.sessionID = s_SessionCounter
 		session.setGameOverFlag(0)
 		print("Creating a new session with ID: " .. session.sessionID)
-		
+
+		for i, player in pairs(clientsManager.getAllPlayers()) do
+			playersManager.setPlayerToArena(player[2])
+		end
 		return true
 	end
 

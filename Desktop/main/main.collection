@@ -203,10 +203,6 @@ scale_along_z: 0
 embedded_instances {
   id: "gameContent"
   children: "ground"
-  children: "player_archer"
-  children: "player_knight"
-  children: "player_mage"
-  children: "player_rogue"
   children: "topWalls"
   children: "walls"
   data: "embedded_components {\n"
