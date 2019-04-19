@@ -45,6 +45,12 @@ function M.getNickFromFrame(frame)
 	return nick
 end
 
+function M.getClassFromFrame(frame)
+	fields = frame:split()
+	local class = fields[2]
+	return class
+end
+
 function M.translateFrameToPlayer(frame, playerObjectID)
 	movement = nil
 	fields = frame:split()
@@ -80,6 +86,14 @@ function M.translateFrameToPlayer(frame, playerObjectID)
 	elseif button == 4 then
 		msg.post(playerObjectID, "btnYellow")
 	end
+
 end
 
+function M.passPlayerClass(classDataPack)
+	msg.post("/menu#championSelect", "classSelect", classDataPack)
+end
+
+function M.passPlayerNick(nickDataPack)
+	msg.post("/menu#championSelect", "nick", nickDataPack)
+end
 return M

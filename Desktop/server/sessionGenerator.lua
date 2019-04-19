@@ -5,28 +5,35 @@ local M = {}
 s_SessionCounter = 0
 
 
+
 --- Creates a new session
 function M.create()
-	
-	local function isGameOver()
-		return false
-	end
 
+	
+	
+
+	local gameOverFlag = 0
 	local session = {}
 	
 	--- Starts the session 
 	-- @return success
-	-- @return error_message
+	function session.setGameOverFlag(value)
+		gameOverFlag = value
+	end
+
+	function session.isGameOver()
+		if gameOverFlag == 1 then
+			return true
+		else
+			return false
+		end
+	end
+	
 	function session.start()
-		
-		--Creating session ID
 		s_SessionCounter = s_SessionCounter + 1
 		session.sessionID = s_SessionCounter
+		session.setGameOverFlag(0)
 		print("Creating a new session with ID: " .. session.sessionID)
-		
-		local ok, err = pcall(function()
-			--TODO: check what pcall does
-		end)
 		
 		return true
 	end
@@ -35,23 +42,19 @@ function M.create()
 	function session.destroy()
 		--Add code here to clean up session
 		print("Destroying session with ID: " .. session.sessionID)
-		session = nil
 	end
 
-
-	function session.functionSkeleton()
-
-	end
 
 	function session.update()
 		--check if game over
 		if isGameOver() then
 			session.destroy()
+		else
+			
 		end
-		return session
 	end
 
-	return session.update()
+	return session
 end
 
 return M

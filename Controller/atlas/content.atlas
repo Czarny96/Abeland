@@ -37,6 +37,18 @@ images {
 images {
   image: "/assets/interface/textField.png"
 }
+images {
+  image: "/assets/interface/playerClass/archer.png"
+}
+images {
+  image: "/assets/interface/playerClass/knight.png"
+}
+images {
+  image: "/assets/interface/playerClass/mage.png"
+}
+images {
+  image: "/assets/interface/playerClass/rogue.png"
+}
 margin: 10
 extrude_borders: 0
 inner_padding: 0

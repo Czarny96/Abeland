@@ -160,8 +160,8 @@ function init(self)
 
 	blackBoxNode = gui.get_node("blackBox")
 	
-	--hideReconnectWindow(self)
-	showReconnectWindow(self)
+	hideReconnectWindow(self)
+	--showReconnectWindow(self)
 end
 
 function final(self)
@@ -190,13 +190,14 @@ function on_message(self, message_id, message, sender)
 
 	elseif message_id == hash("setConnectionText") then
 		--gui.set_text(gui.get_node("connectionText"), message.text)
+		--[[
 		if message.text == "Connected" then
 			hideReconnectWindow()
 		elseif message.text == "Disconnected" then
 			showReconnectWindow(self)
 		elseif message.text == "Connection failed" then
-			
 		end
+		--]]
 	elseif message_id == hash("enable") then
 		start(self)
 	elseif message_id == hash("disable") then

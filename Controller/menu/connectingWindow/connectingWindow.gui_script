@@ -1,0 +1,92 @@
+
+local scalingButton = require "util/scalingButton"
+
+local spinnerNode = nil
+local connectScreenNode = nil
+
+-- don't react after clicking button
+local lockActions = false
+
+local spinnerTimer = 0
+
+local function buttonPressed(hashedNodeId)
+
+end
+
+local function buttonReleased(hashedNodeId)
+	if hashedNodeId == hash("cancelButton") then
+		print("Clicked cancel")
+		lockActions = true
+		msg.post("/xmenu#connectingWindow", "hide")
+
+	end
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+
+	spinnerNode = gui.get_node("spinner")
+	connectScreenNode = gui.get_node("connectScreen")
+
+	self.buttonHolder = {
+		cancelButtonButton = scalingButton.create("cancelButton", 0, buttonReleased, buttonPressed)
+	}
+	
+end
+
+local function start(self)
+	lockActions = false
+
+	-- screen is going from black to white
+	gui.set_scale(connectScreenNode, vmath.vector3(0,0,0))
+	gui.animate(connectScreenNode, gui.PROP_SCALE, vmath.vector3(1,1,1), gui.EASING_INOUTCUBIC, 1)
+end
+
+function final(self)
+	
+end
+
+function update(self, dt)
+	spinnerTimer = spinnerTimer + dt
+
+	if spinnerTimer > 0.05 then
+		spinnerTimer = 0
+		local rot = gui.get_rotation(spinnerNode)
+		rot.z = rot.z - 30
+		gui.set_rotation(spinnerNode, rot)
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+	if message_id == hash("show") then
+		msg.post("/xmenu#connectingWindow", "enable")
+		start(self)
+	elseif message_id == hash("hide") then
+		msg.post("/go#client", "setConnectionFlag", {on = false})
+		gui.cancel_animation(connectScreenNode, gui.PROP_SCALE)
+		gui.animate(connectScreenNode, gui.PROP_SCALE, vmath.vector3(0,0,0), 
+		gui.EASING_INOUTCUBIC, 0.5, 0, function() 
+			msg.post("/xmenu#connectingWindow", "disable")
+			g_connectingWindowIsOn = false
+		end)
+	end
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("mouse_left") then
+		
+		if lockActions then
+			return
+		end
+		
+		for idx, button in pairs(self.buttonHolder) do
+			button.mouseUpdate(action)
+		end
+	end
+end
+
+function on_reload(self)
+	
+end

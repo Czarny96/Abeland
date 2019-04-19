@@ -5,6 +5,7 @@ function init(self)
 
 	-- disable (don't render and don't update) other menu components
 	msg.post("/menu", "disable")
+	msg.post("/xmenu", "disable")
 
 	-- start game with splash screen
 	g_goToSplashScreen()
@@ -22,6 +23,9 @@ g_gameStateEnum = {
 g_gameState = g_gameStateEnum.splashScreen
 
 g_username = ""
+
+g_connectingWindowIsOn = false
+g_dcWindowIsOn = false
 
 function g_goToSplashScreen()
 	print("Entering splash screen")
@@ -50,17 +54,45 @@ function g_goToController()
 	msg.post("/menu", "disable")
 	msg.post("/menu#ctrlGui", "enable")
 end
+
+function g_showConnectingWindow()
+	print("Show connect window")
+	g_connectingWindowIsOn = true
+	msg.post("/xmenu#connectingWindow", "show")
+	msg.post("/go#client", "setConnectionFlag", {on = true})
+	
+end
+
+function g_hideConnectingWindow()
+	print("Hide connect window")
+	g_connectingWindowIsOn = false
+	msg.post("/xmenu#connectingWindow", "hide")
+end
+
+function g_showDcWindow()
+	print("Show dc window")
+	g_dcWindowIsOn = true
+	msg.post("/xmenu#disconnectedWindow", "show")
+end
+
+function g_hideDcWindow()
+	print("Hide dc window")
+	g_dcWindowIsOn = false
+	msg.post("/xmenu#disconnectedWindow", "hide")
+end
 -- END OF GAME STATE FUNCTIONS AND VARIABLES
 
 function on_input(self, action_id, action)
 	if action_id == hash("key_back") and action.pressed then
 		if g_gameState == g_gameStateEnum.controller then
-			g_goToMainMenu()
+			--g_goToMainMenu()
+			msg.post("/go#client", "disconnect")
+			-- TODO: are you sure window
 		elseif g_gameState == g_gameStateEnum.mainMenu then
 			os.exit()
 		elseif g_gameState == g_gameStateEnum.usernameField and not g_textFieldFocused then
-			print(g_textFieldFocused)
-			g_goToMainMenu()
+			--g_goToMainMenu()
+			msg.post("/go#client", "disconnect")
 		end
 	end
 end

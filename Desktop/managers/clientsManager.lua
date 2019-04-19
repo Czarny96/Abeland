@@ -44,12 +44,23 @@ function M.getPlayerInactivityTimeCounter(playerIP)
 	return playersTable[playerIP][3]
 end
 
-function M.setPlayerNick(nick,playerIP)
+
+local function setPlayerNick(nick,playerIP)
 	playersTable[playerIP][5] = nick
 end
 
+local function lockPlayerClass(class,playerIP)
+	playersTable[playerIP][6] = class
+	playersTable[playerIP][2] = "main:/player_" .. class
+end
+
+
 function M.getPlayerID(playerIP)
 	return playersTable[playerIP][2]
+end
+
+function M.setPlayerReadines(playerIP, readiness)
+	playersTable[playerIP][7] = readiness
 end
 
 function M.returnActivePlayersIDs()
@@ -76,33 +87,90 @@ function M.translateDataToPlayer(data, playerIP)
 	translationLayer.translateFrameToPlayer(data, M.getPlayerID(playerIP))
 end
 
+function M.resetPlayersToDefault()
+	for ip,values in pairs(playersTable) do
+		playersTable[ip] = {playersTable[ip][1],"",0.0,true,"","", false}
+	end
+end
+
 function M.addPlayer(playerIP,client)
 	if amountOfCurrentPlayers < ALLOWED_MAX_PLAYERS then 
-		-- WARNING: Temporally fixed to call one factory, until mechanism to chose class at the controller side is avaible
-		factoryObjectID = translationLayer.createPlayerObject("go#archerFactory", vmath.vector3(147, 297, 0))
-		-- key: playerIP values: 1 - client; 2 - factoryObjectID; 3 - inactivity time counter; 4 - is player inactive?;  5 - nick; 6 - class
-		playersTable[playerIP] = {client,factoryObjectID,0.0,true,"",""}
-		amountOfCurrentPlayers = amountOfCurrentPlayers + 1 
+		-- key: playerIP 
+		-- values:
+		-- 1 - client; 2 - class url; 3 - inactivity time counter; 
+		-- 4 - is player inactive?;  5 - nick; 6 - class; 7 - is player ready
+		--TODO: Think about prevention of calling object without url
+		if playersTable[playerIP] == nil then
+			playersTable[playerIP] = {client,"",0.0,true,"","", false}
+			amountOfCurrentPlayers = amountOfCurrentPlayers + 1 
+		end
 	end
 end
 
 function M.removePlayer(playerIP)
-	playersTable[playerIP] = nil
 	mountOfCurrentPlayers = amountOfCurrentPlayers - 1 
 	translationLayer.RemovePlayerObject(M.getPlayerID(playerIP))
+	playersTable[playerIP] = nil
 end
 
 function M.addNickToPlayer(data,playerIP)
 	nick = translationLayer.getNickFromFrame(data)
-	M.setPlayerNick(nick,playerIP)
+	setPlayerNick(nick,playerIP)
 end
 
-function M.generatePlayersList()
-	local playerList = {}
+local function checkIfClassAvaible(class)
+	local isAvaible = true
+
 	for ip,values in pairs(playersTable) do
-		table.insert(playerList, {nick=values[5], ip=ip}) 
+		if values[6] == class then
+			isAvaible = false
+		end	
 	end
-	return playerList
+	
+	return isAvaible
+end
+
+function M.tryToLockPlayerClass(data,playerIP)
+
+	class = translationLayer.getClassFromFrame(frame)
+	local success = false
+	
+	if checkIfClassAvaible(class) then
+		lockPlayerClass("",playerIP)
+		lockPlayerClass(class,playerIP)
+		success = true
+	end
+	
+	return success
+end
+
+function M.getPlayerClass(playerIP)
+	return playersTable[playerIP][6]
+end
+
+function M.sendClassToMenu(playerIP)
+	local dataPack = {}
+	table.insert(playerList, {ip=ip, playerClass=values[6]}) 
+	translationLayer.passPlayerClass(dataPack)
+
+end
+
+function M.sendNickToMenu(playerIP)
+	local dataPack = {}
+	table.insert(playerList, {ip=ip, nick=values[5]}) 
+	translationLayer.passPlayerNick(dataPack)
+
+end
+
+function M.areAllPlayersReady()
+	local answer = true
+	for ip,values in pairs(playersTable) do
+		if values[7] == false then
+			answer = false
+		end
+	return answer
+
 end
 
 return M
+

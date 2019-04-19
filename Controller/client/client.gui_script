@@ -7,8 +7,7 @@ local SERVER_PORT = 5555
 
 local client = nil
 
-local reconnectTimer = 0
-local tryToReconnect = false
+local tryToConnect = false
 
 -- BUGFIX #2
 -- Timer used for fixing bug with non-existing server. UDP datagrams can be received 
@@ -17,16 +16,6 @@ local broadcastTimer = 3
 
 local frame = ""
 
-function init(self)
-	self.p2p = p2p_discovery.create(P2P_PORT)
-	
-	self.p2p.listen("findme", function(ip, port)
-		-- see note above (BUGFIX #2)
-		if broadcastTimer > 3 and not SERVER_IP then
-			SERVER_IP = ip
-		end
-	end)
-end
 
 local function onData(data)
 	if data == "btn_data" then
@@ -34,6 +23,15 @@ local function onData(data)
 		if client then
 			client.send(frame)
 		end
+	elseif data == "StartGame" then
+		g_goToController()
+	elseif data == "EndGame" then
+		g_goToMainMenu()
+		msg.post("/go#client", "disconnect")
+	elseif data == "Reset" then
+		g_goToUsernameField()
+	elseif string.sub(data, 1, 1) == "C" then
+		msg.post("/menu#usernameField", "playerClassConfirm", {playerClass = string.sub(data, 3, #data)})
 	end
 end
 
@@ -42,29 +40,40 @@ local function onDisconnection()
 	client = nil
 	SERVER_IP = nil
 	broadcastTimer = 0
+	g_showDcWindow()
+	g_goToMainMenu()
 	msg.post("/menu#ctrlGui", "setConnectionText", {text = "Disconnected"})
 end
 
 local function connectToServer(self, ip, port)
-	
 	local err
+	print(ip, port)
 	client, err = tcp_client.create(ip, port, onData, onDisconnection)
-	
 	if client then
 		print("Connected")
-		tryToReconnect = false
+		tryToConnect = false
+		g_hideConnectingWindow()
+		g_goToUsernameField()
 		msg.post("/menu#ctrlGui", "setConnectionText", {text = "Connected"})
 
-		-- send username to server after succesful connection
-		if g_username == "" then
-			g_username = "-nameless-"
-		end
-		client.send("N;" .. g_username .. "\n\r")
 	else
 		print("Connection failed. How?")
 		print(err)
 		msg.post("/menu#ctrlGui", "setConnectionText", {text = "Connection failed"})
 	end
+end
+
+function init(self)
+	self.p2p = p2p_discovery.create(P2P_PORT)
+	
+	self.p2p.listen("findme", function(ip, port)
+		-- see note above (BUGFIX #2)
+		if not client and tryToConnect and broadcastTimer > 2 and not SERVER_IP then
+			print("Found new server")
+			SERVER_IP = ip
+			connectToServer(self, SERVER_IP, SERVER_PORT)
+		end
+	end)
 end
 
 function final(self)
@@ -77,13 +86,11 @@ function update(self, dt)
 	-- SERVER LOGIC
 	self.p2p.update()
 
-	reconnectTimer = reconnectTimer + dt
 	broadcastTimer = broadcastTimer + dt
 	-- server dc'ed and ip is known, so try to reconnect
-	if not client and SERVER_IP and reconnectTimer > 2 and tryToReconnect then
-		reconnectTimer = 0
-		connectToServer(self, SERVER_IP, SERVER_PORT)
-	end
+	--if not client and SERVER_IP and tryToConnect then
+	--	connectToServer(self, SERVER_IP, SERVER_PORT)
+	--end
 
 	if client then
 		client.update()
@@ -96,9 +103,30 @@ function on_message(self, message_id, message, sender)
 	-- Remove this function if not needed
 	if message_id == hash("setControllerData") then
 		frame = message.frame
-	elseif message_id == hash("reconnect") then
-		print("Reconnect clicked")
-		tryToReconnect = true
+	elseif message_id == hash("setConnectionFlag") then
+		print("Set connection flag: " .. tostring(message.on))
+		tryToConnect = message.on
+		broadcastTimer = 0
+	elseif message_id == hash("disconnect") then
+		print("Disconnect")
+		if client then
+			client.destroy()
+			client = nil
+			SERVER_IP = nil
+			g_goToMainMenu()
+		end
+	elseif message_id == hash("sendPlayerClass") then
+		if client then
+			client.send("C;" .. message.playerClass .. "\n\r")
+		end
+	elseif message_id == hash("sendReady") then
+		if client then
+			client.send("G;ready\n\r")
+		end
+	elseif message_id == hash("sendUsername") then
+		if client then
+			client.send("N;" .. g_username .. "\n\r")
+		end
 	end
 
 end

@@ -10,14 +10,46 @@ local TCP_SERVER_PORT = 5555
 local PORT = 50000
 
 local dtPassed = 0
+--Proxy to access server in functions other than self
+local serverHandler = nil
+local currentSession = nil
+
+function createSession()
+	if currentSession == nil then
+		currentSession = sessionGenerator.create()
+		currentSession.start()
+		sendMessageToAllActivePlayers("StartGame")
+	end
+end
 
 local function msgActivePlayersChange()
-	msg.post("/menu#championSelect", "playerUpdate", {players=clientsManager.generatePlayersList()})
 	playersManager.setActivePlayersIDs(clientsManager.returnActivePlayersIDs())
 end
 
+local function routeFrameToRespFunc(frame,ip)
+	local frameId = string.sub(data,1,1)
+
+	if frameId == "M" then 
+		clientsManager.translateDataToPlayer(data, ip)
+	elseif frameId == "N" then 
+		clientsManager.addNickToPlayer(data, ip)
+		clientsManager.sendNickToMenu(ip)
+	elseif frameId == "C" then 
+		if clientsManager.tryToLockPlayerClass(data, ip) then
+			serverHandler.send(frame, client)
+			clientsManager.sendClassToMenu(ip)
+		end
+	elseif frameId == "G" then
+		clientsManager.setPlayerReadines(ip, true)
+		if clientsManager.areAllPlayersReady() then
+			createSession()
+		end
+	end
+	
+end
+
+
 local function on_data(data, ip, port, client)
-	--potential choke point
 	clientsManager.resetPlayerInactivityTimeCounter(ip)
 	
 	if  not clientsManager.isPlayerActive(ip) then
@@ -25,11 +57,7 @@ local function on_data(data, ip, port, client)
 		msgActivePlayersChange()
 	end
 	
-	if string.sub(data,1,1) == "M" then 
-		clientsManager.translateDataToPlayer(data, ip)
-	elseif string.sub(data,1,1) == "N" then 
-		clientsManager.addNickToPlayer(data, ip)
-	end
+	routeFrameToRespFunc(data,ip)
 end 
 
 local function on_client_connected(ip, port, client) 
@@ -38,16 +66,15 @@ local function on_client_connected(ip, port, client)
 end
 
 local function on_client_disconnected(ip, port, client)
+	--TODO: add function, to remove data from menu
 	clientsManager.removePlayer(ip)
 	msgActivePlayersChange()
 end
 
 function init(self)
-	-- DEBUG: profiler init
-	-- msg.post("@system:", "toggle_profile")
-	-- tcp server init
 	server = tcpServer.create(TCP_SERVER_PORT, on_data, on_client_connected, on_client_disconnected)
 	self.server = server
+	serverHandler = self.server
 	self.server.start()
 
 	-- broadcast init
@@ -62,8 +89,16 @@ function final(self)
 	end
 end
 
+local function sendMessageToAllActivePlayers(mess)
+	for ip,client in pairs(clientsManager.returnActiveClients()) do
+		serverHandler.send(mess.."\n\r", client)
+	end
+end
+
 function update(self, dt)
 	-- Add update code here
+	
+	--TODO: start updated when inside champion select
 	self.p2p.update(dt)
 	
 	--TODO: adjust clocking for optimal user experience
@@ -84,17 +119,24 @@ function update(self, dt)
 	if self.server then
 		self.server.update()	
 	end
-
-	if self.currentSession then
-		self.currentSession = self.currentSession.update()
+	
+	if currentSession ~= nil then
+		currentSession.update() 
+		if currentSession.isGameOver()  then
+			sendMessageToAllActivePlayers("EndGame")
+			currentSession = nil
+		end
+		
 	end
 end
 
 function on_message(self, message_id, message, sender)
-	--[[if message_id == hash("startGame") then
-		if not self.currentSession then
-			self.currentSession = sessionGenerator.create()
-			self.currentSession.start()
+	if  message_id == hash("reset") then
+		if self.currentSession then
+			sendMessageToAllActivePlayers("Reset")
+			clientsManager.resetPlayersToDefault()
+			self.currentSession.setGameOverFlag(1)
+
 		end
 	end]]
 end
