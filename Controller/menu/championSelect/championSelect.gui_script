@@ -150,12 +150,14 @@ function on_input(self, action_id, action)
 			end
 		end
 		--]]
-		self.buttonHolder.knightButton.mouseUpdate(action)
-		self.buttonHolder.mageButton.mouseUpdate(action)
-		self.buttonHolder.rogueButton.mouseUpdate(action)
-		self.buttonHolder.archerButton.mouseUpdate(action)
-		if self.playerClassLocked and not playerIsReady then
-			self.buttonHolder.startButton.mouseUpdate(action)
+		if not playerIsReady then
+			self.buttonHolder.knightButton.mouseUpdate(action)
+			self.buttonHolder.mageButton.mouseUpdate(action)
+			self.buttonHolder.rogueButton.mouseUpdate(action)
+			self.buttonHolder.archerButton.mouseUpdate(action)
+			if self.playerClassLocked then
+				self.buttonHolder.startButton.mouseUpdate(action)
+			end
 		end
 		-- END OF BUTTONS
 		
