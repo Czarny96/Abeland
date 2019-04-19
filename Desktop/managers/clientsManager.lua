@@ -113,8 +113,8 @@ function M.removePlayer(playerIP)
 	playersTable[playerIP] = nil
 end
 
-function M.addNickToPlayer(data,playerIP)
-	nick = translationLayer.getNickFromFrame(data)
+function M.addNickToPlayer(frame,playerIP)
+	nick = translationLayer.getNickFromFrame(frame)
 	setPlayerNick(nick,playerIP)
 end
 
@@ -130,7 +130,7 @@ local function checkIfClassAvaible(class)
 	return isAvaible
 end
 
-function M.tryToLockPlayerClass(data,playerIP)
+function M.tryToLockPlayerClass(frame,playerIP)
 
 	class = translationLayer.getClassFromFrame(frame)
 	local success = false
@@ -148,18 +148,21 @@ function M.getPlayerClass(playerIP)
 	return playersTable[playerIP][6]
 end
 
+function M.getPlayerNick(playerIP)
+	return playersTable[playerIP][5]
+end
+
 function M.sendClassToMenu(playerIP)
 	local dataPack = {}
-	table.insert(playerList, {ip=ip, playerClass=values[6]}) 
+	table.insert(dataPack, {ip=playerIP, playerClass=M.getPlayerClass(playerIP)}) 
 	translationLayer.passPlayerClass(dataPack)
 
 end
 
 function M.sendNickToMenu(playerIP)
 	local dataPack = {}
-	table.insert(playerList, {ip=ip, nick=values[5]}) 
+	table.insert(dataPack, {ip=playerIP, playerClass=M.getPlayerNick(playerIP)}) 
 	translationLayer.passPlayerNick(dataPack)
-
 end
 
 function M.areAllPlayersReady()
@@ -168,6 +171,7 @@ function M.areAllPlayersReady()
 		if values[7] == false then
 			answer = false
 		end
+	end
 	return answer
 
 end
