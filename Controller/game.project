@@ -56,3 +56,7 @@ input_method = HiddenInputField
 [script]
 shared_state = 1
 
+[graphics]
+default_texture_min_filter = linear
+default_texture_mag_filter = linear
+

@@ -1,53 +1,107 @@
 images {
-  image: "/assets/interface/blue_btn.png"
+  image: "/assets/interface/champion_select/archer-disabled.png"
 }
 images {
-  image: "/assets/interface/duza_galka.png"
+  image: "/assets/interface/champion_select/archer-selected.png"
 }
 images {
-  image: "/assets/interface/green_btn.png"
+  image: "/assets/interface/champion_select/archer.png"
 }
 images {
-  image: "/assets/interface/mala_galka.png"
+  image: "/assets/interface/champion_select/button-next.png"
 }
 images {
-  image: "/assets/interface/red_btn.png"
+  image: "/assets/interface/champion_select/button-ready.png"
 }
 images {
-  image: "/assets/interface/yellow_btn.png"
+  image: "/assets/interface/champion_select/knight-disabled.png"
 }
 images {
-  image: "/assets/interface/ctrl_background.png"
+  image: "/assets/interface/champion_select/knight-selected.png"
+}
+images {
+  image: "/assets/interface/champion_select/knight.png"
+}
+images {
+  image: "/assets/interface/champion_select/mage-disabled.png"
+}
+images {
+  image: "/assets/interface/champion_select/mage-selected.png"
+}
+images {
+  image: "/assets/interface/champion_select/mage.png"
+}
+images {
+  image: "/assets/interface/champion_select/rogue-disabled.png"
+}
+images {
+  image: "/assets/interface/champion_select/rogue-selected.png"
+}
+images {
+  image: "/assets/interface/champion_select/rogue.png"
+}
+images {
+  image: "/assets/interface/champion_select/select-character-clear.png"
+}
+images {
+  image: "/assets/interface/controller/background.png"
+}
+images {
+  image: "/assets/interface/controller/blue_btn.png"
+}
+images {
+  image: "/assets/interface/controller/green_btn.png"
+}
+images {
+  image: "/assets/interface/controller/joystick-top.png"
+}
+images {
+  image: "/assets/interface/controller/joystick.png"
+}
+images {
+  image: "/assets/interface/controller/red_btn.png"
+}
+images {
+  image: "/assets/interface/controller/yellow_btn.png"
+}
+images {
+  image: "/assets/interface/menu/button-cancel.png"
+}
+images {
+  image: "/assets/interface/menu/button-exit.png"
+}
+images {
+  image: "/assets/interface/menu/button-join-game.png"
+}
+images {
+  image: "/assets/interface/menu/enter-name-input.png"
+}
+images {
+  image: "/assets/interface/menu/enter-name.png"
+}
+images {
+  image: "/assets/interface/menu/looking-for-server.png"
+}
+images {
+  image: "/assets/interface/menu/menu.png"
+}
+images {
+  image: "/assets/interface/menu/options.png"
+}
+images {
+  image: "/assets/interface/menu/spinner.png"
+}
+images {
+  image: "/assets/interface/menu/splash.png"
 }
 images {
   image: "/assets/interface/reconnectButton.png"
 }
 images {
-  image: "/assets/interface/reconnectWindow.png"
-}
-images {
-  image: "/assets/interface/spinner.png"
-}
-images {
-  image: "/assets/interface/menu_background.png"
-}
-images {
-  image: "/assets/interface/splashScreen.png"
-}
-images {
   image: "/assets/interface/textField.png"
 }
 images {
-  image: "/assets/interface/playerClass/archer.png"
-}
-images {
-  image: "/assets/interface/playerClass/knight.png"
-}
-images {
-  image: "/assets/interface/playerClass/mage.png"
-}
-images {
-  image: "/assets/interface/playerClass/rogue.png"
+  image: "/assets/interface/menu/button-empty.png"
 }
 margin: 10
 extrude_borders: 0

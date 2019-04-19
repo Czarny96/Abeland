@@ -30,9 +30,9 @@ local function onData(data)
 		g_goToMainMenu()
 		msg.post("/go#client", "disconnect")
 	elseif data == "Reset" then
-		g_goToUsernameField()
+		g_goToChampionSelect()
 	elseif string.sub(data, 1, 1) == "C" then
-		msg.post("/menu#usernameField", "playerClassConfirm", {playerClass = string.sub(data, 3, #data)})
+		msg.post("/menu#championSelect", "playerClassConfirm", {playerClass = string.sub(data, 3, #data)})
 	end
 end
 
@@ -43,7 +43,6 @@ local function onDisconnection()
 	broadcastTimer = 0
 	g_showDcWindow()
 	g_goToMainMenu()
-	msg.post("/menu#ctrlGui", "setConnectionText", {text = "Disconnected"})
 end
 
 local function connectToServer(self, ip, port)
@@ -55,12 +54,12 @@ local function connectToServer(self, ip, port)
 		tryToConnect = false
 		g_hideConnectingWindow()
 		g_goToUsernameField()
-		msg.post("/menu#ctrlGui", "setConnectionText", {text = "Connected"})
+		--msg.post("/menu#ctrlGui", "setConnectionText", {text = "Connected"})
 
 	else
 		print("Connection failed. How?")
 		print(err)
-		msg.post("/menu#ctrlGui", "setConnectionText", {text = "Connection failed"})
+		--msg.post("/menu#ctrlGui", "setConnectionText", {text = "Connection failed"})
 	end
 end
 
@@ -70,7 +69,7 @@ function init(self)
 	self.p2p.listen("findme", function(ip, port)
 		-- see note above (BUGFIX #2)
 		if not client and tryToConnect and broadcastTimer > 2 and not SERVER_IP then
-			print("Found new server")
+			print("Found server " .. ip .. " " .. port)
 			SERVER_IP = ip
 			connectToServer(self, SERVER_IP, SERVER_PORT)
 		end

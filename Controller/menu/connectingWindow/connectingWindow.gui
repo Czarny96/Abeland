@@ -141,8 +141,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 1300.0
-    y: 610.0
+    x: 1026.0
+    y: 685.0
     z: 0.0
     w: 1.0
   }
@@ -154,7 +154,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "menuAtlas/reconnectWindow"
+  texture: "menuAtlas/looking-for-server"
   id: "connectScreenBg"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -196,8 +196,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 400.0
-    y: 100.0
+    x: 500.0
+    y: 150.0
     z: 0.0
     w: 1.0
   }
@@ -245,14 +245,14 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 1.0
-    y: 1.0
+    x: 0.8
+    y: 0.8
     z: 1.0
     w: 1.0
   }
   size {
-    x: 379.0
-    y: 93.0
+    x: 631.0
+    y: 135.0
     z: 0.0
     w: 1.0
   }
@@ -264,7 +264,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "menuAtlas/reconnectButton"
+  texture: "menuAtlas/button-cancel"
   id: "cancelButtonImg"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -319,7 +319,7 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "Cancel"
+  text: ""
   font: "menuFont"
   id: "cancelButtonText"
   xanchor: XANCHOR_NONE
@@ -363,14 +363,14 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 0.4
-    y: 0.4
+    x: 1.0
+    y: 1.0
     z: 1.0
     w: 1.0
   }
   size {
-    x: 476.0
-    y: 482.0
+    x: 193.0
+    y: 196.0
     z: 0.0
     w: 1.0
   }
@@ -407,7 +407,7 @@ nodes {
 nodes {
   position {
     x: 0.0
-    y: -33.0
+    y: -19.0
     z: 0.0
     w: 1.0
   }
@@ -418,8 +418,8 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 1.399
-    y: 1.502
+    x: 1.0
+    y: 1.0
     z: 1.0
     w: 1.0
   }

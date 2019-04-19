@@ -17,6 +17,7 @@ g_gameStateEnum = {
 	splashScreen = {},
 	mainMenu = {},
 	usernameField = {},
+	championSelect = {},
 	controller = {}
 }
 
@@ -46,6 +47,13 @@ function g_goToUsernameField()
 	g_gameState = g_gameStateEnum.usernameField
 	msg.post("/menu", "disable")
 	msg.post("/menu#usernameField", "enable")
+end
+
+function g_goToChampionSelect()
+	print("Entering champion select")
+	g_gameState = g_gameStateEnum.championSelect
+	msg.post("/menu", "disable")
+	msg.post("/menu#championSelect", "enable")
 end
 
 function g_goToController()
@@ -84,16 +92,16 @@ end
 
 function on_input(self, action_id, action)
 	if action_id == hash("key_back") and action.pressed then
-		if g_gameState == g_gameStateEnum.controller then
+		--if g_gameState == g_gameStateEnum.controller then
 			--g_goToMainMenu()
-			msg.post("/go#client", "disconnect")
+		--	msg.post("/go#client", "disconnect")
 			-- TODO: are you sure window
-		elseif g_gameState == g_gameStateEnum.mainMenu then
-			os.exit()
-		elseif g_gameState == g_gameStateEnum.usernameField and not g_textFieldFocused then
+		--elseif g_gameState == g_gameStateEnum.mainMenu then
+		--	os.exit()
+		--elseif g_gameState == g_gameStateEnum.usernameField and not g_textFieldFocused then
 			--g_goToMainMenu()
-			msg.post("/go#client", "disconnect")
-		end
+		--	msg.post("/go#client", "disconnect")
+		--end
 	end
 end
 
