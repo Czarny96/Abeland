@@ -21,7 +21,8 @@ local function buttonReleased(hashedNodeId)
 
 		msg.post("/go#client", "sendReady")
 		playerIsReady = true
-		gui.set_color(gui.get_node("StartImg"), vmath.vector3(0.7, 1, 0.7))
+		gui.set_color(gui.get_node("StartImg"), vmath.vector3(1, 1, 1))
+		gui.play_flipbook(gui.get_node("StartImg"), "button-ready-selected")
 		--lockActions = true
 
 		--gui.hide_keyboard()
@@ -76,6 +77,7 @@ local function start(self)
 
 	gui.set_color(gui.get_node("StartImg"), vmath.vector3(0.3))
 	gui.set_color(gui.get_node("StartText"), vmath.vector4(0.3))
+	gui.play_flipbook(gui.get_node("StartImg"), "button-ready")
 
 	-- screen is going from black to white
 	gui.set_color(blackBoxNode, vmath.vector4(0,0,0,1))
