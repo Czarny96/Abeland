@@ -79,7 +79,8 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("enable") then
 		start(self)
 	elseif message_id == hash("disable") then
-
+	elseif message_id == hash("endGame") then
+		buttonReleased(hash("Exit"))
 	end
 end
 
@@ -88,13 +89,15 @@ function on_input(self, action_id, action)
 	-- Remove this function if not needed
 	if action_id == hash("mouse_left") then
 		
-		if lockActions or g_connectingWindowIsOn or g_dcWindowIsOn then
+		if lockActions then-- or g_connectingWindowIsOn or g_dcWindowIsOn then
 			return
 		end
 		
 		for idx, button in pairs(self.buttonHolder) do
 			button.mouseUpdate(action)
 		end
+	elseif action_id == hash("key_back") and action.pressed then
+		g_showConfirmationWindow()
 	end
 end
 

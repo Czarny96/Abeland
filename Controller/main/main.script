@@ -89,6 +89,16 @@ function g_hideDcWindow()
 	g_dcWindowIsOn = false
 	msg.post("/xmenu#disconnectedWindow", "hide")
 end
+
+function g_showConfirmationWindow()
+	print("Show confirmation window")
+	msg.post("/xmenu#confirmationWindow", "show")
+end
+
+function g_hideConfirmationWindow()
+	print("Hide confirmation window")
+	msg.post("/xmenu#confirmationWindow", "hide")
+end
 -- END OF GAME STATE FUNCTIONS AND VARIABLES
 
 function on_input(self, action_id, action)

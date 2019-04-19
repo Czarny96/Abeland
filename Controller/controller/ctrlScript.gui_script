@@ -247,8 +247,8 @@ function on_input(self, action_id, action)
 		--for k, button in pairs(self.gameButtons) do
 		--	button.mouseUpdate(action)
 		--end
-	elseif action_id == hash("key_back") then
-		
+	elseif action_id == hash("key_back") and action.pressed then
+		g_showConfirmationWindow()
 	end
 
 end
