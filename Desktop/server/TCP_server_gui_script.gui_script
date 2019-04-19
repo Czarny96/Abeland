@@ -27,7 +27,7 @@ local function msgActivePlayersChange()
 	playersManager.setActivePlayersIDs(clientsManager.returnActivePlayersIDs())
 end
 
-local function routeFrameToRespFunc(frame,ip)
+local function routeFrameToRespFunc(frame,ip, client)
 	local frameId = string.sub(frame,1,1)
 
 	if frameId == "M" and currentSession ~=nil then 
@@ -59,7 +59,7 @@ local function on_data(data, ip, port, client)
 		msgActivePlayersChange()
 	end
 	
-	routeFrameToRespFunc(data,ip)
+	routeFrameToRespFunc(data,ip,client)
 end 
 
 local function on_client_connected(ip, port, client) 

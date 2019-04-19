@@ -18,6 +18,7 @@ local frame = ""
 
 
 local function onData(data)
+	print(data)
 	if data == "btn_data" then
 		msg.post("/menu#ctrlGui", "dataRequest")
 		if client then
