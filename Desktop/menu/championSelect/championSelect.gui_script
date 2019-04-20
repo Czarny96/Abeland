@@ -10,9 +10,33 @@ local blackBoxNode = nil
 
 local lockActions = nil
 
+local infoAboutPlayerNick = nil
+local infoAboutPlayerClass = nil
+local previousInfoAboutPlayerClass = nil
+
+local archerNickName = nil
+local mageNickName = nil
+local knightNickName = nil
+local rogurNickName = nil
+
+
 local function buttonPressed(hashedNodeId)
 
 end
+
+local function StartGame()
+	-- print("Clicked start")
+	lockActions = true
+	globals.setPause(false)
+
+	g_gameState = g_gameStateEnum.inGame
+	g_allowOpenPause()
+
+	gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
+	gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
+	gui.EASING_LINEAR, 1, 0, function() msg.post("/menu", "disable") end)
+end
+
 
 local function buttonReleased(hashedNodeId)
 	
@@ -24,16 +48,7 @@ local function buttonReleased(hashedNodeId)
 		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
 		gui.EASING_LINEAR, 1, 0, function() g_goToMainMenu() end)
 	elseif hashedNodeId == hash("Start") then
-		-- print("Clicked start")
-		lockActions = true
-		globals.setPause(false)
-
-		g_gameState = g_gameStateEnum.inGame
-		g_allowOpenPause()
-		
-		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
-		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
-		gui.EASING_LINEAR, 1, 0, function() msg.post("/menu", "disable") end)
+		StartGame()
 	end
 end
 
@@ -68,6 +83,11 @@ function init(self)
 	
 	blackBoxNode = gui.get_node("blackBox")
 	playerListNode = gui.get_node("playerList")
+
+	archerNickName = gui.get_node("archerPlayerName")
+	mageNickName = gui.get_node("magePlayerName")
+	knightNickName = gui.get_node("knightPlayerName")
+	rogurNickName = gui.get_node("roguePlayerName")
 	
 	self.buttonHolder = {
 		backButton = scalingButton.create("Back", buttonReleased, buttonPressed),
@@ -83,15 +103,73 @@ function update(self, dt)
 
 end
 
+local function ClearNickName()
+	if previousInfoAboutPlayerClass ~= nil then
+		if previousInfoAboutPlayerClass[1].ip == infoAboutPlayerClass[1].ip then
+			if previousInfoAboutPlayerClass[1].playerClass == "archer" then
+				gui.set_text(archerNickName, "ARCHER")
+			elseif previousInfoAboutPlayerClass[1].playerClass == "mage" then
+				gui.set_text(mageNickName, "MAGE")
+			elseif previousInfoAboutPlayerClass[1].playerClass == "rogue" then
+				gui.set_text(rogurNickName, "ROGUE")
+			elseif previousInfoAboutPlayerClass[1].playerClass == "knight" then
+				gui.set_text(knightNickName, "KNIGHT")
+			end
+		end
+	end
+end
+
+local function SetPlayers()
+	ClearNickName()
+	
+	
+	if infoAboutPlayerClass[1].playerClass == "archer" then
+		gui.set_text(archerNickName, infoAboutPlayerClass[1].ip)
+	elseif infoAboutPlayerClass[1].playerClass == "mage" then
+		gui.set_text(mageNickName, infoAboutPlayerClass[1].ip)
+	elseif infoAboutPlayerClass[1].playerClass == "rogue" then
+		gui.set_text(rogurNickName, infoAboutPlayerClass[1].ip)
+	elseif infoAboutPlayerClass[1].playerClass == "knight" then
+		gui.set_text(knightNickName, infoAboutPlayerClass[1].ip)
+	end
+end
+
+
 function on_message(self, message_id, message, sender)
 	if message_id == hash("enable") then
 		start(self)
 	elseif message_id == hash("disable") then
 
 	elseif message_id == hash("playerUpdate") then
-		updatePlayerList(message.players)	
+		--updatePlayerList(message.ip)	
 	end
+
+	if message_id == hash("startGame") then
+		StartGame()
+	end
+	
+	if message_id == hash("classSelect") then
+		print("Class Select")
+		pprint(message)
+		infoAboutPlayerClass = message
+
+		
+		SetPlayers()
+
+		previousInfoAboutPlayerClass = infoAboutPlayerClass
+		
+	end
+
+	if message_id == hash("nick") then
+		print("NICK")
+		print("IP: " .. message[1].ip)
+		
+		pprint(message)
+		infoAboutPlayerNick = message
+	end
+	
 end
+
 
 function on_input(self, action_id, action)
 	if action_id == hash("mouse_left") then
