@@ -35,6 +35,9 @@ function M.create()
 		print("Creating a new session with ID: " .. session.sessionID)
 		playersManager.setAllPlayersToArena()
 		enemyManger.initializeWave(10, 1)
+
+		msg.post("/menu#championSelect", "startGame", {})
+		
 		return true
 	end
 
