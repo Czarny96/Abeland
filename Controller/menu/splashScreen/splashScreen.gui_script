@@ -7,6 +7,18 @@ function init(self)
 	-- Add initialization code here
 	-- Remove this function if not needed
 	self.splashScreenNode = gui.get_node("splashImage")
+
+
+	-- LOAD PLAYER USERNAME FROM DISK
+	local filePath = sys.get_save_file("AbelandController", "username")
+	print("Save file path: ", filePath)
+	local uname = sys.load(filePath)
+	if not next(uname) then
+		print("No username created before")
+	else
+		g_username = uname[1]
+		print("Loaded username: ", g_username)
+	end
 	
 end
 

@@ -81,6 +81,15 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("disable") then
 	elseif message_id == hash("endGame") then
 		buttonReleased(hash("Exit"))
+
+		-- SAVE USERNAME 
+		print("Saving username...")
+		local uname = {}
+		table.insert(uname, tostring(g_username))
+		local filePath = sys.get_save_file("AbelandController", "username")
+		if not sys.save(filePath, uname) then
+			print("FAILED TO WRITE USERNAME TO DISK")
+		end
 	end
 end
 
