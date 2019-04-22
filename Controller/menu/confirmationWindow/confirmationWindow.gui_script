@@ -50,7 +50,7 @@ local function start(self)
 
 	-- screen is going from black to white
 	gui.set_scale(confirmScreenNode, vmath.vector3(0,0,0))
-	gui.animate(confirmScreenNode, gui.PROP_SCALE, vmath.vector3(1,1,1), gui.EASING_INOUTCUBIC, 1)
+	gui.animate(confirmScreenNode, gui.PROP_SCALE, vmath.vector3(0.7,0.7,0.7), gui.EASING_INOUTCUBIC, 1)
 end
 
 function final(self)
