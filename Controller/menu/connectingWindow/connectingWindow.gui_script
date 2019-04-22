@@ -16,7 +16,6 @@ end
 local function buttonReleased(hashedNodeId)
 	if hashedNodeId == hash("cancelButton") then
 		print("Clicked cancel")
-		lockActions = true
 		msg.post("/xmenu#connectingWindow", "hide")
 
 	end
@@ -64,6 +63,7 @@ function on_message(self, message_id, message, sender)
 		msg.post("/xmenu#connectingWindow", "enable")
 		start(self)
 	elseif message_id == hash("hide") then
+		lockActions = true
 		msg.post("/go#client", "setConnectionFlag", {on = false})
 		gui.cancel_animation(connectScreenNode, gui.PROP_SCALE)
 		gui.animate(connectScreenNode, gui.PROP_SCALE, vmath.vector3(0,0,0), 
@@ -75,15 +75,19 @@ function on_message(self, message_id, message, sender)
 end
 
 function on_input(self, action_id, action)
+	
+	if lockActions then
+		return true
+	end
+	
 	if action_id == hash("mouse_left") then
-
-		if lockActions then
-			return true
-		end
 		
 		for idx, button in pairs(self.buttonHolder) do
 			button.mouseUpdate(action)
 		end
+	elseif action_id == hash("key_back") and action.pressed then
+		print("Clicked back - hiding window")
+		msg.post("/xmenu#connectingWindow", "hide")
 	end
 
 	-- other screens shouldn't process input
