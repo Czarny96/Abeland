@@ -3,8 +3,8 @@ local playersManager = require "managers.playersManager"
 local clientsManager = require "managers.clientsManager"
 local globals = require "main.globals"
 
-local playerListNode = nil
-local playerList = nil
+--local playerListNode = nil
+--local playerList = nil
 
 local blackBoxNode = nil
 
@@ -52,6 +52,7 @@ local function buttonReleased(hashedNodeId)
 	end
 end
 
+--[[
 local function updatePlayerList(players)
 	playerList = players
 
@@ -67,7 +68,7 @@ local function updatePlayerList(players)
 	gui.set_text(playerListNode, output)
 	--pprint(playerList)
 end
-
+--]]
 local function start()
 	lockActions = false
 
@@ -82,7 +83,7 @@ function init(self)
 	msg.post(".", "acquire_input_focus")
 	
 	blackBoxNode = gui.get_node("blackBox")
-	playerListNode = gui.get_node("playerList")
+	--playerListNode = gui.get_node("playerList")
 
 	archerNickName = gui.get_node("archerPlayerName")
 	mageNickName = gui.get_node("magePlayerName")
@@ -107,13 +108,13 @@ local function ClearNickName()
 	if previousInfoAboutPlayerClass ~= nil then
 		if previousInfoAboutPlayerClass[1].ip == infoAboutPlayerClass[1].ip then
 			if previousInfoAboutPlayerClass[1].playerClass == "archer" then
-				gui.set_text(archerNickName, "ARCHER")
+				gui.set_text(archerNickName, "")
 			elseif previousInfoAboutPlayerClass[1].playerClass == "mage" then
-				gui.set_text(mageNickName, "MAGE")
+				gui.set_text(mageNickName, "")
 			elseif previousInfoAboutPlayerClass[1].playerClass == "rogue" then
-				gui.set_text(rogurNickName, "ROGUE")
+				gui.set_text(rogurNickName, "")
 			elseif previousInfoAboutPlayerClass[1].playerClass == "knight" then
-				gui.set_text(knightNickName, "KNIGHT")
+				gui.set_text(knightNickName, "")
 			end
 		end
 	end
@@ -122,16 +123,17 @@ end
 local function SetPlayers()
 	ClearNickName()
 	
-	
-	if infoAboutPlayerClass[1].playerClass == "archer" then
-		gui.set_text(archerNickName, infoAboutPlayerClass[1].ip)
-	elseif infoAboutPlayerClass[1].playerClass == "mage" then
-		gui.set_text(mageNickName, infoAboutPlayerClass[1].ip)
-	elseif infoAboutPlayerClass[1].playerClass == "rogue" then
-		gui.set_text(rogurNickName, infoAboutPlayerClass[1].ip)
-	elseif infoAboutPlayerClass[1].playerClass == "knight" then
-		gui.set_text(knightNickName, infoAboutPlayerClass[1].ip)
-	end
+	--if infoAboutPlayerClass[1].ip == infoAboutPlayerNick[1].ip then
+		if infoAboutPlayerClass[1].playerClass == "archer" then
+			gui.set_text(archerNickName, infoAboutPlayerNick[1].playerNickname)
+		elseif infoAboutPlayerClass[1].playerClass == "mage" then
+			gui.set_text(mageNickName, infoAboutPlayerNick[1].playerNickname)
+		elseif infoAboutPlayerClass[1].playerClass == "rogue" then
+			gui.set_text(rogurNickName, infoAboutPlayerNick[1].playerNickname)
+		elseif infoAboutPlayerClass[1].playerClass == "knight" then
+			gui.set_text(knightNickName, infoAboutPlayerNick[1].playerNickname)
+		end
+	--end
 end
 
 
@@ -140,7 +142,7 @@ function on_message(self, message_id, message, sender)
 		start(self)
 	elseif message_id == hash("disable") then
 
-	elseif message_id == hash("playerUpdate") then
+	--elseif message_id == hash("playerUpdate") then
 		--updatePlayerList(message.ip)	
 	end
 
@@ -149,25 +151,16 @@ function on_message(self, message_id, message, sender)
 	end
 	
 	if message_id == hash("classSelect") then
-		print("Class Select")
-		pprint(message)
 		infoAboutPlayerClass = message
 
-		
 		SetPlayers()
 
 		previousInfoAboutPlayerClass = infoAboutPlayerClass
-		
 	end
 
 	if message_id == hash("nick") then
-		print("NICK")
-		print("IP: " .. message[1].ip)
-		
-		pprint(message)
 		infoAboutPlayerNick = message
 	end
-	
 end
 
 

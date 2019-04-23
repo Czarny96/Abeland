@@ -88,4 +88,5 @@ end
 function M.passPlayerNick(nickDataPack)
 	msg.post("/menu#championSelect", "nick", nickDataPack)
 end
+
 return M

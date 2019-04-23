@@ -165,7 +165,7 @@ end
 
 function M.sendNickToMenu(playerIP)
 	local dataPack = {}
-	table.insert(dataPack, {ip=playerIP, playerClass=M.getPlayerNick(playerIP)}) 
+	table.insert(dataPack, {ip=playerIP, playerNickname=M.getPlayerNick(playerIP)}) 
 	translationLayer.passPlayerNick(dataPack)
 end
 
