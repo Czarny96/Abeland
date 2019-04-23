@@ -10,6 +10,8 @@ local blackBoxNode = nil
 
 local lockActions = nil
 
+local getNickAndClass = { }
+local previousGetNickAndClass = { }
 local infoAboutPlayerNick = nil
 local infoAboutPlayerClass = nil
 local previousInfoAboutPlayerClass = nil
@@ -105,37 +107,39 @@ function update(self, dt)
 end
 
 local function ClearNickName()
-	if previousInfoAboutPlayerClass ~= nil then
-		if previousInfoAboutPlayerClass[1].ip == infoAboutPlayerClass[1].ip then
-			if previousInfoAboutPlayerClass[1].playerClass == "archer" then
-				gui.set_text(archerNickName, "")
-			elseif previousInfoAboutPlayerClass[1].playerClass == "mage" then
-				gui.set_text(mageNickName, "")
-			elseif previousInfoAboutPlayerClass[1].playerClass == "rogue" then
-				gui.set_text(rogurNickName, "")
-			elseif previousInfoAboutPlayerClass[1].playerClass == "knight" then
-				gui.set_text(knightNickName, "")
-			end
-		end
+	if previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "archer" then
+		gui.set_text(archerNickName, "")
+	elseif previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "mage" then
+		gui.set_text(mageNickName, "")
+	elseif previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "rogue" then
+		gui.set_text(rogurNickName, "")
+	elseif previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "knight" then
+		gui.set_text(knightNickName, "")
 	end
 end
 
 local function SetPlayers()
 	ClearNickName()
 	
-	--if infoAboutPlayerClass[1].ip == infoAboutPlayerNick[1].ip then
-		if infoAboutPlayerClass[1].playerClass == "archer" then
-			gui.set_text(archerNickName, infoAboutPlayerNick[1].playerNickname)
-		elseif infoAboutPlayerClass[1].playerClass == "mage" then
-			gui.set_text(mageNickName, infoAboutPlayerNick[1].playerNickname)
-		elseif infoAboutPlayerClass[1].playerClass == "rogue" then
-			gui.set_text(rogurNickName, infoAboutPlayerNick[1].playerNickname)
-		elseif infoAboutPlayerClass[1].playerClass == "knight" then
-			gui.set_text(knightNickName, infoAboutPlayerNick[1].playerNickname)
-		end
-	--end
+	if getNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "archer" then
+		gui.set_text(archerNickName, getNickAndClass[infoAboutPlayerClass[1].ip].playerNickname)
+	elseif getNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "mage" then
+		gui.set_text(mageNickName, getNickAndClass[infoAboutPlayerClass[1].ip].playerNickname)
+	elseif getNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "rogue" then
+		gui.set_text(rogurNickName, getNickAndClass[infoAboutPlayerClass[1].ip].playerNickname)
+	elseif getNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "knight" then
+		gui.set_text(knightNickName, getNickAndClass[infoAboutPlayerClass[1].ip].playerNickname)
+	end
 end
 
+local function ContainValueinArray(array, value)
+	for index, valueArray in ipairs(array) do
+		if valueArray.ip == value then
+			return true
+		end
+	end
+	return false
+end 
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("enable") then
@@ -152,14 +156,19 @@ function on_message(self, message_id, message, sender)
 	
 	if message_id == hash("classSelect") then
 		infoAboutPlayerClass = message
-
+		
+		getNickAndClass[message[1].ip] = {ip = getNickAndClass[message[1].ip].ip, playerNickname = getNickAndClass[message[1].ip].playerNickname ,playerClass = infoAboutPlayerClass[1].playerClass}
 		SetPlayers()
-
-		previousInfoAboutPlayerClass = infoAboutPlayerClass
+		
+		--previousInfoAboutPlayerClass = infoAboutPlayerClass
+		previousGetNickAndClass[message[1].ip] = {ip = getNickAndClass[message[1].ip].ip, playerNickname = getNickAndClass[message[1].ip].playerNickname ,playerClass = infoAboutPlayerClass[1].playerClass}
 	end
 
 	if message_id == hash("nick") then
 		infoAboutPlayerNick = message
+
+		getNickAndClass[message[1].ip] = {ip = infoAboutPlayerNick[1].ip, playerNickname = infoAboutPlayerNick[1].playerNickname}
+		previousGetNickAndClass[message[1].ip] = {ip = infoAboutPlayerNick[1].ip, playerNickname = infoAboutPlayerNick[1].playerNickname}
 	end
 end
 
