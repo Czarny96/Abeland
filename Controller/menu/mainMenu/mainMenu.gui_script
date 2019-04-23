@@ -80,7 +80,7 @@ function update(self, dt)
 		if pos.x > 2100 then
 			-- cloud flied outside screen
 			pos.x = -200
-			pos.y = math.random(770, 1500)
+			pos.y = math.random(770, 1050)
 		end
 
 		gui.set_position(cloud, pos)
