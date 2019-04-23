@@ -83,9 +83,6 @@ images {
   image: "/assets/interface/menu/looking-for-server.png"
 }
 images {
-  image: "/assets/interface/menu/menu.png"
-}
-images {
   image: "/assets/interface/menu/options.png"
 }
 images {
@@ -93,12 +90,6 @@ images {
 }
 images {
   image: "/assets/interface/menu/splash.png"
-}
-images {
-  image: "/assets/interface/reconnectButton.png"
-}
-images {
-  image: "/assets/interface/textField.png"
 }
 images {
   image: "/assets/interface/menu/button-empty.png"
@@ -111,6 +102,24 @@ images {
 }
 images {
   image: "/assets/interface/menu/button-empty-green.png"
+}
+images {
+  image: "/assets/interface/menu/background-menu.png"
+}
+images {
+  image: "/assets/interface/menu/castle.png"
+}
+images {
+  image: "/assets/interface/menu/cloud1.png"
+}
+images {
+  image: "/assets/interface/menu/cloud2.png"
+}
+images {
+  image: "/assets/interface/menu/cloud3.png"
+}
+images {
+  image: "/assets/interface/menu/cloud4.png"
 }
 margin: 10
 extrude_borders: 0
