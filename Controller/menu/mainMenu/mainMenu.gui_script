@@ -39,10 +39,13 @@ function init(self)
 	
 	backgroundNode = gui.get_node("bg")
 
-	-- maybe later it will be useful...
-	--newGameNode = gui.get_node("NewGame")
-	--settingsNode = gui.get_node("Settings")
-	--exitNode = gui.get_node("Exit")
+	self.cloudNodes = {
+		gui.get_node("cloud1"),
+		gui.get_node("cloud2"),
+		gui.get_node("cloud3"),
+		gui.get_node("cloud4"),
+		gui.get_node("cloud5")
+	}
 	
 	blackBoxNode = gui.get_node("blackBox")
 
@@ -69,8 +72,19 @@ function final(self)
 end
 
 function update(self, dt)
-	-- Add update code here
-	-- Remove this function if not needed
+
+	for i, cloud in pairs(self.cloudNodes) do 
+		local pos = gui.get_position(cloud)
+		pos.x = pos.x + 10.0 * dt * (pos.y / 100.0)
+		
+		if pos.x > 2100 then
+			-- cloud flied outside screen
+			pos.x = -200
+			pos.y = math.random(770, 1500)
+		end
+
+		gui.set_position(cloud, pos)
+	end
 end
 
 function on_message(self, message_id, message, sender)
