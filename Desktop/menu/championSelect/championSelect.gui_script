@@ -3,24 +3,20 @@ local playersManager = require "managers.playersManager"
 local clientsManager = require "managers.clientsManager"
 local globals = require "main.globals"
 
---local playerListNode = nil
---local playerList = nil
-
 local blackBoxNode = nil
 
 local lockActions = nil
 
 local getNickAndClass = { }
 local previousGetNickAndClass = { }
+
 local infoAboutPlayerNick = nil
 local infoAboutPlayerClass = nil
-local previousInfoAboutPlayerClass = nil
 
 local archerNickName = nil
 local mageNickName = nil
 local knightNickName = nil
 local rogurNickName = nil
-
 
 local function buttonPressed(hashedNodeId)
 
@@ -39,9 +35,7 @@ local function StartGame()
 	gui.EASING_LINEAR, 1, 0, function() msg.post("/menu", "disable") end)
 end
 
-
 local function buttonReleased(hashedNodeId)
-	
 	if hashedNodeId == hash("Back") then
 		-- print("Clicked Back Button")
 		lockActions = true
@@ -49,32 +43,12 @@ local function buttonReleased(hashedNodeId)
 		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
 		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
 		gui.EASING_LINEAR, 1, 0, function() g_goToMainMenu() end)
-	elseif hashedNodeId == hash("Start") then
-		StartGame()
 	end
 end
 
---[[
-local function updatePlayerList(players)
-	playerList = players
-
-	local output = ""
-	if players then
-		for i, player in pairs(players) do
-			output = output .. player.nick .. ":" .. player.ip
-			output = output .. "\n"
-		end
-	else
-		output = "none"
-	end
-	gui.set_text(playerListNode, output)
-	--pprint(playerList)
-end
---]]
 local function start()
 	lockActions = false
 
-	-- screen is going from black to white
 	gui.set_color(blackBoxNode, vmath.vector4(0,0,0,1))
 	gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,0), gui.EASING_LINEAR, 1)
 
@@ -85,7 +59,6 @@ function init(self)
 	msg.post(".", "acquire_input_focus")
 	
 	blackBoxNode = gui.get_node("blackBox")
-	--playerListNode = gui.get_node("playerList")
 
 	archerNickName = gui.get_node("archerPlayerName")
 	mageNickName = gui.get_node("magePlayerName")
@@ -94,7 +67,6 @@ function init(self)
 	
 	self.buttonHolder = {
 		backButton = scalingButton.create("Back", buttonReleased, buttonPressed),
-		startButton = scalingButton.create("Start", buttonReleased, buttonPressed)
 	}
 end
 
@@ -132,22 +104,11 @@ local function SetPlayers()
 	end
 end
 
-local function ContainValueinArray(array, value)
-	for index, valueArray in ipairs(array) do
-		if valueArray.ip == value then
-			return true
-		end
-	end
-	return false
-end 
-
 function on_message(self, message_id, message, sender)
 	if message_id == hash("enable") then
 		start(self)
 	elseif message_id == hash("disable") then
 
-	--elseif message_id == hash("playerUpdate") then
-		--updatePlayerList(message.ip)	
 	end
 
 	if message_id == hash("startGame") then
@@ -157,21 +118,35 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("classSelect") then
 		infoAboutPlayerClass = message
 		
-		getNickAndClass[message[1].ip] = {ip = getNickAndClass[message[1].ip].ip, playerNickname = getNickAndClass[message[1].ip].playerNickname ,playerClass = infoAboutPlayerClass[1].playerClass}
+		getNickAndClass[message[1].ip] = {
+			ip = getNickAndClass[message[1].ip].ip,
+			playerNickname = getNickAndClass[message[1].ip].playerNickname,
+			playerClass = infoAboutPlayerClass[1].playerClass
+		}
+		
 		SetPlayers()
 		
-		--previousInfoAboutPlayerClass = infoAboutPlayerClass
-		previousGetNickAndClass[message[1].ip] = {ip = getNickAndClass[message[1].ip].ip, playerNickname = getNickAndClass[message[1].ip].playerNickname ,playerClass = infoAboutPlayerClass[1].playerClass}
+		previousGetNickAndClass[message[1].ip] = {
+			ip = getNickAndClass[message[1].ip].ip,
+			playerNickname = getNickAndClass[message[1].ip].playerNickname,
+			playerClass = infoAboutPlayerClass[1].playerClass
+		}
 	end
 
 	if message_id == hash("nick") then
 		infoAboutPlayerNick = message
 
-		getNickAndClass[message[1].ip] = {ip = infoAboutPlayerNick[1].ip, playerNickname = infoAboutPlayerNick[1].playerNickname}
-		previousGetNickAndClass[message[1].ip] = {ip = infoAboutPlayerNick[1].ip, playerNickname = infoAboutPlayerNick[1].playerNickname}
+		getNickAndClass[message[1].ip] = {
+			ip = infoAboutPlayerNick[1].ip,
+			playerNickname = infoAboutPlayerNick[1].playerNickname
+		}
+		
+		previousGetNickAndClass[message[1].ip] = {
+			ip = infoAboutPlayerNick[1].ip,
+			playerNickname = infoAboutPlayerNick[1].playerNickname
+		}
 	end
 end
-
 
 function on_input(self, action_id, action)
 	if action_id == hash("mouse_left") then
