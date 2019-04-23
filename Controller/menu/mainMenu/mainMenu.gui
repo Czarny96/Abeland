@@ -7,6 +7,10 @@ textures {
   name: "menuAtlas"
   texture: "/atlas/content.atlas"
 }
+textures {
+  name: "mainMenu"
+  texture: "/atlas/mainMenu.atlas"
+}
 background_color {
   x: 0.0
   y: 0.0
@@ -46,7 +50,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "menuAtlas/background-menu"
+  texture: "mainMenu/background-menu"
   id: "bg"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -100,7 +104,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "menuAtlas/cloud1"
+  texture: "mainMenu/cloud1"
   id: "cloud1"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -154,7 +158,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "menuAtlas/cloud2"
+  texture: "mainMenu/cloud2"
   id: "cloud2"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -208,7 +212,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "menuAtlas/cloud3"
+  texture: "mainMenu/cloud3"
   id: "cloud3"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -262,7 +266,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "menuAtlas/cloud4"
+  texture: "mainMenu/cloud4"
   id: "cloud4"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -316,7 +320,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "menuAtlas/cloud2"
+  texture: "mainMenu/cloud2"
   id: "cloud5"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -370,7 +374,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "menuAtlas/castle"
+  texture: "mainMenu/castle"
   id: "castle"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE

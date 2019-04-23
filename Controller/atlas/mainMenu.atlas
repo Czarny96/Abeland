@@ -1,0 +1,21 @@
+images {
+  image: "/assets/interface/menu/background-menu.png"
+}
+images {
+  image: "/assets/interface/menu/castle.png"
+}
+images {
+  image: "/assets/interface/menu/cloud1.png"
+}
+images {
+  image: "/assets/interface/menu/cloud2.png"
+}
+images {
+  image: "/assets/interface/menu/cloud3.png"
+}
+images {
+  image: "/assets/interface/menu/cloud4.png"
+}
+margin: 10
+extrude_borders: 0
+inner_padding: 0
