@@ -33,6 +33,7 @@ function M.create()
 		session.sessionID = s_SessionCounter
 		session.setGameOverFlag(0)
 		print("Creating a new session with ID: " .. session.sessionID)
+		playersManager.setActivePlayersIDs()
 		playersManager.setAllPlayersToArena()
 		enemyManger.initializeWave(10, 1)
 

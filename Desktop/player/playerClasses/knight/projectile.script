@@ -1,8 +1,8 @@
 --KNIGHT
 go.property("projectileDir", vmath.vector3())
-go.property("range", 60)
+go.property("range", 40)
 go.property("speed", 700)
-go.property("damage", 50)
+go.property("damage", 25)
 
 function init(self)
 	self.projectilelife = self.range / self.speed

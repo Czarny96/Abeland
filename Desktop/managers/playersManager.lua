@@ -7,48 +7,36 @@ local globals = require "main.globals"
 
 local M = {}
 
--- This array keeps track of all active players ID
-local playersIDs = {}
+local activePlayersIDs = {}
 
-function M.setActivePlayersIDs(newPlayersIDs)
--- Set active playersIDs
-	local newTable = {}
-	for i, player in pairs(newPlayersIDs) do
-		table.insert(newTable, player)
-	end
-	if #newTable > 0 then
-		playersIDs = newTable
-	else
-		playersIDs = {}
+function M.setActivePlayersIDs()
+-- Set indexable table of active players
+	local allPlayersByIP = clientsManager.getAllPlayers()
+	activePlayersIDs = {}
+	if clientsManager.getAmountOfCurrentPlayers() > 0 then
+		for playerIP in pairs(allPlayersByIP) do
+			if clientsManager.isPlayerActive(playerIP) then
+				table.insert(activePlayersIDs, allPlayersByIP[playerIP][2])
+			end
+		end
 	end
 end
 
 function M.getActivePlayersIDs()
--- Get unhashed playersIDs
-	local alivePlayersTable = {}
-	for i, player in pairs(playersIDs) do
-		local scriptUrl = msg.url(nil, player, "player")
-		if go.get(scriptUrl, "isKilled") == false then
-			table.insert(alivePlayersTable, globals.unhash(player))
-		end
-	end
-	if #alivePlayersTable > 0 then
-		return alivePlayersTable
-	else
-		return 0
-	end
+-- Get table of active players
+	return activePlayersIDs
 end
 
 function M.getPlayersPos()
 -- Get all players positions
-	local tableOfPlayersPos = {}
-	if playersIDs ~= 0 then
-		for i, player in pairs(playersIDs) do 
-			local scriptUrl = msg.url(nil, player, "player")
-			local playerPos = go.get(scriptUrl, "position")
-			table.insert(tableOfPlayersPos, playerPos)
+	local activePlayersPos = {}
+	if #activePlayersIDs > 0 then
+		for i, playerID in pairs(activePlayersIDs) do
+			local playerURL = msg.url(nil, playerID, "player")
+			local playerPos = go.get(playerURL, "position")
+			table.insert(activePlayersPos, playerPos)
 		end
-		return tableOfPlayersPos
+		return activePlayersPos
 	else
 		return 0
 	end
@@ -57,14 +45,14 @@ end
 function M.getClosestPlayerID(pos)
 -- Get closes player ID to position given
 	local playersPos = M.getPlayersPos()
-	if #playersPos ~= 0 then
-		local closestPlayerID = playersIDs[1]
+	if playersPos ~= 0 then
+		local closestPlayerID = activePlayersIDs[1]
 		local distanceToClosestPlayer = math.pow((playersPos[1].x - pos.x), 2) + math.pow((playersPos[1].y - pos.y), 2)
 		for i, playerPos in pairs(playersPos) do 
 			local distanceToCurrentPlayer = math.pow((playersPos[i].x - pos.x), 2) + math.pow((playersPos[i].y - pos.y), 2)
 			if distanceToCurrentPlayer < distanceToClosestPlayer then			
 				distanceToClosestPlayer = distanceToCurrentPlayer
-				closestPlayerID = playersIDs[i]
+				closestPlayerID = activePlayersIDs[i]
 			end
 		end
 		return closestPlayerID
@@ -74,9 +62,9 @@ function M.getClosestPlayerID(pos)
 end
 
 function M.getPlayerPos(id)
--- Get player position of given ID
-	local scriptUrl = msg.url(nil, id, "player")
-	local playerPos = go.get(scriptUrl, "position")
+	-- Get player position of given ID
+	local playerURL = msg.url(nil, id, "player")
+	local playerPos = go.get(playerURL, "position")
 	return playerPos
 end
 
@@ -92,14 +80,15 @@ function M.setAllPlayersToWaitingRoom()
 	end
 end
 
-function M.setPlayerToArena(playerURL)
-	local url = msg.url(playerURL .."#player")
-	print(url)
-	msg.post(playerURL .."#player", "start")
+function M.setPlayerToArena(playerID)
+	--local playerURL = msg.url(nil, playerID, "player")
+	local playerURL = msg.url("main", playerID, "player")
+	msg.post(playerURL, "start")
 end
 
-function M.setPlayerToWaitingRoom(playerURL)
-	msg.post("/player_" .. class .."#player", "stop")
+function M.setPlayerToWaitingRoom(playerID)
+	local playerURL = msg.url("main", playerID, "player")
+	msg.post(playerURL, "stop")
 end
 
 return M

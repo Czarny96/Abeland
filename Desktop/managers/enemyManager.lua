@@ -27,15 +27,11 @@ local rand
 
 --Important objects URLs
 local wave_label = "main:/gameContent#label_waveNr"
-local waiting_room = "main:/spawnPoints/gate_right_out"
-local gate_top_out = "main:/spawnPoints/gate_top_out"
-local gate_top_in = "main:/spawnPoints/gate_top_in"
-local gate_bottom_out = "main:/spawnPoints/gate_bottom_out"
-local gate_bottom_in = "main:/spawnPoints/gate_bottom_in"
-local gate_left_out = "main:/spawnPoints/gate_left_out"
-local gate_left_in = "main:/spawnPoints/gate_left_in"
-local gate_right_out = "main:/spawnPoints/gate_right_out"
-local gate_right_in = "main:/spawnPoints/gate_right_in"
+local waiting_room = vmath.vector3(750,-1500,0)
+local gate_top_out = vmath.vector3(928,1400,0)
+local gate_bottom_out = vmath.vector3(928,-320,0)
+local gate_left_out = vmath.vector3(-320,540,0)
+local gate_right_out = vmath.vector3(2240,540,0)
 
 function M.initializeEnemies(amount)
 	--This function creates all enemy objects and puts them in the waiting_room
@@ -44,24 +40,14 @@ function M.initializeEnemies(amount)
 
 	for i = 0, amount/2, 1
 	do
-		enemyRanged = factory.create("#enemyMageFactory")
-		enemyMalee = factory.create("#enemyMaleeFactory")
+		enemyRanged = factory.create("main:/spawnPoints/waiting_room#enemyMageFactory")
+		enemyMalee = factory.create("main:/spawnPoints/waiting_room#enemyMaleeFactory")
 
-		go.set_position(go.get_position(waiting_room) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), enemyRanged)
-		go.set_position(go.get_position(waiting_room) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), enemyMalee)
+		msg.post(enemyRanged, "setInactive")
+		msg.post(enemyMalee, "setInactive")
 		
 		table.insert(inactiveRangeEnemiesIDs, enemyRanged)
 		table.insert(inactiveMaleeEnemiesIDs, enemyMalee)
-	end
-
-	for i, enemy in pairs(inactiveRangeEnemiesIDs)
-	do
-		msg.post(enemy,"setInactive")
-	end
-
-	for i, enemy in pairs(inactiveMaleeEnemiesIDs)
-	do
-		msg.post(enemy,"setInactive")
 	end
 end
 
@@ -78,7 +64,7 @@ end
 function M.setEnemyInactive(enemyID)
 --This function sets given enemy (enemyID) to inactive state, resurrecting and teleporting to the wainting_room
 	msg.post(enemy, "setInactive")
-	go.set_position(go.get_position(waiting_room) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), enemyID)
+	go.set_position(globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), enemyID)
 
 	if M.isActiveEnemyRanged(enemyID) then
 		table.remove(activeRangeEnemiesIDs, M.findIndexOfEnemy(activeRangeEnemiesIDs,enemyID))
@@ -147,11 +133,12 @@ function M.initializeWave(rangePercent, gateAmount)
 		do
 			rand = math.floor(math.random(1,100))
 			if rand <= rangePercent then
-				go.set_position(go.get_position(gate_top_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveRangeEnemiesIDs[i+1])
+				print(gate_top_out)
+				msg.post(inactiveRangeEnemiesIDs[i+1], "setActive", { x = gate_top_out.x, y =gate_top_out.y})
 				table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
 				table.remove(inactiveRangeEnemiesIDs, i+1)
 			else
-				go.set_position(go.get_position(gate_top_out) + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), inactiveMaleeEnemiesIDs[i+1])
+				msg.post(inactiveMaleeEnemiesIDs[i+1], "setActive", { x = gate_top_out.x, y =gate_top_out.y})
 				table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i+1])
 				table.remove(inactiveMaleeEnemiesIDs, i+1)
 			end
@@ -257,7 +244,7 @@ function M.initializeWave(rangePercent, gateAmount)
 	end
 
 	--Somehow waiting_room gets teleported with enemies so i set its position back to where it belongs
-	go.set_position(vmath.vector3(750,-1500,0), "main:/spawnPoints/waiting_room")
+	--go.set_position(vmath.vector3(750,-1500,0), "main:/spawnPoints/waiting_room")
 --                              ,|
 --                             //|                              ,|
 --                            //,/                             -~ |

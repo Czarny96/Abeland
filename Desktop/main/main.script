@@ -4,7 +4,7 @@ local globals = require "main.globals"
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	enemyManager.initializeEnemies(40)
+	enemyManager.initializeEnemies(26)
 	-- disable (don't render and don't update) other menu components
 	msg.post("/menu", "disable")
 	

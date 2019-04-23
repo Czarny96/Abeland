@@ -55,7 +55,7 @@ end
 
 local function lockPlayerClass(class,playerIP)
 	playersTable[playerIP][6] = class
-	playersTable[playerIP][2] = "main:/player_" .. class
+	playersTable[playerIP][2] = "/player_" .. class
 end
 
 

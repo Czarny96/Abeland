@@ -8,12 +8,13 @@ go.property("enemyMovingDir", vmath.vector3(0, 0, 0))
 go.property("maxHealth", 100)
 go.property("health", 100)
 go.property("damage", 5)
-go.property("isKilled", false)
+go.property("isKilled", true)
 go.property("isRanged", true)
 go.property("moveForce", vmath.vector3(0, 0, 0))
 
 function init(self)
 	-- Local Settings
+	self.enemyPos = go.get_position()
 	self.movingSpeed = 50
 	self.followDistance = 300
 	self.runAwayDistance = 200
@@ -250,9 +251,17 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("contact_point_response") then	
 		wallsCollisions(self, message_id, message, sender)	
 	elseif message_id == hash("setInactive") then
+		go.set_position(go.get_position("/spawnPoints/waiting_room")+ vmath.vector3(math.random(-100, 100),math.random(-100, 100),0))
+		self.health = self.maxHealth
+		self.isKilled = true
+	end
+	if message_id == hash("setInactive") then
+		go.set_position(globals.getSpawnPoints()[1]+ vmath.vector3(math.random(-100, 100),math.random(-100, 100),0))
 		self.health = self.maxHealth
 		self.isKilled = true
 	elseif message_id == hash("setActive") then
+		local pos = globals.getSpawnPoints()[2] --number of gate to spawn at (1-waiting_room; 2-top; 3-bottom; 4-left; 5-right
+		go.set_position(pos)
 		label.set_text("#label_hp", self.health)
 		self.isKilled = false
 	end

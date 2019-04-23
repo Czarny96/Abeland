@@ -1,10 +1,11 @@
 --MAGE
 
---Class Properties
 go.property("movingDir", vmath.vector3(0, 0, 0))
 go.property("position", vmath.vector3(0, 0, 0))
+
+--Class Properties
 go.property("health", 80)
-go.property("movingSpeed", 120)
+go.property("movingSpeed", 100)
 
 --Flags
 go.property("isKilled", false)

@@ -30,7 +30,7 @@ function createSession()
 end
 
 local function msgActivePlayersChange()
-	playersManager.setActivePlayersIDs(clientsManager.returnActivePlayersIDs())
+	playersManager.setActivePlayersIDs()
 end
 
 local function routeFrameToRespFunc(frame,ip, client)
@@ -50,6 +50,7 @@ local function routeFrameToRespFunc(frame,ip, client)
 		clientsManager.setPlayerReadines(ip, true)
 		if clientsManager.areAllPlayersReady() then
 			startP2P = false
+			msgActivePlayersChange()
 			createSession()
 		end
 	end

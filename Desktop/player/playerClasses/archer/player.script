@@ -1,8 +1,9 @@
 --ARCHER
 
---Class Properties
-go.property("movingDir", vmath.vector3(0, 0, 0))
 go.property("position", vmath.vector3(0, 0, 0))
+go.property("movingDir", vmath.vector3(0, 0, 0))
+
+--Class Properties
 go.property("health", 100)
 go.property("movingSpeed", 150)
 

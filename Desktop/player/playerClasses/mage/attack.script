@@ -1,5 +1,5 @@
 --MAGE
-go.property("shootingDelay", 1.0)
+go.property("shootingDelay", 1.3)
 
 function init(self)
 	self.shootingTimer = 0
