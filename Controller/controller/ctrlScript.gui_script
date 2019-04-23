@@ -9,7 +9,7 @@ local leftJoystick = {
 	value = {x=0, y=0},
 	maxDist = 150,
 	touchId = -1,
-	area = {left=175, right=1920/3, top=1080-175, bottom=175}
+	area = {left=0, right=1920/3, top=1080, bottom=0}
 }
 
 -- Right joystick isn't floating!
@@ -210,8 +210,25 @@ function on_input(self, action_id, action)
 
 			-- LEFT JOYSTICK
 			if touchData.pressed and leftJoystick.touchId == -1 and isTouchedInJoystickArea(touchData.x, touchData.y, leftJoystick) then
+				
 				leftJoystick.touchId = touchData.id
-				leftJoystick.touchPos = vmath.vector3(touchData.x, touchData.y, 0)
+				
+				local newPos = vmath.vector3(touchData.x, touchData.y, 0)
+				
+				if newPos.x < leftJoystick.area.left + 185 then
+					newPos.x = leftJoystick.area.left + 185
+				elseif newPos.x > leftJoystick.area.right - 185 then
+					newPos.x = leftJoystick.area.right - 185
+				end
+
+				if newPos.y < leftJoystick.area.bottom + 185 then
+					newPos.y = leftJoystick.area.bottom + 185
+				elseif newPos.y > leftJoystick.area.top - 185 then
+					newPos.y = leftJoystick.area.top - 185
+				end
+					
+				leftJoystick.touchPos = newPos
+					
 				gui.set_position(gui.get_node("joystick_back"), leftJoystick.touchPos)
 			elseif touchData.released and leftJoystick.touchId == touchData.id then
 				if leftJoystick.touchId == touchData.id then
