@@ -27,4 +27,11 @@ app_icon = /assets/app_icons/appicon.icns
 [physics]
 max_collisions = 512
 max_contacts = 512
+trigger_overlap_capacity = 512
+
+[label]
+max_count = 256
+
+[sprite]
+max_count = 512
 
