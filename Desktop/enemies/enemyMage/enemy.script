@@ -261,7 +261,16 @@ function on_message(self, message_id, message, sender)
 		self.health = self.maxHealth
 		self.isKilled = true
 	elseif message_id == hash("setActive") then
-		local pos = globals.getSpawnPoints()[2]  --number of gate to spawn at (1-waiting_room; 2-top; 3-bottom; 4-left; 5-right
+		local pos;
+		if message.gate == "top" then
+			pos = globals.getSpawnPoints()[2]  --number of gate to spawn at (1-waiting_room; 2-top; 3-bottom; 4-left; 5-right
+		elseif message.gate == "bottom" then
+			pos = globals.getSpawnPoints()[3]  --number of gate to spawn at (1-waiting_room; 2-top; 3-bottom; 4-left; 5-right
+		elseif message.gate == "left" then
+			pos = globals.getSpawnPoints()[4]  --number of gate to spawn at (1-waiting_room; 2-top; 3-bottom; 4-left; 5-right
+		elseif message.gate == "right" then
+			pos = globals.getSpawnPoints()[5]  --number of gate to spawn at (1-waiting_room; 2-top; 3-bottom; 4-left; 5-right
+		end
 		go.set_position(pos + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0))
 		label.set_text("#label_hp", self.health)
 		self.isKilled = false

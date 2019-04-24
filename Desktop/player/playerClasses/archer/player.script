@@ -57,13 +57,13 @@ function update(self, dt)
 	if playersManager.getActivePlayersIDs() == 0 and g_gameState == g_gameStateEnum.inGame then
 		g_goToGameOverScreen()
 	end
-	
+
 	--Check if game is paused
 	--Check if player is dead
 	if globals.getPause() or self.isKilled then
 		return
 	end
-	
+
 	--Death
 	if self.health <= 0 then
 		if not self.isKilled then
@@ -114,10 +114,12 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
+
 	if self.isKilled or self.nonOperativeTimer > 0 then
+		print("DEAD")
 		return
 	end
-	
+
 	--Movement
 	if message_id == hash("move") then
 		self.movingDir.x = message.x
@@ -127,8 +129,8 @@ function on_message(self, message_id, message, sender)
 		else
 			self.isMoving = false
 		end		
-	
-	--Invulnerability (all enemy interactions put here)
+
+		--Invulnerability (all enemy interactions put here)
 	elseif self.isVulnerable then
 		--Got Hit
 		if message_id == hash("hit") then
@@ -137,28 +139,30 @@ function on_message(self, message_id, message, sender)
 			self.nonVulnerableTimer = 0.5
 			self.isVulnerable = false
 		end
-	
-	--Kill
+
+		--Kill
 	elseif message_id == hash("kill") then
 		go.delete()
-		
-	--AFK
+
+		--AFK
 	elseif message_id == hash("desactivate") then
 		sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 0.33))
 		self.isVulnerable = false
 		self.nonVulnerableTimer = 50
-	
-	--Activate if player came back
+
+		--Activate if player came back
 	elseif message_id == hash("activate") then
 		self.nonVulnerableTimer = 50
 		self.isVulnerable = false
 		self.nonOperativeTimer = 2
 		sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 1))
 		msg.post("#sprite", "play_animation", {id = hash("player_afk")})
-	
-	--Colliders
-	elseif message_id == hash("contact_point_response") then	
+
+		--Colliders
+	end
+	if message_id == hash("contact_point_response") then	
 		--Walls
+		print("MESS:",message_id, message_group)
 		if message.group == hash("walls") or message.group == hash("walls") then
 			if sender.fragment == hash("wallsTopCollider") then
 				self.wallsCollider.top = true
@@ -172,10 +176,10 @@ function on_message(self, message_id, message, sender)
 				self.wallsCollider.right = true
 			end
 		end
-		
+
 		return
 	end
-	
+
 	if message_id == hash("start") then
 		go.set_position(go.get_position("main:/spawnPoints/spawn_archer"))
 	elseif message_id == hash("stop") then

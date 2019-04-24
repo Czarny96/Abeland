@@ -114,7 +114,9 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
+
 	if self.isKilled or self.nonOperativeTimer > 0 then
+		print("DEAD")
 		return
 	end
 
@@ -157,8 +159,10 @@ function on_message(self, message_id, message, sender)
 		msg.post("#sprite", "play_animation", {id = hash("player_afk")})
 
 		--Colliders
-	elseif message_id == hash("contact_point_response") then	
+	end
+	if message_id == hash("contact_point_response") then	
 		--Walls
+		print("MESS:",message_id, message_group)
 		if message.group == hash("walls") or message.group == hash("walls") then
 			if sender.fragment == hash("wallsTopCollider") then
 				self.wallsCollider.top = true
@@ -172,12 +176,13 @@ function on_message(self, message_id, message, sender)
 				self.wallsCollider.right = true
 			end
 		end
+
 		return
 	end
 
 	if message_id == hash("start") then
-		go.set_position(go.get_position("main:/spawnPoints/spawn_rogue"))
+		go.set_position(go.get_position("main:/spawnPoints/spawn_archer"))
 	elseif message_id == hash("stop") then
-		go.set_position(go.get_position("main:/spawnPoints/players_room") + vmath.vector3(64,0,0))
+		go.set_position(go.get_position("main:/spawnPoints/players_room") + vmath.vector3(-128,0,0))
 	end
 end
