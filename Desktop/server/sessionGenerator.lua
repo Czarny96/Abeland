@@ -7,8 +7,6 @@ local M = {}
 
 s_SessionCounter = 0
 
-
-
 --- Creates a new session
 function M.create()
 	local gameOverFlag = 0

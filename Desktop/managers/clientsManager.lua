@@ -18,6 +18,18 @@ function M.getAllPlayers()
 	return playersTable
 end
 
+function M.getPlayerID(playerIP)
+	return playersTable[playerIP][2]
+end
+
+function M.returnAllClients()
+	local clients = {}
+	for ip,values in pairs(playersTable) do
+		clients[ip] = values[1]
+	end
+	return clients 
+end
+
 function M.isPlayerActive(playerIP)
 	return playersTable[playerIP][4] == true
 end
@@ -59,9 +71,7 @@ local function lockPlayerClass(class,playerIP)
 end
 
 
-function M.getPlayerID(playerIP)
-	return playersTable[playerIP][2]
-end
+
 
 function M.setPlayerReadines(playerIP, readiness)
 	playersTable[playerIP][7] = readiness
@@ -112,7 +122,7 @@ function M.addPlayer(playerIP,client)
 end
 
 function M.removePlayer(playerIP)
-	mountOfCurrentPlayers = amountOfCurrentPlayers - 1 
+	amountOfCurrentPlayers = amountOfCurrentPlayers - 1 
 	translationLayer.RemovePlayerObject(M.getPlayerID(playerIP))
 	playersTable[playerIP] = nil
 end

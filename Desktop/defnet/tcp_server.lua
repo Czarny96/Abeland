@@ -62,7 +62,7 @@ function M.create(port, on_data, on_client_connected, on_client_disconnected)
 	local clients = {}
 	local queues = {}
 
-	local function remove_client(connection_to_remove)
+	function server.remove_client(connection_to_remove)
 		for i,connection in pairs(clients) do
 			if connection == connection_to_remove then
 				table.remove(clients, i)
@@ -167,7 +167,7 @@ function M.create(port, on_data, on_client_connected, on_client_disconnected)
 					end
 				end
 				if err and err == "closed" then
-					remove_client(client)
+					server.remove_client(client)
 				end
 			end)()
 		end

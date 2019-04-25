@@ -11,8 +11,8 @@ local M = {}
 
 function M.RemovePlayerObject(objectID)
 	print("Removing Player Object")
-	--TODO: Inside palyer must be a part of code whtich allows to self destruction
-	msg.post(objectID, "kill")
+	---playersManager.setPlayerToWaitingRoom(objectID)
+	msg.post(objectID, "stop")
 end
 
 function M.desactivatePlayer(objectID)

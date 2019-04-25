@@ -32,11 +32,16 @@ end
 local function lookForClosestPlayer(self)
 	-- Count possition diffrence between closest player and enemy to designate enemy moving direction
 	local closestPlayerID = playersManager.getClosestPlayerID(self.enemyPos)
-	local closestPlayerPos = playersManager.getPlayerPos(closestPlayerID)
-	self.distanceToClosestPlayer = vmath.length(closestPlayerPos - self.enemyPos)
-	local positionDiffrence = closestPlayerPos - self.enemyPos
-	self.enemyMovingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
-	self.enemyMovingDir = vmath.normalize(self.enemyMovingDir)
+	if closestPlayerID ~= 0 then
+		local closestPlayerPos = playersManager.getPlayerPos(closestPlayerID)
+		self.distanceToClosestPlayer = vmath.length(closestPlayerPos - self.enemyPos)
+		local positionDiffrence = closestPlayerPos - self.enemyPos
+		self.enemyMovingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
+		self.enemyMovingDir = vmath.normalize(self.enemyMovingDir)
+	else
+		self.distanceToClosestPlayer = 0
+		self.enemyMovingDir = vmath.vector3(0, 0, 0)
+	end
 end
 
 local function handleWallsCollisions(self)
