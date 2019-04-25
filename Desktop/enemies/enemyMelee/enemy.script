@@ -184,7 +184,7 @@ local function enemiesCollisions(self, message_id, message, sender)
 end
 
 local function playersAttacksCollisions(self, message_id, message, sender)
-	local attackUrl = msg.url(nil, message.other_id, "rangeAttack")
+	local attackUrl = msg.url(nil, message.other_id, "attack")
 	local attackDmg = go.get(attackUrl, "damage")		
 	self.health = self.health - attackDmg
 	label.set_text("#label_hp", self.health)
