@@ -1,5 +1,4 @@
 -- ENEMY MELEE
-
 local playersManager = require "managers.playersManager"
 local enemyManager = require "managers.enemyManager"
 local globals = require "main.globals"
@@ -170,7 +169,7 @@ local function enemiesCollisions(self, message_id, message, sender)
 	local otherEnemyUrl = msg.url(nil, message.other_id, "enemy")
 	-- Get pushed from other enemy if its not a dead body
 	local isOtherEnemyKilled = go.get(otherEnemyUrl, "isKilled")
-	if isOtherEnemyKilled == false and self.moveForce.x < 1500 or self.moveForce.y < 1500 then
+	if isOtherEnemyKilled == false then
 		-- Count direction of force that needs to be applied
 		local forceDir = vmath.vector3(self.enemyPos.x - otherEnemyPos.x, self.enemyPos.y - otherEnemyPos.y, 0)
 		forceDir = vmath.normalize(forceDir)		
@@ -235,8 +234,8 @@ local function wallsCollisions(self, message_id, message, sender)
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("collision_response") and self.isKilled == false then		
-		if message.group == hash("enemyBody") then
+	if message_id == hash("collision_response") and self.isKilled == false then	
+		if message.group == hash("enemies") then
 			enemiesCollisions(self, message_id, message, sender)
 		elseif message.group == hash("attacks") then
 			playersAttacksCollisions(self, message_id, message, sender)

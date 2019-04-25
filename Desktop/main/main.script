@@ -4,13 +4,13 @@ local globals = require "main.globals"
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	enemyManager.initializeEnemies(200)
+	enemyManager.initializeEnemies(150)
 	-- disable (don't render and don't update) other menu components
 	msg.post("/menu", "disable")
 	
 	-- start game with splash screen
 	g_goToSplashScreen()
-	--msg.post("@system:", "toggle_profile")
+	msg.post("@system:", "toggle_profile")
 end
 
 -- GAME STATE GLOBAL FUNCTIONS AND VARIABLES:

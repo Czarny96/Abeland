@@ -158,7 +158,7 @@ function M.initializeWave(rangePercent, gateAmount)
 		do
 			rand = math.floor(math.random(1,100))
 			gateSide = math.floor(math.random(1,100))
-			if gateSize <= 50 then
+			if gateSide <= 50 then
 				if rand <= rangePercent then
 					msg.post(inactiveRangeEnemiesIDs[i+1], "setActive", { x = gate_top_out.x, y =gate_top_out.y, gate="top"})
 					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
@@ -190,7 +190,7 @@ function M.initializeWave(rangePercent, gateAmount)
 		do
 			rand = math.floor(math.random(1,100))
 			gateSide = math.floor(math.random(1,100))
-			if gateSize <= 33 then
+			if gateSide <= 33 then
 				if rand <= rangePercent then
 					msg.post(inactiveRangeEnemiesIDs[i+1], "setActive", { x = gate_top_out.x, y =gate_top_out.y, gate="top"})
 					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
@@ -233,7 +233,7 @@ function M.initializeWave(rangePercent, gateAmount)
 		do
 			rand = math.floor(math.random(1,100))
 			gateSide = math.floor(math.random(1,100))
-			if gateSize <= 25 then
+			if gateSide <= 25 then
 				if rand <= rangePercent then
 					msg.post(inactiveRangeEnemiesIDs[i+1], "setActive", { x = gate_top_out.x, y =gate_top_out.y, gate="top"})
 					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
