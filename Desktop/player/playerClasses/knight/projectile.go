@@ -1,5 +1,5 @@
 components {
-  id: "rangeAttack"
+  id: "attack"
   component: "/player/playerClasses/knight/projectile.script"
   position {
     x: 0.0
