@@ -270,6 +270,20 @@ layers {
     v_flip: 0
   }
   cell {
+    x: 0
+    y: 11
+    tile: 42
+    h_flip: 0
+    v_flip: 0
+  }
+  cell {
+    x: 30
+    y: 11
+    tile: 39
+    h_flip: 0
+    v_flip: 0
+  }
+  cell {
     x: 31
     y: 11
     tile: 1

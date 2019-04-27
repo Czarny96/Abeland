@@ -20,10 +20,7 @@ go.property("nonOperativeTimer", 0)
 go.property("isMoving", false)
 
 --Local Colliders
-go.property("wallsColliderTop", false)
-go.property("wallsColliderBottom", false)
-go.property("wallsColliderLeft", false)
-go.property("wallsColliderRight", false)
+go.property("wallCollisionCorrector", vmath.vector3())
 
 
 local globals = require "main.globals"
@@ -49,9 +46,6 @@ function update(self, dt)
 	if self.health <= 0 then
 		playerModule.death(dt)
 	else
-		--Collisions with arena walls
-		playerModule.manageCollisions()
-
 		--Movement
 		if self.isMoving then
 			playerModule.move(self.movingDir, dt)

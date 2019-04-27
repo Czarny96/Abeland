@@ -25,13 +25,19 @@ app_icon = /assets/app_icons/appicon.ico
 app_icon = /assets/app_icons/appicon.icns
 
 [physics]
-max_collisions = 512
-max_contacts = 512
-trigger_overlap_capacity = 512
+max_collisions = 2048
+max_contacts = 2048
+trigger_overlap_capacity = 8192
 
 [label]
-max_count = 256
+max_count = 512
 
 [sprite]
+max_count = 1024
+
+[graphics]
+max_debug_vertices = 100000
+
+[factory]
 max_count = 512
 

@@ -29,15 +29,16 @@ components {
   }
 }
 embedded_components {
-  id: "enemyCollider"
+  id: "triggerCollider"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
   "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
   "mass: 0.0\n"
   "friction: 0.1\n"
   "restitution: 0.5\n"
-  "group: \"players\"\n"
-  "mask: \"enemies\"\n"
+  "group: \"player\"\n"
+  "mask: \"enemy\"\n"
+  "mask: \"player\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"
@@ -114,22 +115,22 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "wallsBottomCollider"
+  id: "wallCollider"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
   "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
   "mass: 0.0\n"
-  "friction: 0.1\n"
-  "restitution: 0.5\n"
-  "group: \"players\"\n"
-  "mask: \"walls\"\n"
-  "mask: \"openGates\"\n"
+  "friction: 1.0\n"
+  "restitution: 0.0\n"
+  "group: \"player\"\n"
+  "mask: \"wall\"\n"
+  "mask: \"openGate\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"
   "    position {\n"
   "      x: 0.0\n"
-  "      y: -10.0\n"
+  "      y: -8.0\n"
   "      z: 0.0\n"
   "    }\n"
   "    rotation {\n"
@@ -141,157 +142,13 @@ embedded_components {
   "    index: 0\n"
   "    count: 3\n"
   "  }\n"
-  "  data: 11.0\n"
-  "  data: 1.0\n"
-  "  data: 10.0\n"
-  "}\n"
-  "linear_damping: 0.0\n"
-  "angular_damping: 0.0\n"
-  "locked_rotation: false\n"
-  ""
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-embedded_components {
-  id: "wallsLeftCollider"
-  type: "collisionobject"
-  data: "collision_shape: \"\"\n"
-  "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
-  "mass: 0.0\n"
-  "friction: 0.1\n"
-  "restitution: 0.5\n"
-  "group: \"players\"\n"
-  "mask: \"walls\"\n"
-  "mask: \"openGates\"\n"
-  "embedded_collision_shape {\n"
-  "  shapes {\n"
-  "    shape_type: TYPE_BOX\n"
-  "    position {\n"
-  "      x: -11.0\n"
-  "      y: -7.0\n"
-  "      z: 0.0\n"
-  "    }\n"
-  "    rotation {\n"
-  "      x: 0.0\n"
-  "      y: 0.0\n"
-  "      z: 0.0\n"
-  "      w: 1.0\n"
-  "    }\n"
-  "    index: 0\n"
-  "    count: 3\n"
-  "  }\n"
+  "  data: 15.0\n"
   "  data: 4.0\n"
-  "  data: 1.0\n"
   "  data: 10.0\n"
   "}\n"
-  "linear_damping: 0.0\n"
+  "linear_damping: 1.0\n"
   "angular_damping: 0.0\n"
-  "locked_rotation: false\n"
-  ""
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-embedded_components {
-  id: "wallsRightCollider"
-  type: "collisionobject"
-  data: "collision_shape: \"\"\n"
-  "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
-  "mass: 0.0\n"
-  "friction: 0.1\n"
-  "restitution: 0.5\n"
-  "group: \"players\"\n"
-  "mask: \"walls\"\n"
-  "mask: \"openGates\"\n"
-  "embedded_collision_shape {\n"
-  "  shapes {\n"
-  "    shape_type: TYPE_BOX\n"
-  "    position {\n"
-  "      x: 11.0\n"
-  "      y: -7.0\n"
-  "      z: 0.0\n"
-  "    }\n"
-  "    rotation {\n"
-  "      x: 0.0\n"
-  "      y: 0.0\n"
-  "      z: 0.0\n"
-  "      w: 1.0\n"
-  "    }\n"
-  "    index: 0\n"
-  "    count: 3\n"
-  "  }\n"
-  "  data: 4.0\n"
-  "  data: 1.0\n"
-  "  data: 10.0\n"
-  "}\n"
-  "linear_damping: 0.0\n"
-  "angular_damping: 0.0\n"
-  "locked_rotation: false\n"
-  ""
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-embedded_components {
-  id: "wallsTopCollider"
-  type: "collisionobject"
-  data: "collision_shape: \"\"\n"
-  "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
-  "mass: 0.0\n"
-  "friction: 0.1\n"
-  "restitution: 0.5\n"
-  "group: \"players\"\n"
-  "mask: \"walls\"\n"
-  "mask: \"openGates\"\n"
-  "embedded_collision_shape {\n"
-  "  shapes {\n"
-  "    shape_type: TYPE_BOX\n"
-  "    position {\n"
-  "      x: 0.0\n"
-  "      y: -4.0\n"
-  "      z: 0.0\n"
-  "    }\n"
-  "    rotation {\n"
-  "      x: 0.0\n"
-  "      y: 0.0\n"
-  "      z: 0.0\n"
-  "      w: 1.0\n"
-  "    }\n"
-  "    index: 0\n"
-  "    count: 3\n"
-  "  }\n"
-  "  data: 11.0\n"
-  "  data: 1.0\n"
-  "  data: 10.0\n"
-  "}\n"
-  "linear_damping: 0.0\n"
-  "angular_damping: 0.0\n"
-  "locked_rotation: false\n"
+  "locked_rotation: true\n"
   ""
   position {
     x: 0.0

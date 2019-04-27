@@ -63,7 +63,7 @@ end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("collision_response") then
-		if message.group == hash("players") then
+		if message.group == hash("player") then
 			playersCollision(self, message_id, message, sender)
 		end
 		go.delete()

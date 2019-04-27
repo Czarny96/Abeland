@@ -13,5 +13,13 @@ function on_message(self, message_id, message, sender)
 		tilemap.set_tile("#topWalls", "topWalls", 16, 17, 97)
 		tilemap.set_tile("#topWalls", "topWalls", 17, 17, 97)
 		tilemap.set_tile("#topWalls", "topWalls", 18, 17, 98)
+	elseif message_id == hash("closeLeft") then
+		tilemap.set_tile("#walls", "walls", 1, 12, 42)
+	elseif message_id == hash("openLeft") then
+		tilemap.set_tile("#walls", "walls", 1, 12, 43)
+	elseif message_id == hash("closeRight") then
+		tilemap.set_tile("#walls", "walls", 31, 12, 40)
+	elseif message_id == hash("openRight") then
+		tilemap.set_tile("#walls", "walls", 31, 12, 41)
 	end
 end

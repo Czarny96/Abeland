@@ -17,11 +17,9 @@ function M.manageFlagsAndTimers(dt)
 	if go.get(url, "nonVulnerableTimer") <= 0 then
 		go.set(url, "isVulnerable", true)
 	end
-	--Collider flags
-	go.set(url, "wallsColliderTop", false)
-	go.set(url, "wallsColliderBottom", false)
-	go.set(url, "wallsColliderLeft", false)
-	go.set(url, "wallsColliderRight", false)
+	
+	--Collider correction
+	go.set(url, "wallCollisionCorrector", vmath.vector3())
 
 	--Timers
 	go.set(url, "nonVulnerableTimer", go.get(url, "nonVulnerableTimer") - dt)
@@ -75,18 +73,21 @@ function M.messages(message_id, message, sender)
 
 	--Colliders
 	if message_id == hash("contact_point_response") then	
-		--Walls
-		if message.group == hash("walls") or message.group == hash("walls") then
-			if sender.fragment == hash("wallsTopCollider") then
-				go.set(url, "wallsColliderTop", true)
-			elseif sender.fragment == hash("wallsBottomCollider") then
-				go.set(url, "wallsColliderBottom", true)
-			end
-
-			if sender.fragment == hash("wallsLeftCollider") then
-				go.set(url, "wallsColliderLeft", true)
-			elseif sender.fragment == hash("wallsRightCollider") then
-				go.set(url, "wallsColliderRight", true)
+		-- Get the info needed to move out of collision. We might
+		-- get several contact points back and have to calculate
+		-- how to move out of all of them by accumulating a
+		-- correction vector for this frame:
+		if message.distance > 0 then
+			-- First, project the accumulated correction onto
+			-- the penetration vector
+			local proj = vmath.project(go.get(url, "wallCollisionCorrector"), message.normal * message.distance)
+			if proj < 1 then
+				-- Only care for projections that does not overshoot.
+				local comp = (message.distance - message.distance * proj) * message.normal
+				-- Apply compensation
+				go.set_position(go.get_position() + comp)
+				-- Accumulate correction done
+				go.set(url, "wallCollisionCorrector", go.get(url, "wallCollisionCorrector") + comp)
 			end
 		end
 	end
@@ -101,16 +102,6 @@ function M.messages(message_id, message, sender)
 	--Kill
 	if message_id == hash("kill") then
 		go.delete()
-	end
-end
-
-function M.manageCollisions()
-	local url = msg.url("main",go.get_id(),"player")
-	if (go.get(url, "wallsColliderTop") and go.get(url, "movingDir").y > 0) or (go.get(url, "wallsColliderBottom") and go.get(url, "movingDir").y < 0) then
-		go.set(url, "movingDir.y", 0)
-	end
-	if (go.get(url, "wallsColliderLeft") and go.get(url, "movingDir").x < 0) or (go.get(url, "wallsColliderRight") and go.get(url, "movingDir").x > 0) then
-		go.set(url, "movingDir.x", 0)
 	end
 end
 

@@ -4,31 +4,36 @@ local enemyManager = require "managers.enemyManager"
 local globals = require "main.globals"
 
 -- Global properties
-go.property("enemyMovingDir", vmath.vector3(0, 0, 0))
+go.property("movingDir", vmath.vector3(0))
 go.property("maxHealth", 100)
 go.property("health", 100)
 go.property("damage", 5)
 go.property("isKilled", true)
 go.property("isRanged", true)
-go.property("moveForce", vmath.vector3(0, 0, 0))
 
 function init(self)
-	-- Local Settings
+	-- Set position
 	self.enemyPos = go.get_position()
+	-- Move settings
 	self.movingSpeed = 50
 	self.followDistance = 300
 	self.runAwayDistance = 200
-	self.knockbackForce = 250
-	self.moveForceReduction = 400
-	self.killedTimer = 0
-	-- Local Colliders
-	self.wallsCollider = {top = false, bottom = false, left = false, right = false}
+	-- Force settings
+	self.knockbackStrength = 250
+	self.forceReductionSpeed = 300
+	-- Force variables
+	self.force = vmath.vector3(0)
+	self.forceDir = vmath.vector3(0)
+	self.collisionEnemyFlag = false
+	-- Local colliders
+	self.wallCollisionCorrector = vmath.vector3(0)
 	-- Health label
 	label.set_text("#label_hp", self.health)
-	-- Local Timers	
+	-- Local timers	
 	self.checkClosestPlayerPosTimer = 0
 	self.knockbackTimer = 0
-	self.moveForceTimer = 0
+	self.forceTimer = 0
+	self.killedTimer = 0
 end
 
 local function lookForClosestPlayer(self)
@@ -38,41 +43,31 @@ local function lookForClosestPlayer(self)
 		local closestPlayerPos = playersManager.getPlayerPos(closestPlayerID)
 		self.distanceToClosestPlayer = vmath.length(closestPlayerPos - self.enemyPos)
 		local positionDiffrence = closestPlayerPos - self.enemyPos
-		self.enemyMovingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
-		self.enemyMovingDir = vmath.normalize(self.enemyMovingDir)
+		self.movingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
+		self.movingDir = vmath.normalize(self.movingDir)
 	else
 		self.distanceToClosestPlayer = (self.followDistance + self.runAwayDistance) / 2
-		self.enemyMovingDir = vmath.vector3(0, 0, 0)
-	end
-end
-
-local function handleWallsCollisions(self)
-	-- Reset enemy moving directions if needed
-	if (self.wallsCollider.top and self.enemyMovingDir.y > 0) or (self.wallsCollider.bottom and self.enemyMovingDir.y < 0) then
-		self.enemyMovingDir.y = 0
-	end
-	if (self.wallsCollider.left and self.enemyMovingDir.x < 0) or (self.wallsCollider.right and self.enemyMovingDir.x > 0) then
-		self.enemyMovingDir.x = 0
+		self.movingDir = vmath.vector3(0)
 	end
 end
 
 local function updateAnimation(self)
 	-- Set proper animation based on enemy moving directory
-	if self.enemyMovingDir.x < -0.3 and self.enemyMovingDir.y > 0.3 then
+	if self.movingDir.x < -0.3 and self.movingDir.y > 0.3 then
 		msg.post("#sprite", "play_animation", {id = hash("enemy_mage_up_left")})
-	elseif self.enemyMovingDir.x > 0.3 and self.enemyMovingDir.y > 0.3 then
+	elseif self.movingDir.x > 0.3 and self.movingDir.y > 0.3 then
 		msg.post("#sprite", "play_animation", {id = hash("enemy_mage_up_right")})
-	elseif self.enemyMovingDir.x < -0.3 and self.enemyMovingDir.y < -0.3 then
+	elseif self.movingDir.x < -0.3 and self.movingDir.y < -0.3 then
 		msg.post("#sprite", "play_animation", {id = hash("enemy_mage_down_left")})
-	elseif self.enemyMovingDir.x > 0.3 and self.enemyMovingDir.y < -0.3 then
+	elseif self.movingDir.x > 0.3 and self.movingDir.y < -0.3 then
 		msg.post("#sprite", "play_animation", {id = hash("enemy_mage_down_right")})
-	elseif self.enemyMovingDir.y > 0.3  then
+	elseif self.movingDir.y > 0.3  then
 		msg.post("#sprite", "play_animation", {id = hash("enemy_mage_up")})
-	elseif self.enemyMovingDir.y < -0.3  then
+	elseif self.movingDir.y < -0.3  then
 		msg.post("#sprite", "play_animation", {id = hash("enemy_mage_down")})
-	elseif self.enemyMovingDir.x < -0.3  then
+	elseif self.movingDir.x < -0.3  then
 		msg.post("#sprite", "play_animation", {id = hash("enemy_mage_left")})
-	elseif self.enemyMovingDir.x > 0.3  then
+	elseif self.movingDir.x > 0.3  then
 		msg.post("#sprite", "play_animation", {id = hash("enemy_mage_right")})
 	else 
 		msg.post("#sprite", "play_animation", {id = hash("enemy_mage_down")})
@@ -81,18 +76,16 @@ end
 
 local function moveEnemy(self, dt)
 	-- Change enemy position basen on his movements or forces that works on him
+	if self.collisionEnemyFlag then
+		self.force = vmath.vector3(self.forceDir.x * self.movingSpeed, self.forceDir.y * self.movingSpeed, 0)
+		self.collisionEnemyFlag = false
+	end
 	if self.distanceToClosestPlayer >= self.followDistance then
-		self.enemyPos = self.enemyPos + self.enemyMovingDir * self.movingSpeed * dt + self.moveForce * dt
+		self.enemyPos = self.enemyPos + self.movingDir * self.movingSpeed * dt + self.force * dt
 	elseif self.distanceToClosestPlayer <= self.runAwayDistance then
-		if self.wallsCollider.top or self.wallsCollider.bottom then
-			self.enemyMovingDir.y = 0
-		end
-		if self.wallsCollider.left or self.wallsCollider.right then
-			self.enemyMovingDir.x = 0
-		end
-		self.enemyPos = self.enemyPos + self.enemyMovingDir * -self.movingSpeed * dt + self.moveForce * dt
+		self.enemyPos = self.enemyPos + self.movingDir * -self.movingSpeed * dt + self.force * dt
 	else
-		self.enemyPos = self.enemyPos + self.moveForce * dt
+		self.enemyPos = self.enemyPos + self.force * dt
 	end
 	go.set_position(self.enemyPos)
 	updateAnimation(self)
@@ -100,19 +93,19 @@ end
 
 local function reduceForces(self, dt)
 	-- Reduce force that works on enemy
-	if self.moveForce.x > 1 then
-		self.moveForce.x = self.moveForce.x - self.moveForceReduction * dt
-	elseif self.moveForce.x < -1 then
-		self.moveForce.x = self.moveForce.x + self.moveForceReduction * dt
+	if self.force.x > 1 then
+		self.force.x = self.force.x - self.forceReductionSpeed * dt
+	elseif self.force.x < -1 then
+		self.force.x = self.force.x + self.forceReductionSpeed * dt
 	else
-		self.moveForce.y = 0
+		self.force.y = 0
 	end
-	if self.moveForce.y > 1 then
-		self.moveForce.y = self.moveForce.y - self.moveForceReduction * dt
-	elseif self.moveForce.y < -1 then
-		self.moveForce.y = self.moveForce.y + self.moveForceReduction * dt
+	if self.force.y > 1 then
+		self.force.y = self.force.y - self.forceReductionSpeed * dt
+	elseif self.force.y < -1 then
+		self.force.y = self.force.y + self.forceReductionSpeed * dt
 	else
-		self.moveForce.y = 0
+		self.force.y = 0
 	end
 end
 
@@ -145,8 +138,8 @@ local function resetTimers(self, dt)
 	if self.knockbackTimer > 0 then
 		self.knockbackTimer = self.knockbackTimer - 1 * dt
 	end
-	if self.moveForceTimer > 0 then
-		self.moveForceTimer = self.moveForceTimer - 1 * dt
+	if self.forceTimer > 0 then
+		self.forceTimer = self.forceTimer - 1 * dt
 	end
 	if self.checkClosestPlayerPosTimer > 0 then
 		self.checkClosestPlayerPosTimer = self.checkClosestPlayerPosTimer - 1 * dt
@@ -154,10 +147,7 @@ local function resetTimers(self, dt)
 end
 
 local function resetWallColliders(self)
-	self.wallsCollider.top = false
-	self.wallsCollider.bottom = false
-	self.wallsCollider.left = false
-	self.wallsCollider.right = false
+	self.wallCollisionCorrector = vmath.vector3()
 end
 
 function update(self, dt)
@@ -172,7 +162,6 @@ function update(self, dt)
 			lookForClosestPlayer(self)
 			self.checkClosestPlayerPosTimer = 0.25
 		end	
-		handleWallsCollisions(self)
 		moveEnemy(self, dt)
 		reduceForces(self, dt)
 		resetTimers(self, dt)
@@ -181,15 +170,50 @@ function update(self, dt)
 	handleDeath(self, dt)
 end
 
+local function wallsCollisions(self, message_id, message, sender)
+	-- Get the info needed to move out of collision. We might
+	-- get several contact points back and have to calculate
+	-- how to move out of all of them by accumulating a
+	-- correction vector for this frame:
+	if message.distance > 0 then
+		-- First, project the accumulated correction onto
+		-- the penetration vector
+		local proj = vmath.project(self.wallCollisionCorrector, message.normal * message.distance)
+		if proj < 1 then
+			-- Only care for projections that does not overshoot.
+			local comp = (message.distance - message.distance * proj) * message.normal
+			-- Apply compensation
+			go.set_position(go.get_position() + comp)
+			-- Accumulate correction done
+			self.wallCollisionCorrector = self.wallCollisionCorrector + comp
+		end
+	end
+end
+
 local function enemiesCollisions(self, message_id, message, sender)
 	local otherEnemyPos = go.get_position(message.other_id)
 	local otherEnemyUrl = msg.url(nil, message.other_id, "enemy")
 	-- Get pushed from other enemy if its not a dead body
 	local isOtherEnemyKilled = go.get(otherEnemyUrl, "isKilled")
+	
 	if isOtherEnemyKilled == false then
 		-- Count direction of force that needs to be applied
 		local forceDir = vmath.vector3(self.enemyPos.x - otherEnemyPos.x, self.enemyPos.y - otherEnemyPos.y, 0)
-		forceDir = vmath.normalize(forceDir)		
+		forceDir = vmath.normalize(forceDir)
+		if self.forceDir == vmath.vector3(0) then
+			self.forceDir = forceDir
+		else
+			self.forceDir = vmath.vector3((self.forceDir.x + forceDir.x), (self.forceDir.y + forceDir.y), 0)
+			if self.forceDir.x ~= 0 then
+				self.forceDir.x = self.forceDir.x / 2
+			end
+			if self.forceDir.y ~= 0 then
+				self.forceDir.y = self.forceDir.y / 2
+			end
+		end
+		self.collisionEnemyFlag = true
+	end
+		--[[
 		self.moveForce = vmath.vector3(self.moveForce.x + forceDir.x * self.movingSpeed, self.moveForce.y + forceDir.y * self.movingSpeed, 0)
 		if self.moveForce.x > 1500 then
 			self.moveForce.x = 1500
@@ -198,6 +222,7 @@ local function enemiesCollisions(self, message_id, message, sender)
 			self.moveForce.y = 1500
 		end
 	end
+	]]--
 end
 
 local function playersAttacksCollisions(self, message_id, message, sender)
@@ -214,55 +239,28 @@ local function playersCollisions(self, message_id, message, sender)
 	msg.post(playerUrl,"hit", {dmg = self.damage})
 	-- Get knockback if player took damage or get pushed if dont
 	if self.knockbackTimer <= 0 and isPlayerVurnerable then
-		self.moveForce = vmath.vector3(self.moveForce.x - self.enemyMovingDir.x * self.knockbackForce, self.moveForce.y - self.enemyMovingDir.y * self.knockbackForce, 0)
+		self.force = vmath.vector3(self.force.x - self.movingDir.x * self.knockbackStrength, self.force.y - self.movingDir.y * self.knockbackStrength, 0)
 		self.knockbackTimer = 0.5
-		self.moveForceTimer = 0.1
-	elseif self.moveForceTimer <= 0 then
-		self.moveForce = vmath.vector3(self.moveForce.x - self.enemyMovingDir.x * self.movingSpeed * 2.5, self.moveForce.y - self.enemyMovingDir.y * self.movingSpeed * 2.5, 0)
-		self.moveForceTimer = 0.1
-	end
-end
-
-local function wallsCollisions(self, message_id, message, sender)
-	if message.group == hash("walls") then
-		if sender.fragment == hash("wallsTopCollider") then
-			self.wallsCollider.top = true
-			if self.moveForce.y > 0 then
-				self.moveForce.y = 0
-			end
-		elseif sender.fragment == hash("wallsBottomCollider") then
-			self.wallsCollider.bottom = true
-			if self.moveForce.y < 0 then
-				self.moveForce.y = 0
-			end
-		end
-		if sender.fragment == hash("wallsLeftCollider") then
-			self.wallsCollider.left = true
-			if self.moveForce.x < 0 then
-				self.moveForce.x = 0
-			end
-		elseif sender.fragment == hash("wallsRightCollider") then
-			self.wallsCollider.right = true
-			if self.moveForce.x > 0 then
-				self.moveForce.x = 0
-			end
-		end
+		self.forceTimer = 0.1
+	elseif self.forceTimer <= 0 then
+		self.force = vmath.vector3(self.force.x - self.movingDir.x * self.movingSpeed * 2.5, self.force.y - self.movingDir.y * self.movingSpeed * 2.5, 0)
+		self.forceTimer = 0.1
 	end
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("collision_response") and self.isKilled == false then
-		print("message.group:", message.group)
-		if message.group == hash("enemies") then
+	if message_id == hash("contact_point_response") then
+		wallsCollisions(self, message_id, message, sender)
+	elseif message_id == hash("collision_response") and self.isKilled == false then
+		if message.group == hash("enemy") then
 			enemiesCollisions(self, message_id, message, sender)
-		elseif message.group == hash("attacks") then
+		elseif message.group == hash("attack") then
 			playersAttacksCollisions(self, message_id, message, sender)
-		elseif message.group == hash("players") then
+		elseif message.group == hash("player") then
 			playersCollisions(self, message_id, message, sender)
-		end
-	elseif message_id == hash("contact_point_response") then	
-		wallsCollisions(self, message_id, message, sender)	
-	elseif message_id == hash("setInactive") then
+		end	
+	end
+	if message_id == hash("setInactive") then
 		go.set_position(globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100000, 100), math.random(-100000, 100), 0))
 		self.health = self.maxHealth
 		self.isKilled = true

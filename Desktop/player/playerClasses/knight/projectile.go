@@ -34,15 +34,15 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "enemiesCollider"
+  id: "triggerCollider"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
-  "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
+  "type: COLLISION_OBJECT_TYPE_TRIGGER\n"
   "mass: 0.0\n"
   "friction: 0.1\n"
   "restitution: 0.5\n"
-  "group: \"attacks\"\n"
-  "mask: \"enemies\"\n"
+  "group: \"attack\"\n"
+  "mask: \"enemy\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"
@@ -81,15 +81,15 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "wallsCollider"
+  id: "wallCollider"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
   "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
   "mass: 0.0\n"
-  "friction: 0.1\n"
-  "restitution: 0.5\n"
-  "group: \"attacks\"\n"
-  "mask: \"walls\"\n"
+  "friction: 1.0\n"
+  "restitution: 0.0\n"
+  "group: \"attack\"\n"
+  "mask: \"wall\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"
@@ -111,9 +111,9 @@ embedded_components {
   "  data: 8.0\n"
   "  data: 10.0\n"
   "}\n"
-  "linear_damping: 0.0\n"
+  "linear_damping: 1.0\n"
   "angular_damping: 0.0\n"
-  "locked_rotation: false\n"
+  "locked_rotation: true\n"
   ""
   position {
     x: 0.0
