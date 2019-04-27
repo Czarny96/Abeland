@@ -80,6 +80,7 @@ function M.create()
 		print("Destroying session with ID: " .. session.sessionID)
 		playersManager.setAllPlayersToWaitingRoom()
 		enemyManger.resetArena()
+		msg.post("/menu#gameOver", "enable", {})
 	end
 
 
@@ -88,9 +89,8 @@ function M.create()
 		if session.isGameOver() then
 			session.destroy()
 		elseif globals.getIsWaveOver() and #playersQueue > 0 then
-		session.setPlayersFromQue()
-		playersManager.setActivePlayersIDs()
-			
+			session.setPlayersFromQue()
+			playersManager.setActivePlayersIDs()
 		end
 	end
 

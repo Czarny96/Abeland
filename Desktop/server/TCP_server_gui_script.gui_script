@@ -82,6 +82,10 @@ local function on_client_disconnected(ip, port, client)
 	currentSession.removePlayerInQue(clientsManager.getPlayerID(ip))
 	clientsManager.removePlayer(ip)
 	msgActivePlayersChange()
+
+	if not clientsManager.isAnyPlayer() then
+		currentSession.setGameOverFlag(1)
+	end
 end
 
 function init(self)
