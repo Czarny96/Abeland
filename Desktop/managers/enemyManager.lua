@@ -80,8 +80,7 @@ function M.initializeEnemies(amount)
 	local enemyRanged
 	local enemyMalee
 
-	for i = 0, amount/2, 1
-	do
+	for i = 0, amount/2, 1 do
 		enemyRanged = factory.create("main:/spawnPoints/waiting_room#enemyMageFactory")
 		enemyMalee = factory.create("main:/spawnPoints/waiting_room#enemyMaleeFactory")
 
@@ -107,7 +106,7 @@ function M.isWaveOver()
 			M.initializeWave(35, 4)
 		end
 	else
-		print("NOT EMPTY?")
+		print("WAVE STILL GOING")
 	end
 end
 
@@ -148,14 +147,12 @@ end
 
 function M.resetArena()
 	--This function resets all enemies and wave counter to default (inactive, 1)
-	for i, enemy in pairs(activeRangeEnemiesIDs)
-	do
+	for i, enemy in pairs(activeRangeEnemiesIDs) do
 		M.setEnemyInactive(enemy)
 	end
 	activeRangeEnemiesIDs = {}
 
-	for i, enemy in pairs(activeMaleeEnemiesIDs)
-	do
+	for i, enemy in pairs(activeMaleeEnemiesIDs) do
 		M.setEnemyInactive(enemy)
 	end
 	activeMaleeEnemiesIDs = {}
@@ -168,7 +165,7 @@ function M.initializeWave(rangePercent, gateAmount)
 	--Teleports enemies to arena (behind gates / to gate_[direction]_out
 	--rangePercent == what is a ratio of ranged attack enemies to malee attacking enemies 
 	--gateAmount == to how many of 4 gates enemies should be distributed
-
+	print("INITIALIZE WAVE:", globals.getWaveNr()
 	local enemiesAmount = globals.getWaveNr()
 	local gateSide
 
@@ -179,53 +176,42 @@ function M.initializeWave(rangePercent, gateAmount)
 	if gateAmount <= 1 then
 		--Spawn enemies only at top gate
 		msg.post("/topWalls#topWallsScript", "openTop")
-		
-		for i = 0, enemiesAmount, 1
+		for i = 1, enemiesAmount, 1
 		do
 			rand = math.floor(math.random(1,100))
 			if rand <= rangePercent then
-				gate_top_enemies = gate_top_enemies + 1
-				msg.post(inactiveRangeEnemiesIDs[i+1], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
-				table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
-				table.remove(inactiveRangeEnemiesIDs, i+1)
+				msg.post(inactiveRangeEnemiesIDs[i], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
+				table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i])
 			else
-				gate_top_enemies = gate_top_enemies + 1
-				msg.post(inactiveMaleeEnemiesIDs[i+1], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
-				table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i+1])
-				table.remove(inactiveMaleeEnemiesIDs, i+1)
+				msg.post(inactiveMaleeEnemiesIDs[i], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
+				table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i])
 			end
 		end
+
+
 	elseif gateAmount == 2 then
 		--Spawn enemies only at top & bottom gate
 		msg.post("/topWalls#topWallsScript", "openTop")
 		msg.post("/walls#wallsScript", "openBottom")
-		for i = 0, enemiesAmount, 1
+		for i = 1, enemiesAmount, 1
 		do
 			rand = math.floor(math.random(1,100))
 			gateSide = math.floor(math.random(1,100))
 			if gateSide <= 50 then
 				if rand <= rangePercent then
-					gate_top_enemies = gate_top_enemies + 1
-					msg.post(inactiveRangeEnemiesIDs[i+1], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
-					table.remove(inactiveRangeEnemiesIDs, i+1)
+					msg.post(inactiveRangeEnemiesIDs[i], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
+					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i])
 				else
-					gate_top_enemies = gate_top_enemies + 1
-					msg.post(inactiveMaleeEnemiesIDs[i+1], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i+1])
-					table.remove(inactiveMaleeEnemiesIDs, i+1)
+					msg.post(inactiveMaleeEnemiesIDs[i], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
+					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i])
 				end
 			else
 				if rand <= rangePercent then
-					gate_bottom_enemies = gate_bottom_enemies + 1
-					msg.post(inactiveRangeEnemiesIDs[i+1], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
-					table.remove(inactiveRangeEnemiesIDs, i+1)
+					msg.post(inactiveRangeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
+					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i])
 				else
-					gate_bottom_enemies = gate_bottom_enemies + 1
-					msg.post(inactiveMaleeEnemiesIDs[i+1], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i+1])
-					table.remove(inactiveMaleeEnemiesIDs, i+1)
+					msg.post(inactiveMaleeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
+					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i])
 				end
 			end
 		end
@@ -235,45 +221,33 @@ function M.initializeWave(rangePercent, gateAmount)
 		msg.post("/walls#wallsScript", "openBottom")
 		msg.post("/walls#wallsScript", "openLeft")
 
-		for i = 0, enemiesAmount, 1
+		for i = 1, enemiesAmount, 1
 		do
 			rand = math.floor(math.random(1,100))
 			gateSide = math.floor(math.random(1,100))
 			if gateSide <= 33 then
 				if rand <= rangePercent then
-					gate_top_enemies = gate_top_enemies + 1
-					msg.post(inactiveRangeEnemiesIDs[i+1], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
-					table.remove(inactiveRangeEnemiesIDs, i+1)
+					msg.post(inactiveRangeEnemiesIDs[i], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
+					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i])
 				else
-					gate_top_enemies = gate_top_enemies + 1
-					msg.post(inactiveMaleeEnemiesIDs[i+1], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i+1])
-					table.remove(inactiveMaleeEnemiesIDs, i+1)
+					msg.post(inactiveMaleeEnemiesIDs[i], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
+					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i])
 				end
 			elseif gateSide <= 66 then
 				if rand <= rangePercent then
-					gate_bottom_enemies = gate_bottom_enemies + 1
-					msg.post(inactiveRangeEnemiesIDs[i+1], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
-					table.remove(inactiveRangeEnemiesIDs, i+1)
+					msg.post(inactiveRangeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
+					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i])
 				else
-					gate_bottom_enemies = gate_bottom_enemies + 1
-					msg.post(inactiveMaleeEnemiesIDs[i+1], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i+1])
-					table.remove(inactiveMaleeEnemiesIDs, i+1)
+					msg.post(inactiveMaleeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
+					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i])
 				end
 			else
 				if rand <= rangePercent then
-					gate_left_enemies = gate_left_enemies + 1
-					msg.post(inactiveRangeEnemiesIDs[i+1], "setActive", { x = gate_left_out.x, y = gate_left_out.y, gate = "left"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
-					table.remove(inactiveRangeEnemiesIDs, i+1)
+					msg.post(inactiveRangeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "left"})
+					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i])
 				else
-					gate_left_enemies = gate_left_enemies + 1
-					msg.post(inactiveMaleeEnemiesIDs[i+1], "setActive", { x = gate_left_out.x, y = gate_left_out.y, gate = "left"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i+1])
-					table.remove(inactiveMaleeEnemiesIDs, i+1)
+					msg.post(inactiveMaleeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "left"})
+					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i])
 				end
 			end
 		end
@@ -284,58 +258,61 @@ function M.initializeWave(rangePercent, gateAmount)
 		msg.post("/walls#wallsScript", "openLeft")
 		msg.post("/walls#wallsScript", "openRight")
 
-		for i = 0, enemiesAmount, 1
+		for i = 1, enemiesAmount, 1
 		do
 			rand = math.floor(math.random(1,100))
 			gateSide = math.floor(math.random(1,100))
 			if gateSide <= 25 then
 				if rand <= rangePercent then
-					gate_top_enemies = gate_top_enemies + 1
-					msg.post(inactiveRangeEnemiesIDs[i+1], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
-					table.remove(inactiveRangeEnemiesIDs, i+1)
+					msg.post(inactiveRangeEnemiesIDs[i], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
+					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i])
 				else
-					gate_top_enemies = gate_top_enemies + 1
-					msg.post(inactiveMaleeEnemiesIDs[i+1], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i+1])
-					table.remove(inactiveMaleeEnemiesIDs, i+1)
+					msg.post(inactiveMaleeEnemiesIDs[i], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
+					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i])
 				end
 			elseif gateSide <= 50 then
 				if rand <= rangePercent then
-					gate_bottom_enemies = gate_bottom_enemies + 1
-					msg.post(inactiveRangeEnemiesIDs[i+1], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
-					table.remove(inactiveRangeEnemiesIDs, i+1)
+					msg.post(inactiveRangeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
+					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i])
 				else
-					gate_bottom_enemies = gate_bottom_enemies + 1
-					msg.post(inactiveMaleeEnemiesIDs[i+1], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i+1])
-					table.remove(inactiveMaleeEnemiesIDs, i+1)
+					msg.post(inactiveMaleeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
+					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i])
 				end
 			elseif gateSide <= 75 then
 				if rand <= rangePercent then
-					gate_left_enemies = gate_left_enemies + 1
-					msg.post(inactiveRangeEnemiesIDs[i+1], "setActive", { x = gate_left_out.x, y = gate_left_out.y, gate = "left"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
-					table.remove(inactiveRangeEnemiesIDs, i+1)
+					msg.post(inactiveRangeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_left_out.y, gate = "left"})
+					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i])
 				else
-					gate_left_enemies = gate_left_enemies + 1
-					msg.post(inactiveMaleeEnemiesIDs[i+1], "setActive", { x = gate_left_out.x, y = gate_left_out.y, gate = "left"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i+1])
-					table.remove(inactiveMaleeEnemiesIDs, i+1)
+					msg.post(inactiveMaleeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_left_out.y, gate = "left"})
+					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i])
 				end
 			else
 				if rand <= rangePercent then
-					gate_right_enemies = gate_right_enemies + 1
-					msg.post(inactiveRangeEnemiesIDs[i+1], "setActive", { x = gate_right_out.x, y = gate_right_out.y, gate = "right"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i+1])
-					table.remove(inactiveRangeEnemiesIDs, i+1)
+					msg.post(inactiveRangeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_right_out.y, gate = "right"})
+					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i])
 				else
-					gate_right_enemies = gate_right_enemies + 1
-					msg.post(inactiveMaleeEnemiesIDs[i+1], "setActive", { x = gate_right_out.x, y = gate_right_out.y, gate = "right"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i+1])
-					table.remove(inactiveMaleeEnemiesIDs, i+1)
+					msg.post(inactiveMaleeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_right_out.y, gate = "right"})
+					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i])
+
 				end
+			end
+		end
+	end
+	
+	for k, active in pairs(activeMaleeEnemiesIDs) do
+		for i, inactive in pairs(inactiveMaleeEnemiesIDs) do
+			if active == inactive then
+				table.remove(inactiveMaleeEnemiesIDs, k)
+				break
+			end
+		end
+	end
+	
+	for k, active in pairs(activeRangeEnemiesIDs) do
+		for i, inactive in pairs(inactiveRangeEnemiesIDs) do
+			if active == inactive then
+				table.remove(inactiveRangeEnemiesIDs, k)
+				break
 			end
 		end
 	end

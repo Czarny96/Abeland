@@ -12,7 +12,7 @@ function init(self)
 	
 	-- start game with splash screen
 	g_goToSplashScreen()
-	msg.post("@system:", "toggle_profile")
+	--msg.post("@system:", "toggle_profile")
 end
 
 -- GAME STATE GLOBAL FUNCTIONS AND VARIABLES:
