@@ -70,9 +70,6 @@ local function lockPlayerClass(class,playerIP)
 	playersTable[playerIP][2] = "/player_" .. class
 end
 
-
-
-
 function M.setPlayerReadines(playerIP, readiness)
 	playersTable[playerIP][7] = readiness
 end

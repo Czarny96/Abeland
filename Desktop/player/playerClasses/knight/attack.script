@@ -38,5 +38,5 @@ function on_message(self, message_id, message, sender)
 		self.isShooting = true
 		self.shootingDir = vmath.vector3(message.x, message.y, 0)
 	end
-	endgo.property("shootingDir", vmath.vector3(0,0,0))
+end
 	
