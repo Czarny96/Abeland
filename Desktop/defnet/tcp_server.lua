@@ -70,6 +70,7 @@ function M.create(port, on_data, on_client_connected, on_client_disconnected)
 				if on_client_disconnected then
 					local client_ip, client_port = connection:getpeername()
 					on_client_disconnected(client_ip, client_port, connection)
+					connection:close()
 				end
 				break
 			end

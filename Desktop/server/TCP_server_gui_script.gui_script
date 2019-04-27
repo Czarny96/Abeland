@@ -6,6 +6,7 @@ local playersManager = require "managers.playersManager"
 
 local sessionGenerator = require "server.sessionGenerator"
 
+
 local TCP_SERVER_PORT = 5555
 local PORT = 50000
 
@@ -14,6 +15,7 @@ local dtPassed = 0
 local serverHandler = nil
 local currentSession = nil
 local startP2P = false
+
 
 local function sendMessageToAllActivePlayers(mess)
 	for ip,client in pairs(clientsManager.returnActiveClients()) do
@@ -48,10 +50,13 @@ local function routeFrameToRespFunc(frame,ip, client)
 		end
 	elseif frameId == "G" then
 		clientsManager.setPlayerReadines(ip, true)
-		if clientsManager.areAllPlayersReady() then
-			msgActivePlayersChange()
+		if currentSession~=nil then
+			currentSession.insertPlayerToQue(clientsManager.getPlayerID(ip))
+			serverHandler.send("StartGame".."\n\r", client)
+		elseif clientsManager.areAllPlayersReady() and currentSession==nil then
 			createSession()
 		end
+		
 	end
 	
 end
@@ -70,11 +75,11 @@ end
 
 local function on_client_connected(ip, port, client) 
 	clientsManager.addPlayer(ip, client)
-	msgActivePlayersChange()
 end
 
 local function on_client_disconnected(ip, port, client)
 	--TODO: add function, to remove data from menu
+	currentSession.removePlayerInQue(clientsManager.getPlayerID(ip))
 	clientsManager.removePlayer(ip)
 	msgActivePlayersChange()
 end
@@ -100,25 +105,26 @@ end
 function update(self, dt)
 	-- Add update code here
 	
-	--TODO: start updated when inside champion select
+
 	if startP2P == true then 
 		self.p2p.update(dt)
 	end
 	
-	--TODO: adjust clocking for optimal user experience
-	if  clientsManager.isAnyPlayer() and dtPassed > 0.016 then
+
+	if  dtPassed > 0.016 then
 		for ip,client in pairs(clientsManager.returnAllClients()) do
 
 			if clientsManager.isPlayerActive(ip) then
 				self.server.send("btn_data\n\r", client)
 			end
-			
-			clientsManager.incrementPlayerInactivityTimeCounterByDT(ip,dtPassed)
 
-			if clientsManager.getPlayerInactivityTimeCounter(ip) > 2 and clientsManager.isPlayerActive(ip) then
+			clientsManager.incrementPlayerInactivityTimeCounterByDT(ip,dtPassed)
+		
+
+			if clientsManager.getPlayerInactivityTimeCounter(ip) > 1 and clientsManager.isPlayerActive(ip) then
 				clientsManager.desactivatePlayer(ip)
 				msgActivePlayersChange()
-			elseif clientsManager.getPlayerInactivityTimeCounter(ip) > 10 and not clientsManager.isPlayerActive(ip) then
+			elseif clientsManager.getPlayerInactivityTimeCounter(ip) > 5 and not clientsManager.isPlayerActive(ip) then
 				self.server.remove_client(client)
 			end
 		end
@@ -152,6 +158,11 @@ function on_message(self, message_id, message, sender)
 		end
 	elseif  message_id == hash("championSelect") then
 		startP2P = true
+	elseif  message_id == hash("mainMenu") then
+		startP2P = false
+		for ip,client in pairs(clientsManager.returnAllClients()) do
+			self.server.remove_client(client)
+		end
 	end
 
 end

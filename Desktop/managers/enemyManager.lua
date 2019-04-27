@@ -93,18 +93,24 @@ function M.initializeEnemies(amount)
 end
 
 function M.isWaveOver()
-	--This function checks if a wave is over / finished / all enemies are dead / inactive
+		--This function checks if a wave is over / finished / all enemies are dead / inactive
 	if next(activeMaleeEnemiesIDs) == nil and next(activeRangeEnemiesIDs) == nil then
-		--Starts new wave
-		if globals.getWaveNr() < 5 then
-			M.initializeWave(10, 1)
-		elseif globals.getWaveNr() < 10 then
-			M.initializeWave(15, 2)
-		elseif globals.getWaveNr() < 15 then
-			M.initializeWave(25, 3)
-		else
-			M.initializeWave(35, 4)
-		end
+		globals.setIsWaveOver(true)
+		return true
+	else
+		print("WAVE STILL GOING")
+		return false
+	end
+end
+
+function M.startNextWave()
+	--Starts new wave
+	if globals.getWaveNr() < 5 then
+		M.initializeWave(10, 1)
+	elseif globals.getWaveNr() < 10 then
+		M.initializeWave(15, 2)
+	elseif globals.getWaveNr() < 15 then
+		M.initializeWave(20, 3)
 	else
 		print("WAVE STILL GOING")
 	end
@@ -123,7 +129,9 @@ function M.setEnemyInactive(enemyID)
 		table.insert(inactiveMaleeEnemiesIDs, enemyID)
 	end
 
-	M.isWaveOver()
+	if M.isWaveOver() then
+		M.startNextWave()
+	end
 end
 
 function M.findIndexOfEnemy(tab,enemy)
@@ -168,6 +176,8 @@ function M.initializeWave(rangePercent, gateAmount)
 	print("INITIALIZE WAVE:", globals.getWaveNr())
 	local enemiesAmount = globals.getWaveNr()
 	local gateSide
+	-- info for session generator to know that wave has started
+	globals.setIsWaveOver(false)
 
 	--Set wave number counter on main screen
 	label.set_text(wave_label, "Wave: " .. globals.getWaveNr())

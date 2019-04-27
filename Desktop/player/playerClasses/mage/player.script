@@ -5,6 +5,7 @@ go.property("position", vmath.vector3(0, 0, 0))
 
 --Class Properties
 go.property("health", 80)
+go.property("maxHealth", 80)
 go.property("movingSpeed", 100)
 
 --Flags

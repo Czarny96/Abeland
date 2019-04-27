@@ -5,6 +5,7 @@ go.property("position", vmath.vector3(0, 0, 0))
 
 --Class Properties
 go.property("health", 200)
+go.property("maxHealth", 200)
 go.property("movingSpeed", 180)
 
 --Flags
@@ -21,6 +22,8 @@ go.property("isMoving", false)
 
 --Local Colliders
 go.property("wallCollisionCorrector", vmath.vector3())
+
+
 
 
 local globals = require "main.globals"

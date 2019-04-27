@@ -5,6 +5,7 @@ go.property("movingDir", vmath.vector3(0, 0, 0))
 
 --Class Properties
 go.property("health", 100)
+go.property("maxHealth", 100)
 go.property("movingSpeed", 150)
 
 --Flags

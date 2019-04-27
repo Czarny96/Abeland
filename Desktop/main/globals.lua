@@ -18,6 +18,15 @@ local waveNumber = 1
 --Pause indicator
 local pause = false
 
+local isWaveOver = false
+
+function M.setIsWaveOver(booleanValue)
+	isWaveOver = booleanValue
+end
+
+function M.getIsWaveOver()
+	return isWaveOver
+end
 
 function M.getSpawnPoints()
 	local spawnPoints = {waiting_room, gate_top_out, gate_bottom_out, gate_left_out, gate_right_out}

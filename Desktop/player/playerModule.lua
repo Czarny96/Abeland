@@ -28,12 +28,26 @@ end
 
 function M.messages(message_id, message, sender)
 	local url = msg.url("main",go.get_id(),"player")
-	
+
+	--Activating player
+	if message_id == hash("start") then
+		go.set_position(go.get_position("main:/spawnPoints/spawn_archer"))
+		msg.post("#sprite", "play_animation", {id = hash("player_down")})
+		sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 1))
+		label.set_text("#label_hp", go.get(url, "health"))
+		go.set(url, "isKilled", false)
+		go.set(url, "nonVulnerableTimer", 0)
+	elseif message_id == hash("stop") then
+		go.set_position(go.get_position("main:/spawnPoints/players_room") + vmath.vector3(-128,0,0))
+		go.set(url, "isKilled", true)
+		go.set(url, "health", go.get(url, "maxHealth"))
+	end
+
 	if go.get(url, "isKilled") or go.get(url, "nonOperativeTimer") > 0 then
 		print("DEAD")
 		return
 	end
-
+		
 	--Movement
 	if message_id == hash("move") then
 		go.set(url, "movingDir", vmath.vector3(message.x, message.y, 0))
@@ -92,17 +106,14 @@ function M.messages(message_id, message, sender)
 		end
 	end
 
-	--Activating player
-	if message_id == hash("start") then
-		go.set_position(go.get_position("main:/spawnPoints/spawn_archer"))
-	elseif message_id == hash("stop") then
-		go.set_position(go.get_position("main:/spawnPoints/players_room") + vmath.vector3(-128,0,0))
-	end
 
+	
 	--Kill
 	if message_id == hash("kill") then
 		go.delete()
 	end
+
+
 end
 
 function M.death(dt)

@@ -3,17 +3,50 @@
 local clientsManager = require "managers.clientsManager"
 local playersManager = require "managers.playersManager"
 local enemyManger = require "managers.enemyManager"
+local globals = require "main.globals"
+
 local M = {}
 
 s_SessionCounter = 0
+
 
 --- Creates a new session
 function M.create()
 	local gameOverFlag = 0
 	local session = {}
+	local playersQueue = {}
+
+
+	function session.insertPlayerToQue(playerID)
+		table.insert(playersQueue,playerID)
+	end
+	function session.isPlayerInQue(playerID)
+		if #playersQueue > 0 then
+			for i,id in ipairs(playersQueue) do
+				if playersQueue[i] == id then
+					return true
+				end
+			end
+		end
+		return false
+	end
 	
-	--- Starts the session 
-	-- @return success
+	function session.removePlayerInQue(playerID)
+		for i,id in ipairs(playersQueue) do
+			if playersQueue[i] == id then
+				table.remove(playersQueue,i)
+			end
+		end
+		
+	end
+
+	function session.setPlayersFromQue()
+		for i,playerID in pairs(playersQueue) do
+			playersManager.setPlayerToArena(playerID)
+			table.remove(playersQueue,i)
+		end
+	end
+	
 	function session.setGameOverFlag(value)
 		gameOverFlag = value
 	end
@@ -31,8 +64,9 @@ function M.create()
 		session.sessionID = s_SessionCounter
 		session.setGameOverFlag(0)
 		print("Creating a new session with ID: " .. session.sessionID)
-		playersManager.setActivePlayersIDs()
+		
 		playersManager.setAllPlayersToArena()
+		playersManager.setActivePlayersIDs()
 		enemyManger.initializeWave(10, 1)
 
 		msg.post("/menu#championSelect", "startGame", {})
@@ -53,7 +87,9 @@ function M.create()
 		--check if game over
 		if session.isGameOver() then
 			session.destroy()
-		else
+		elseif globals.getIsWaveOver() and #playersQueue > 0 then
+		session.setPlayersFromQue()
+		playersManager.setActivePlayersIDs()
 			
 		end
 	end
