@@ -101,13 +101,13 @@ animations {
   flip_vertical: 0
 }
 animations {
-  id: "player_attack1"
+  id: "player_attack_basic"
   images {
-    image: "/assets/prototypes/attack_prot.png"
+    image: "/assets/prototypes/rogue/player_attack_particle.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 8
-  flip_horizontal: 0
+  flip_horizontal: 1
   flip_vertical: 0
 }
 animations {
@@ -117,6 +117,86 @@ animations {
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 60
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "player_att_up"
+  images {
+    image: "/assets/prototypes/archer/player_prot_up.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 8
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "player_att_down"
+  images {
+    image: "/assets/prototypes/archer/player_prot_down.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 8
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "player_att_left"
+  images {
+    image: "/assets/prototypes/archer/player_prot_left.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 8
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "player_att_right"
+  images {
+    image: "/assets/prototypes/archer/player_prot_right.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 8
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "player_att_up_left"
+  images {
+    image: "/assets/prototypes/archer/player_prot_up_left.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 8
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "player_att_down_right"
+  images {
+    image: "/assets/prototypes/archer/player_prot_down_right.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 8
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "player_att_up_right"
+  images {
+    image: "/assets/prototypes/archer/player_prot_up_right.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 8
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "player_att_down_left"
+  images {
+    image: "/assets/prototypes/archer/player_prot_down_left.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 8
   flip_horizontal: 0
   flip_vertical: 0
 }

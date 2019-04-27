@@ -1,5 +1,14 @@
 --KNIGHT
 go.property("shootingDelay", 0.35) 
+go.property("shootingDir", vmath.vector3(0,0,0))
+
+--Flags
+go.property("isShooting", false)
+
+--Timers
+go.property("shootingTimer", 0)
+
+local playerModule = require "player.playerModule"
 
 function init(self)
 	self.shootingTimer = 0
@@ -12,11 +21,13 @@ function update(self, dt)
 	if self.isShooting and self.shootingTimer <= 0 then
 		self.shootingDir = vmath.normalize(self.shootingDir)
 		local l_angle = math.atan2(self.shootingDir.y, self.shootingDir.x)
-		factory.create("#attackFactory", nil, vmath.quat_rotation_z(l_angle), { projectileDir = self.shootingDir, makerID = msg.url() })
+		factory.create("#attackFactory", nil, vmath.quat_rotation_z(l_angle), { projectileDir = self.shootingDir })
 		self.shootingTimer = self.shootingDelay
 	else
 		self.shootingTimer = self.shootingTimer - dt
 	end
+
+	playerModule.updateAnimation(dt)
 
 	--Reset flags
 	self.isShooting = false
@@ -27,4 +38,5 @@ function on_message(self, message_id, message, sender)
 		self.isShooting = true
 		self.shootingDir = vmath.vector3(message.x, message.y, 0)
 	end
-end
+	endgo.property("shootingDir", vmath.vector3(0,0,0))
+	

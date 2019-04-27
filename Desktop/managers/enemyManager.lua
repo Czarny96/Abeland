@@ -95,6 +95,7 @@ end
 function M.isWaveOver()
 		--This function checks if a wave is over / finished / all enemies are dead / inactive
 	if next(activeMaleeEnemiesIDs) == nil and next(activeRangeEnemiesIDs) == nil then
+
 		globals.setIsWaveOver(true)
 		return true
 	else
@@ -113,6 +114,20 @@ function M.startNextWave()
 		M.initializeWave(20, 3)
 	else
 		print("WAVE STILL GOING")
+		return false
+	end
+end
+
+function M.startNextWave()
+	--Starts new wave
+	if globals.getWaveNr() < 5 then
+		M.initializeWave(10, 1)
+	elseif globals.getWaveNr() < 10 then
+		M.initializeWave(15, 2)
+	elseif globals.getWaveNr() < 15 then
+		M.initializeWave(20, 3)
+	else
+		M.initializeWave(25, 4)
 	end
 end
 

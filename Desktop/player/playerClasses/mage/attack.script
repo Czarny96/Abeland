@@ -1,5 +1,14 @@
 --MAGE
 go.property("shootingDelay", 1.3)
+go.property("shootingDir", vmath.vector3(0,0,0))
+
+--Flags
+go.property("isShooting", false)
+
+--Timers
+go.property("shootingTimer", 0)
+
+local playerModule = require "player.playerModule"
 
 function init(self)
 	self.shootingTimer = 0
@@ -17,6 +26,8 @@ function update(self, dt)
 	else
 		self.shootingTimer = self.shootingTimer - dt
 	end
+
+	playerModule.updateAnimation(dt)
 
 	--Reset flags
 	self.isShooting = false

@@ -67,7 +67,7 @@ function M.create()
 		
 		playersManager.setAllPlayersToArena()
 		playersManager.setActivePlayersIDs()
-		enemyManger.initializeWave(10, 1)
+		enemyManger.startNextWave()
 
 		msg.post("/menu#championSelect", "startGame", {})
 		

@@ -14,7 +14,7 @@ components {
   }
 }
 components {
-  id: "playerAttack"
+  id: "attack"
   component: "/player/playerClasses/archer/attack.script"
   position {
     x: 0.0

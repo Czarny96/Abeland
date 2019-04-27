@@ -1,7 +1,7 @@
 
 
 local M = {}
-
+local animTimer = 0
 
 function M.init()
 	local url = msg.url("main",go.get_id(),"player")
@@ -17,7 +17,7 @@ function M.manageFlagsAndTimers(dt)
 	if go.get(url, "nonVulnerableTimer") <= 0 then
 		go.set(url, "isVulnerable", true)
 	end
-	
+
 	--Collider correction
 	go.set(url, "wallCollisionCorrector", vmath.vector3())
 
@@ -28,6 +28,7 @@ end
 
 function M.messages(message_id, message, sender)
 	local url = msg.url("main",go.get_id(),"player")
+
 
 	--Activating player
 	if message_id == hash("start") then
@@ -51,7 +52,7 @@ function M.messages(message_id, message, sender)
 	--Movement
 	if message_id == hash("move") then
 		go.set(url, "movingDir", vmath.vector3(message.x, message.y, 0))
-		
+
 		if go.get(url, "movingDir").x ~= 0 or go.get(url, "movingDir").y ~= 0 then
 			go.set(url, "isMoving", true)
 		else
@@ -105,8 +106,6 @@ function M.messages(message_id, message, sender)
 			end
 		end
 	end
-
-
 	
 	--Kill
 	if message_id == hash("kill") then
@@ -114,6 +113,72 @@ function M.messages(message_id, message, sender)
 	end
 
 
+end
+
+function M.updateAnimation(dt)
+	local url = msg.url("main",go.get_id(),"attack")
+	if go.get(url, "isShooting") then
+		animTimer = 0.3
+	end
+
+	if animTimer >= 0 then
+		local vector = go.get(url, "shootingDir")
+		if vector.x < -0.3 then
+			if vector.y > 0.3 then
+				msg.post("#sprite", "play_animation", {id = hash("player_att_up_left")})
+			elseif vector.y < -0.3 then
+				msg.post("#sprite", "play_animation", {id = hash("player_att_down_left")})
+			else
+				msg.post("#sprite", "play_animation", {id = hash("player_att_left")})
+			end
+		elseif vector.x > 0.3 then
+			if vector.y > 0.3 then
+				msg.post("#sprite", "play_animation", {id = hash("player_att_up_right")})
+			elseif vector.y < -0.3 then
+				msg.post("#sprite", "play_animation", {id = hash("player_att_down_right")})
+			else
+				msg.post("#sprite", "play_animation", {id = hash("player_att_right")})
+			end
+		elseif vector.y > 0.3  then
+			msg.post("#sprite", "play_animation", {id = hash("player_att_up")})
+		elseif vector.y < -0.3  then
+			msg.post("#sprite", "play_animation", {id = hash("player_att_down")})
+		end
+	else
+		url = msg.url("main",go.get_id(),"player")
+		local vector = go.get(url, "movingDir")
+		if vector.x < -0.3 then
+			if vector.y > 0.3 then
+				msg.post("#sprite", "play_animation", {id = hash("player_up_left")})
+			elseif vector.y < -0.3 then
+				msg.post("#sprite", "play_animation", {id = hash("player_down_left")})
+			else
+				msg.post("#sprite", "play_animation", {id = hash("player_left")})
+			end
+		elseif vector.x > 0.3 then
+			if vector.y > 0.3 then
+				msg.post("#sprite", "play_animation", {id = hash("player_up_right")})
+			elseif vector.y < -0.3 then
+				msg.post("#sprite", "play_animation", {id = hash("player_down_right")})
+			else
+				msg.post("#sprite", "play_animation", {id = hash("player_right")})
+			end
+		elseif vector.y > 0.3  then
+			msg.post("#sprite", "play_animation", {id = hash("player_up")})
+		elseif vector.y < -0.3  then
+			msg.post("#sprite", "play_animation", {id = hash("player_down")})
+		end
+	end
+	animTimer = animTimer - dt
+end
+
+function M.move(vector, dt)
+	M.updateAnimation(dt)
+	local playerPos = go.get_position()
+	local url = msg.url("main",go.get_id(),"player")
+	playerPos = playerPos + vector * go.get(url,"movingSpeed") * dt
+	go.set_position(playerPos)
+	go.set("#player", "position", go.get_position())
 end
 
 function M.death(dt)
@@ -131,36 +196,6 @@ function M.death(dt)
 			go.delete()
 		end
 	end
-end
-
-function M.move(vector, dt)
-	if vector.x < -0.3 then
-		if vector.y > 0.3 then
-			msg.post("#sprite", "play_animation", {id = hash("player_up_left")})
-		elseif vector.y < -0.3 then
-			msg.post("#sprite", "play_animation", {id = hash("player_down_left")})
-		else
-			msg.post("#sprite", "play_animation", {id = hash("player_left")})
-		end
-	elseif vector.x > 0.3 then
-		if vector.y > 0.3 then
-			msg.post("#sprite", "play_animation", {id = hash("player_up_right")})
-		elseif vector.y < -0.3 then
-			msg.post("#sprite", "play_animation", {id = hash("player_down_right")})
-		else
-			msg.post("#sprite", "play_animation", {id = hash("player_right")})
-		end
-	elseif vector.y > 0.3  then
-		msg.post("#sprite", "play_animation", {id = hash("player_up")})
-	elseif vector.y < -0.3  then
-		msg.post("#sprite", "play_animation", {id = hash("player_down")})
-	end
-
-	local playerPos = go.get_position()
-	local url = msg.url("main",go.get_id(),"player")
-	playerPos = playerPos + vector * go.get(url,"movingSpeed") * dt
-	go.set_position(playerPos)
-	go.set("#player", "position", go.get_position())
 end
 
 return M
