@@ -79,7 +79,10 @@ end
 
 local function on_client_disconnected(ip, port, client)
 	--TODO: add function, to remove data from menu
-	currentSession.removePlayerInQue(clientsManager.getPlayerID(ip))
+	if currentSession ~= nil then 
+		currentSession.removePlayerInQue(clientsManager.getPlayerID(ip))
+	end
+	--serverHandler.send("EndGame".."\n\r", client)
 	clientsManager.removePlayer(ip)
 	msgActivePlayersChange()
 
