@@ -134,7 +134,6 @@ end
 function M.setEnemyInactive(enemyID)
 	--This function sets given enemy (enemyID) to inactive state, resurrecting and teleporting to the wainting_room
 	msg.post(enemy, "setInactive")
-	go.set_position(globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0), enemyID)
 
 	if M.isActiveEnemyRanged(enemyID) then
 		table.remove(activeRangeEnemiesIDs, M.findIndexOfEnemy(activeRangeEnemiesIDs,enemyID))
