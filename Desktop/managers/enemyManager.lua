@@ -165,7 +165,7 @@ function M.initializeWave(rangePercent, gateAmount)
 	--Teleports enemies to arena (behind gates / to gate_[direction]_out
 	--rangePercent == what is a ratio of ranged attack enemies to malee attacking enemies 
 	--gateAmount == to how many of 4 gates enemies should be distributed
-	print("INITIALIZE WAVE:", globals.getWaveNr()
+	print("INITIALIZE WAVE:", globals.getWaveNr())
 	local enemiesAmount = globals.getWaveNr()
 	local gateSide
 
