@@ -6,10 +6,10 @@
 local M = {}
 
 --players URLS
-local playersURL = {msg.url("main","player_archer","player")
-, msg.url("main","player_knight","player")
-, msg.url("main","player_mage","player")
-, msg.url("main","player_rogue","player")}
+local playersURL = {msg.url("main","/player_archer","player")
+, msg.url("main","/player_knight","player")
+, msg.url("main","/player_mage","player")
+, msg.url("main","/player_rogue","player")}
 
 --spawnPoints
 local waiting_room = vmath.vector3(750,-1500,0)
