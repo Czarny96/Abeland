@@ -1,4 +1,4 @@
-
+local globals = require "main.globals"
 
 local M = {}
 local animTimer = 0
@@ -7,6 +7,8 @@ function M.init()
 	local url = msg.url("main",go.get_id(),"player")
 	label.set_text("#label_hp", go.get(url, "health"))
 	local startPos = go.get_position()	
+	go.set(url, "isKilled", false)
+	globals.setArePlayersDead(false)
 	go.set(url, "position", vmath.vector3(startPos.x, startPos.y, 0.99))
 	go.set_position(go.get(url, "position"))
 end
@@ -44,9 +46,15 @@ function M.messages(message_id, message, sender)
 	end
 
 	if go.get(url, "isKilled") or go.get(url, "nonOperativeTimer") > 0 then
-		return
+		for i, player in pairs(globals.getPlayersURL()) do
+			if not go.get(player, "isKilled") then
+				globals.setArePlayersDead(false)
+				return
+			end
+			globals.setArePlayersDead(true)
+			return
+		end
 	end
-		
 	--Movement
 	if message_id == hash("move") then
 		go.set(url, "movingDir", vmath.vector3(message.x, message.y, 0))
@@ -104,7 +112,7 @@ function M.messages(message_id, message, sender)
 			end
 		end
 	end
-	
+
 	--Kill
 	if message_id == hash("kill") then
 		go.delete()

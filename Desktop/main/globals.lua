@@ -5,6 +5,12 @@
 
 local M = {}
 
+--players URLS
+local playersURL = {msg.url("main","player_archer","player")
+, msg.url("main","player_knight","player")
+, msg.url("main","player_mage","player")
+, msg.url("main","player_rogue","player")}
+
 --spawnPoints
 local waiting_room = vmath.vector3(750,-1500,0)
 local gate_top_out = vmath.vector3(928,1400,0)
@@ -19,6 +25,12 @@ local waveNumber = 1
 local pause = false
 
 local isWaveOver = false
+local arePlayersDead = true
+
+
+function M.getPlayersURL()
+	return playersURL
+end
 
 function M.setIsWaveOver(booleanValue)
 	isWaveOver = booleanValue
@@ -33,6 +45,13 @@ function M.getSpawnPoints()
 	return spawnPoints;
 end
 
+function M.setArePlayersDead(state)
+	arePlayersDead = state
+end
+
+function M.getArePlayersDead()
+	return arePlayersDead
+end
 
 --waveNumber getter
 function M.getWaveNr()
