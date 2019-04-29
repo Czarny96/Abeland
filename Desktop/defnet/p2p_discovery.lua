@@ -67,7 +67,7 @@ function M.create(port)
 			udp_broadcast:close()
 			broadcast_co = nil
 		end)
-		return coroutine.resume(broadcast_co)
+		return true --coroutine.resume(broadcast_co)
 	end
 
 	--- Start listening for a broadcasting server

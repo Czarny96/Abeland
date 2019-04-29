@@ -83,7 +83,7 @@ end
 
 function on_input(self, action_id, action)
 	
-	if lockActions then
+	if lockActions and action_id ~= nil then
 		return true
 	end
 	
@@ -95,8 +95,10 @@ function on_input(self, action_id, action)
 		end
 	end
 
-	-- other screens shouldn't process input
-	return true
+	-- other screens shouldn't process input (ACCELEROMETER DATA HAS nil ID)
+	if action_id ~= nil then
+		return true
+	end
 end
 
 function on_reload(self)

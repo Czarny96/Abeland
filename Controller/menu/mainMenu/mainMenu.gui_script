@@ -1,7 +1,9 @@
 
 local scalingButton = require "util/scalingButton"
+local acc = require "util/accelerometer"
 
 local backgroundNode = nil
+local castleNode = nil
 
 -- buttons
 local newGameNode = nil
@@ -38,6 +40,7 @@ function init(self)
 	msg.post(".", "acquire_input_focus")
 	
 	backgroundNode = gui.get_node("bg")
+	castleNode = gui.get_node("castle")
 
 	self.cloudNodes = {
 		gui.get_node("cloud1"),
@@ -46,13 +49,25 @@ function init(self)
 		gui.get_node("cloud4"),
 		gui.get_node("cloud5")
 	}
+
+	self.cloudPos = { }
+	for i, cloudNode in pairs(self.cloudNodes) do
+		table.insert(self.cloudPos, gui.get_position(cloudNode))
+	end
+
+	-- create accelerometer (15 samples)
+	self.acc = acc.create(15) 
+	--self.acc.calibrate() -- sounds good, doesn't work
+
+	self.backgroundDefaultPos = gui.get_position(backgroundNode)
+	self.castleDefaultPos = gui.get_position(castleNode)
 	
 	blackBoxNode = gui.get_node("blackBox")
 
 	self.buttonHolder = {
 		newGameButton = scalingButton.create("NewGame", 0, buttonReleased, buttonPressed),
 		exitButton = scalingButton.create("Exit", 0, buttonReleased, buttonPressed)
-	}
+	}	
 	
 end
 
@@ -71,20 +86,45 @@ function final(self)
 	-- Remove this function if not needed
 end
 
-function update(self, dt)
+local function clamp(x, min, max)
+	if x < min then x = min elseif x > max then x = max end
+	return x
+end
 
-	for i, cloud in pairs(self.cloudNodes) do 
-		local pos = gui.get_position(cloud)
-		pos.x = pos.x + 5.0 * dt * (pos.y / 100.0)
+function update(self, dt)
+	
+	-- read accelerometer values 
+	local accData = self.acc.adjusted()
+	accData.x = clamp(accData.x, -0.4, 0.4) -- probably best values
+	accData.y = accData.y + 0.55
+	accData.y = clamp(accData.y, -1, 0)
+	accData.z = 0
+
+	-- move menu elements (parallax effect)
+	local newBackgroundPos = self.backgroundDefaultPos + accData * 70
+	gui.set_position(backgroundNode, newBackgroundPos)
+	
+	local newCastlePos = self.castleDefaultPos + accData * 150
+	gui.set_position(castleNode, newCastlePos)
+	
+
+	for i, cloudPos in pairs(self.cloudPos) do 
+		cloudPos.x = cloudPos.x + 5.0 * dt * (cloudPos.y / 100.0)
 		
-		if pos.x > 2100 then
+		if cloudPos.x > 2400 then
 			-- cloud flied outside screen
-			pos.x = -200
-			pos.y = math.random(770, 1050)
+			cloudPos.x = -400
+			cloudPos.y = math.random(770, 1050)
 		end
 
-		gui.set_position(cloud, pos)
 	end
+
+	for i, cloudPos in pairs(self.cloudPos) do
+		local newCloudPos = cloudPos + accData * 120
+		gui.set_position(self.cloudNodes[i], newCloudPos)
+	end
+
+	
 end
 
 function on_message(self, message_id, message, sender)
@@ -102,14 +142,16 @@ function on_message(self, message_id, message, sender)
 		table.insert(uname, tostring(g_username))
 		local filePath = sys.get_save_file("AbelandController", "username")
 		if not sys.save(filePath, uname) then
-			print("FAILED TO WRITE USERNAME TO DISK")
+			print("FAILED TO WRITE USERNAME ON DISK")
 		end
 	end
 end
 
 function on_input(self, action_id, action)
-	-- Add input-handling code here
-	-- Remove this function if not needed
+	
+	-- feed accelerometer buffer with calibration data
+	self.acc.on_input(action)
+	
 	if action_id == hash("mouse_left") then
 		
 		if lockActions then-- or g_connectingWindowIsOn or g_dcWindowIsOn then
