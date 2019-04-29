@@ -16,7 +16,7 @@ local infoAboutPlayerClass = nil
 local archerNickName = nil
 local mageNickName = nil
 local knightNickName = nil
-local rogurNickName = nil
+local rogueNickName = nil
 
 local function buttonPressed(hashedNodeId)
 
@@ -63,7 +63,7 @@ function init(self)
 	archerNickName = gui.get_node("archerPlayerName")
 	mageNickName = gui.get_node("magePlayerName")
 	knightNickName = gui.get_node("knightPlayerName")
-	rogurNickName = gui.get_node("roguePlayerName")
+	rogueNickName = gui.get_node("roguePlayerName")
 	
 	self.buttonHolder = {
 		backButton = scalingButton.create("Back", buttonReleased, buttonPressed),
@@ -84,7 +84,7 @@ local function ClearNickName()
 	elseif previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "mage" then
 		gui.set_text(mageNickName, "")
 	elseif previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "rogue" then
-		gui.set_text(rogurNickName, "")
+		gui.set_text(rogueNickName, "")
 	elseif previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "knight" then
 		gui.set_text(knightNickName, "")
 	end
@@ -98,7 +98,7 @@ local function SetPlayers()
 	elseif getNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "mage" then
 		gui.set_text(mageNickName, getNickAndClass[infoAboutPlayerClass[1].ip].playerNickname)
 	elseif getNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "rogue" then
-		gui.set_text(rogurNickName, getNickAndClass[infoAboutPlayerClass[1].ip].playerNickname)
+		gui.set_text(rogueNickName, getNickAndClass[infoAboutPlayerClass[1].ip].playerNickname)
 	elseif getNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "knight" then
 		gui.set_text(knightNickName, getNickAndClass[infoAboutPlayerClass[1].ip].playerNickname)
 	end
@@ -109,13 +109,9 @@ function on_message(self, message_id, message, sender)
 		start(self)
 	elseif message_id == hash("disable") then
 
-	end
-
-	if message_id == hash("startGame") then
+	elseif message_id == hash("startGame") then
 		StartGame()
-	end
-	
-	if message_id == hash("classSelect") then
+	elseif message_id == hash("classSelect") then
 		infoAboutPlayerClass = message
 		
 		getNickAndClass[message[1].ip] = {
@@ -131,9 +127,7 @@ function on_message(self, message_id, message, sender)
 			playerNickname = getNickAndClass[message[1].ip].playerNickname,
 			playerClass = infoAboutPlayerClass[1].playerClass
 		}
-	end
-
-	if message_id == hash("nick") then
+	elseif message_id == hash("nick") then
 		infoAboutPlayerNick = message
 
 		getNickAndClass[message[1].ip] = {

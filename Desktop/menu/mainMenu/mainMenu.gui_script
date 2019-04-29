@@ -39,11 +39,6 @@ function init(self)
 	msg.post(".", "acquire_input_focus")
 	
 	backgroundNode = gui.get_node("bg")
-
-	-- maybe later it will be useful...
-	--newGameNode = gui.get_node("NewGame")
-	--settingsNode = gui.get_node("Settings")
-	--exitNode = gui.get_node("Exit")
 	
 	blackBoxNode = gui.get_node("blackBox")
 
@@ -52,7 +47,6 @@ function init(self)
 		settingsButton = scalingButton.create("Settings", buttonReleased, buttonPressed),
 		exitButton = scalingButton.create("Exit", buttonReleased, buttonPressed)
 	}
-	
 end
 
 local function start(self)

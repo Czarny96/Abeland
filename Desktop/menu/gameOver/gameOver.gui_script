@@ -13,16 +13,20 @@ local function buttonPressed(hashedNodeId)
 
 end
 
+local function RestartGame() 
+	enemyManager.resetArena()
+
+	g_gameState = g_gameStateEnum.championSelect
+	lockActions = true
+	gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
+	gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
+	gui.EASING_LINEAR, 1, 0, function() g_goToChampionSelect() end)
+end
+
 local function buttonReleased(hashedNodeId)
 	if hashedNodeId == hash("RestartGameButton") then
 		--print("Clicked Restart Game Button")
-		enemyManager.resetArena()
-
-		g_gameState = g_gameStateEnum.championSelect
-		lockActions = true
-		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
-		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
-		gui.EASING_LINEAR, 1, 0, function() g_goToChampionSelect() end)
+		RestartGame()
 	elseif hashedNodeId == hash("Exit") then
 		-- print("Clicked Exit Button")
 		lockActions = true
@@ -43,7 +47,6 @@ function init(self)
 		newGameButton = scalingButton.create("RestartGameButton", buttonReleased, buttonPressed),
 		exitButton = scalingButton.create("Exit", buttonReleased, buttonPressed)
 	}
-
 end
 
 local function start(self)
@@ -71,6 +74,8 @@ function on_message(self, message_id, message, sender)
 		start(self)
 	elseif message_id == hash("disable") then
 
+	elseif message_id == hash("restartGame") then
+		RestartGame()
 	end
 end
 
