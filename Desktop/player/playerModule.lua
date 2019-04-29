@@ -36,10 +36,13 @@ function M.messages(message_id, message, sender)
 		go.set_position(go.get_position("main:/spawnPoints/spawn_archer"))
 		msg.post("#sprite", "play_animation", {id = hash("player_down")})
 		sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 1))
+		go.set(url, "health", go.get(url, "maxHealth"))
 		label.set_text("#label_hp", go.get(url, "health"))
 		go.set(url, "isKilled", false)
 		globals.setArePlayersDead(false)
 		go.set(url, "nonVulnerableTimer", 0)
+
+		print("PLAYER POS:", go.get_position(url))
 	elseif message_id == hash("stop") then
 		go.set_position(go.get_position("main:/spawnPoints/players_room") + vmath.vector3(math.random(-128,128),0,0))
 		go.set(url, "isKilled", true)
@@ -202,7 +205,7 @@ function M.death(dt)
 	else
 		go.set(url, "killedTimer", go.get(url, "killedTimer") - dt)
 		if go.get(url, "killedTimer") <= 0 then
-			go.delete()
+			go.set_position(go.get_position("main:/spawnPoints/players_room") + vmath.vector3(math.random(-128,128),0,0))
 		end
 	end
 end

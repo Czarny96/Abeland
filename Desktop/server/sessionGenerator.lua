@@ -88,12 +88,16 @@ function M.create()
 		
 	end
 
-
+	local deadTime = 0
 	function session.update()
 		--check if game over
 		if globals.getArePlayersDead() then
-			print("All players are dead")
-			session.setGameOverFlag(1)
+			if deadTime >= 30 then
+				print("All players are dead")
+				session.setGameOverFlag(1)
+			else
+				deadTime = deadTime + 1
+			end
 		end
 		
 		if session.isGameOver() then

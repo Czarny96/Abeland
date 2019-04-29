@@ -77,14 +77,17 @@ end
 
 function M.startNextWave()
 	--Starts new wave
-	if globals.getWaveNr() < 5 then
-		M.initializeWave(10, 1)
-	elseif globals.getWaveNr() < 10 then
-		M.initializeWave(15, 2)
-	elseif globals.getWaveNr() < 15 then
-		M.initializeWave(20, 3)
-	else
-		M.initializeWave(25, 4)
+	print("ARE PLAYERS DEAD",globals.getArePlayersDead())
+	if not globals.getArePlayersDead() then
+		if globals.getWaveNr() < 5 then
+			M.initializeWave(10, 1)
+		elseif globals.getWaveNr() < 10 then
+			M.initializeWave(15, 2)
+		elseif globals.getWaveNr() < 15 then
+			M.initializeWave(20, 3)
+		else
+			M.initializeWave(25, 4)
+		end
 	end
 end
 
