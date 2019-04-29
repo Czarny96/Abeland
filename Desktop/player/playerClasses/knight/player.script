@@ -41,7 +41,7 @@ function update(self, dt)
 	end
 
 	--Pause and dead body
-	if globals.getPause() or self.isKilled then
+	if globals.getPause() then
 		return
 	end
 

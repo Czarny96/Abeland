@@ -1,4 +1,4 @@
-
+local globals = require "main.globals"
 
 local M = {}
 local animTimer = 0
@@ -7,6 +7,8 @@ function M.init()
 	local url = msg.url("main",go.get_id(),"player")
 	label.set_text("#label_hp", go.get(url, "health"))
 	local startPos = go.get_position()	
+	go.set(url, "isKilled", true)
+	globals.setArePlayersDead(false)
 	go.set(url, "position", vmath.vector3(startPos.x, startPos.y, 0.99))
 	go.set_position(go.get(url, "position"))
 end
@@ -34,9 +36,13 @@ function M.messages(message_id, message, sender)
 		go.set_position(go.get_position("main:/spawnPoints/spawn_archer"))
 		msg.post("#sprite", "play_animation", {id = hash("player_down")})
 		sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 1))
+		go.set(url, "health", go.get(url, "maxHealth"))
 		label.set_text("#label_hp", go.get(url, "health"))
 		go.set(url, "isKilled", false)
+		globals.setArePlayersDead(false)
 		go.set(url, "nonVulnerableTimer", 0)
+
+		print("PLAYER POS:", go.get_position(url))
 	elseif message_id == hash("stop") then
 		go.set_position(go.get_position("main:/spawnPoints/players_room") + vmath.vector3(math.random(-128,128),0,0))
 		go.set(url, "isKilled", true)
@@ -44,9 +50,17 @@ function M.messages(message_id, message, sender)
 	end
 
 	if go.get(url, "isKilled") or go.get(url, "nonOperativeTimer") > 0 then
-		return
+		if not globals.getArePlayersDead() then
+			for i, player in pairs(globals.getPlayersURL()) do
+				if not go.get(player, "isKilled") then
+					globals.setArePlayersDead(false)
+					return
+				end
+				globals.setArePlayersDead(true)
+			end
+			return
+		end
 	end
-		
 	--Movement
 	if message_id == hash("move") then
 		go.set(url, "movingDir", vmath.vector3(message.x, message.y, 0))
@@ -104,7 +118,7 @@ function M.messages(message_id, message, sender)
 			end
 		end
 	end
-	
+
 	--Kill
 	if message_id == hash("kill") then
 		go.delete()
@@ -191,7 +205,7 @@ function M.death(dt)
 	else
 		go.set(url, "killedTimer", go.get(url, "killedTimer") - dt)
 		if go.get(url, "killedTimer") <= 0 then
-			go.delete()
+			go.set_position(go.get_position("main:/spawnPoints/players_room") + vmath.vector3(math.random(-128,128),0,0))
 		end
 	end
 end

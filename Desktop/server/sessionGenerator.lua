@@ -60,9 +60,10 @@ function M.create()
 	end
 	
 	function session.start()
+		session.setGameOverFlag(0)
 		s_SessionCounter = s_SessionCounter + 1
 		session.sessionID = s_SessionCounter
-		session.setGameOverFlag(0)
+		
 		print("Creating a new session with ID: " .. session.sessionID)
 		
 		playersManager.setAllPlayersToArena()
@@ -80,17 +81,31 @@ function M.create()
 		print("Destroying session with ID: " .. session.sessionID)
 		playersManager.setAllPlayersToWaitingRoom()
 		enemyManger.resetArena()
+		if session.isPlayerInQue() then
+			playersQueue = nil
+		end
+		msg.post("/menu#gameOver", "enable", {})
+		
 	end
-
-
+--TODO: Temporary, until cleaner solution will be found
+	local deadTime = 0
 	function session.update()
 		--check if game over
+		if globals.getArePlayersDead() then
+			if deadTime >= 30 then
+				print("All players are dead")
+				session.setGameOverFlag(1)
+				deadTime = 0
+			else
+				deadTime = deadTime + 1
+			end
+		end
+		
 		if session.isGameOver() then
 			session.destroy()
 		elseif globals.getIsWaveOver() and #playersQueue > 0 then
-		session.setPlayersFromQue()
-		playersManager.setActivePlayersIDs()
-			
+			session.setPlayersFromQue()
+			playersManager.setActivePlayersIDs()
 		end
 	end
 

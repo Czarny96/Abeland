@@ -89,4 +89,12 @@ function M.passPlayerNick(nickDataPack)
 	msg.post("/menu#championSelect", "nick", nickDataPack)
 end
 
+function M.clearPlayerNick(playerIP)
+	msg.post("/menu#championSelect", "clearNick", {ip=playerIP})
+end
+
+function M.clearPlayerNicks()
+	msg.post("/menu#championSelect", "clearAllNicks")
+end
+
 return M

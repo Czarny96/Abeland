@@ -21,6 +21,7 @@ local function RestartGame()
 	gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
 	gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
 	gui.EASING_LINEAR, 1, 0, function() g_goToChampionSelect() end)
+	msg.post("/TCP_server/go#TCP_server_gui", "reset")
 end
 
 local function buttonReleased(hashedNodeId)

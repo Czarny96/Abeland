@@ -78,15 +78,34 @@ function update(self, dt)
 
 end
 
-local function ClearNickName()
-	if previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "archer" then
-		gui.set_text(archerNickName, "")
-	elseif previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "mage" then
-		gui.set_text(mageNickName, "")
-	elseif previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "rogue" then
-		gui.set_text(rogueNickName, "")
-	elseif previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "knight" then
-		gui.set_text(knightNickName, "")
+local function ClearAllNickNames()
+	gui.set_text(archerNickName, "")
+	gui.set_text(mageNickName, "")
+	gui.set_text(rogueNickName, "")
+	gui.set_text(knightNickName, "")
+end
+
+local function ClearNickName(ip)
+	if ip == nil then
+		if previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "archer" then
+			gui.set_text(archerNickName, "")
+		elseif previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "mage" then
+			gui.set_text(mageNickName, "")
+		elseif previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "rogue" then
+			gui.set_text(rogueNickName, "")
+		elseif previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "knight" then
+			gui.set_text(knightNickName, "")
+		end
+	else
+		if previousGetNickAndClass[ip].playerClass == "archer" then
+			gui.set_text(archerNickName, "")
+		elseif previousGetNickAndClass[ip].playerClass == "mage" then
+			gui.set_text(mageNickName, "")
+		elseif previousGetNickAndClass[ip].playerClass == "rogue" then
+			gui.set_text(rogueNickName, "")
+		elseif previousGetNickAndClass[ip].playerClass == "knight" then
+			gui.set_text(knightNickName, "")
+		end
 	end
 end
 
@@ -139,6 +158,14 @@ function on_message(self, message_id, message, sender)
 			ip = infoAboutPlayerNick[1].ip,
 			playerNickname = infoAboutPlayerNick[1].playerNickname
 		}
+	end
+
+	if message_id == hash("clearNick") then
+		ClearNickName(message.ip)
+	end
+
+	if message_id == hash("clearAllNicks") then
+		ClearAllNickNames()
 	end
 end
 

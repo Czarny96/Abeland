@@ -68,9 +68,9 @@ function M.isWaveOver()
 		--This function checks if a wave is over / finished / all enemies are dead / inactive
 	if next(enemyIDs) == nil then
 		globals.setIsWaveOver(true)
+		print("Wave is over", globals.getWaveNr())
 		return true
 	else
-		print("WAVE STILL GOING")
 		return false
 	end
 end
@@ -249,8 +249,6 @@ function M.initializeWave(rangePercent, gateAmount)
 			end
 		end
 	end
-
-	print(#enemyIDs)
 end
 
 return M
