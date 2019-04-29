@@ -47,13 +47,13 @@ function M.messages(message_id, message, sender)
 
 	if go.get(url, "isKilled") or go.get(url, "nonOperativeTimer") > 0 then
 		if not globals.getArePlayersDead() then
-		for i, player in pairs(globals.getPlayersURL()) do
-			if not go.get(player, "isKilled") then
-				globals.setArePlayersDead(false)
-				return
+			for i, player in pairs(globals.getPlayersURL()) do
+				if not go.get(player, "isKilled") then
+					globals.setArePlayersDead(false)
+					return
+				end
+				globals.setArePlayersDead(true)
 			end
-			globals.setArePlayersDead(true)
-		end
 			return
 		end
 	end

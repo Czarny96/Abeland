@@ -86,6 +86,11 @@ function M.create()
 
 	function session.update()
 		--check if game over
+		if globals.getArePlayersDead() then
+			print("All players are dead")
+			session.setGameOverFlag(1)
+		end
+		
 		if session.isGameOver() then
 			session.destroy()
 		elseif globals.getIsWaveOver() and #playersQueue > 0 then
