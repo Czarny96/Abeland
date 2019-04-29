@@ -81,7 +81,7 @@ end
 local function ClearAllNickNames()
 	gui.set_text(archerNickName, "")
 	gui.set_text(mageNickName, "")
-	gui.set_text(rogurNickName, "")
+	gui.set_text(rogueNickName, "")
 	gui.set_text(knightNickName, "")
 end
 
@@ -92,7 +92,7 @@ local function ClearNickName(ip)
 		elseif previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "mage" then
 			gui.set_text(mageNickName, "")
 		elseif previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "rogue" then
-			gui.set_text(rogurNickName, "")
+			gui.set_text(rogueNickName, "")
 		elseif previousGetNickAndClass[infoAboutPlayerClass[1].ip].playerClass == "knight" then
 			gui.set_text(knightNickName, "")
 		end
@@ -102,7 +102,7 @@ local function ClearNickName(ip)
 		elseif previousGetNickAndClass[ip].playerClass == "mage" then
 			gui.set_text(mageNickName, "")
 		elseif previousGetNickAndClass[ip].playerClass == "rogue" then
-			gui.set_text(rogurNickName, "")
+			gui.set_text(rogueNickName, "")
 		elseif previousGetNickAndClass[ip].playerClass == "knight" then
 			gui.set_text(knightNickName, "")
 		end
