@@ -176,6 +176,14 @@ function M.sendNickToMenu(playerIP)
 	translationLayer.passPlayerNick(dataPack)
 end
 
+function M.clearNickFromMenu(playerIP)
+	translationLayer.clearPlayerNick(playerIP)
+end
+
+function M.clearNicksFromMenu()
+	translationLayer.clearPlayerNicks()
+end
+
 function M.areAllPlayersReady()
 	local answer = true
 	for ip,values in pairs(playersTable) do

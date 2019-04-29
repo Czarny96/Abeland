@@ -60,9 +60,10 @@ function M.create()
 	end
 	
 	function session.start()
+		session.setGameOverFlag(0)
 		s_SessionCounter = s_SessionCounter + 1
 		session.sessionID = s_SessionCounter
-		session.setGameOverFlag(0)
+		
 		print("Creating a new session with ID: " .. session.sessionID)
 		
 		playersManager.setAllPlayersToArena()
@@ -80,7 +81,11 @@ function M.create()
 		print("Destroying session with ID: " .. session.sessionID)
 		playersManager.setAllPlayersToWaitingRoom()
 		enemyManger.resetArena()
+		if session.isPlayerInQue() then
+			playersQueue = nil
+		end
 		msg.post("/menu#gameOver", "enable", {})
+		
 	end
 
 

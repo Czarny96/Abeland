@@ -82,11 +82,11 @@ local function on_client_disconnected(ip, port, client)
 	if currentSession ~= nil then 
 		currentSession.removePlayerInQue(clientsManager.getPlayerID(ip))
 	end
-	--serverHandler.send("EndGame".."\n\r", client)
+	clientsManager.clearNickFromMenu(ip)
 	clientsManager.removePlayer(ip)
 	msgActivePlayersChange()
 
-	if not clientsManager.isAnyPlayer() then
+	if not clientsManager.isAnyPlayer() and currentSession~=nil then
 		currentSession.setGameOverFlag(1)
 	end
 end
@@ -147,7 +147,7 @@ function update(self, dt)
 	if currentSession ~= nil then
 		currentSession.update() 
 		if currentSession.isGameOver()  then
-			sendMessageToAllActivePlayers("EndGame")
+			--sendMessageToAllActivePlayers("EndGame")
 			currentSession = nil
 			startP2P = false
 		end
@@ -157,12 +157,11 @@ end
 
 function on_message(self, message_id, message, sender)
 	if  message_id == hash("reset") then
-		if self.currentSession then
-			sendMessageToAllActivePlayers("Reset")
-			clientsManager.resetPlayersToDefault()
-			self.currentSession.setGameOverFlag(1)
-
-		end
+		
+		sendMessageToAllActivePlayers("Reset")
+		clientsManager.clearNicksFromMenu()
+		clientsManager.resetPlayersToDefault()
+		
 	elseif  message_id == hash("championSelect") then
 		startP2P = true
 	elseif  message_id == hash("mainMenu") then
