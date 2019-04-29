@@ -28,6 +28,8 @@ app_icon = /assets/app_icons/appicon.icns
 max_collisions = 2048
 max_contacts = 2048
 trigger_overlap_capacity = 8192
+gravity_y = 0.0
+scale = 0.1
 
 [label]
 max_count = 512

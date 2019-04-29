@@ -14,24 +14,13 @@ local globals = require "main.globals"
 --			1 for active 
 --			1 for inactive
 
---This arrays keep track of all enemies in the wainting_room
-local inactiveRangeEnemiesIDs = {}
-local inactiveMaleeEnemiesIDs = {}
-
---This arrays keep track of all enemies actively being on arena
-local activeRangeEnemiesIDs = {}
-local activeMaleeEnemiesIDs = {}
+local enemyIDs = {}
 
 --Variable for random number
 local rand
 
 --Important objects URLs
 local wave_label = "main:/gameContent#label_waveNr"
-local waiting_room = vmath.vector3(750,-1500,0)
-local gate_top_out = vmath.vector3(928,1400,0)
-local gate_bottom_out = vmath.vector3(928,-320,0)
-local gate_left_out = vmath.vector3(-320,540,0)
-local gate_right_out = vmath.vector3(2240,540,0)
 
 local gate_top_enemies = 0;
 local gate_bottom_enemies = 0;
@@ -75,26 +64,9 @@ function M.canCloseGate(gate)
 	end
 end
 
-function M.initializeEnemies(amount)
-	--This function creates all enemy objects and puts them in the waiting_room
-	local enemyRanged
-	local enemyMalee
-
-	for i = 1, amount/2, 1 do
-		enemyRanged = factory.create("main:/spawnPoints/waiting_room#enemyMageFactory")
-		enemyMalee = factory.create("main:/spawnPoints/waiting_room#enemyMaleeFactory")
-
-		msg.post(enemyRanged, "setInactive")
-		msg.post(enemyMalee, "setInactive")
-
-		table.insert(inactiveRangeEnemiesIDs, enemyRanged)
-		table.insert(inactiveMaleeEnemiesIDs, enemyMalee)
-	end
-end
-
 function M.isWaveOver()
 		--This function checks if a wave is over / finished / all enemies are dead / inactive
-	if next(activeMaleeEnemiesIDs) == nil and next(activeRangeEnemiesIDs) == nil then
+	if next(enemyIDs) == nil then
 		globals.setIsWaveOver(true)
 		print("Wave is over", globals.getWaveNr())
 		return true
@@ -116,61 +88,29 @@ function M.startNextWave()
 	end
 end
 
-function M.setEnemyInactive(enemyID)
-	--This function sets given enemy (enemyID) to inactive state, resurrecting and teleporting to the wainting_room
-	msg.post(enemyID, "setInactive")
-	if M.isActiveEnemyRanged(enemyID) then
-		table.remove(activeRangeEnemiesIDs, M.findIndexOfEnemy(activeRangeEnemiesIDs,enemyID))
-		table.insert(inactiveRangeEnemiesIDs, enemyID)
-	else
-		table.remove(activeMaleeEnemiesIDs, M.findIndexOfEnemy(activeMaleeEnemiesIDs,enemyID))
-		table.insert(inactiveMaleeEnemiesIDs, enemyID)
-	end
+function M.removeEnemy(enemy)
+	table.remove(enemyIDs, M.findIndexOfEnemy(enemy))
 
 	if M.isWaveOver() then
 		M.startNextWave()
 	end
 end
 
-function M.findIndexOfEnemy(tab,enemy)
+function M.findIndexOfEnemy(enemy)
 	--This function helps to find an index of specified enemyObject in given array
-	for i, value in pairs(activeRangeEnemiesIDs) do
+	for i, value in pairs(enemyIDs) do
 		if value == enemy then 
 			return i
 		end
 	end
 end
 
-function M.isActiveEnemyRanged(enemy)
-	--This function checks if given enemyObject type is ranged (true) or malee (false)
-	for i, value in pairs(activeRangeEnemiesIDs) do
-		if value == enemy then 
-			return true
-		end
-	end
-	return false
-end
-
 function M.resetArena()
 	--This function resets all enemies and wave counter to default (inactive, 1)
-	local enemyIDs = {}
-	for i, enemy in pairs(activeRangeEnemiesIDs) do
-		table.insert(enemyIDs, enemy)
-	end
-	
 	for i, enemy in pairs(enemyIDs) do
-		M.setEnemyInactive(enemy)
+		msg.post(enemy, "kill")
 	end
-
 	enemyIDs = {}
-	
-	for i, enemy in pairs(activeMaleeEnemiesIDs) do
-		table.insert(enemyIDs, enemy)
-	end
-
-	for i, enemy in pairs(enemyIDs) do
-		M.setEnemyInactive(enemy)
-	end
 
 	globals.setWaveNr(1)
 end
@@ -180,7 +120,7 @@ function M.initializeWave(rangePercent, gateAmount)
 	--Teleports enemies to arena (behind gates / to gate_[direction]_out
 	--rangePercent == what is a ratio of ranged attack enemies to malee attacking enemies 
 	--gateAmount == to how many of 4 gates enemies should be distributed
-	print("Initializing wave number", globals.getWaveNr())
+	print("Initializing wave nr", globals.getWaveNr())
 	local enemiesAmount = globals.getWaveNr()
 	local gateSide
 	-- info for session generator to know that wave has started
@@ -188,7 +128,7 @@ function M.initializeWave(rangePercent, gateAmount)
 
 	--Set wave number counter on main screen
 	label.set_text(wave_label, "Wave: " .. globals.getWaveNr())
-	globals.setWaveNr(globals.getWaveNr()+1)
+	globals.setWaveNr(globals.getWaveNr() + 1)
 
 	if gateAmount <= 1 then
 		--Spawn enemies only at top gate
@@ -197,39 +137,35 @@ function M.initializeWave(rangePercent, gateAmount)
 		do
 			rand = math.floor(math.random(1,100))
 			if rand <= rangePercent then
-				msg.post(inactiveRangeEnemiesIDs[1], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
-				table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[1])
-				table.remove(inactiveRangeEnemiesIDs, 1)
-
+				local url = msg.url("main","/gate_top_out","enemyMageFactory")
+				table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 			else
-				msg.post(inactiveMaleeEnemiesIDs[1], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
-				table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[1])
-				table.remove(inactiveMaleeEnemiesIDs, 1)
+				local url = msg.url("main","/gate_top_out","enemyMeleeFactory")
+				table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 			end
 		end
 	elseif gateAmount == 2 then
 		--Spawn enemies only at top & bottom gate
 		msg.post("/topWalls#topWallsScript", "openTop")
 		msg.post("/walls#wallsScript", "openBottom")
-		for i = 1, enemiesAmount, 1
-		do
+		for i = 1, enemiesAmount, 1 do
 			rand = math.floor(math.random(1,100))
 			gateSide = math.floor(math.random(1,100))
 			if gateSide <= 50 then
 				if rand <= rangePercent then
-					msg.post(inactiveRangeEnemiesIDs[i], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i])
+					local url = msg.url("main","/gate_top_out","enemyMageFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				else
-					msg.post(inactiveMaleeEnemiesIDs[i], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i])
+					local url = msg.url("main","/gate_top_out","enemyMeleeFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			else
 				if rand <= rangePercent then
-					msg.post(inactiveRangeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i])
+					local url = msg.url("main","/gate_bottom_out","enemyMageFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				else
-					msg.post(inactiveMaleeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i])
+					local url = msg.url("main","/gate_bottom_out","enemyMeleeFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			end
 		end
@@ -239,33 +175,32 @@ function M.initializeWave(rangePercent, gateAmount)
 		msg.post("/walls#wallsScript", "openBottom")
 		msg.post("/walls#wallsScript", "openLeft")
 
-		for i = 1, enemiesAmount, 1
-		do
+		for i = 1, enemiesAmount, 1 do
 			rand = math.floor(math.random(1,100))
 			gateSide = math.floor(math.random(1,100))
 			if gateSide <= 33 then
 				if rand <= rangePercent then
-					msg.post(inactiveRangeEnemiesIDs[i], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i])
+					local url = msg.url("main","/gate_top_out","enemyMageFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				else
-					msg.post(inactiveMaleeEnemiesIDs[i], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i])
+					local url = msg.url("main","/gate_top_out","enemyMeleeFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			elseif gateSide <= 66 then
 				if rand <= rangePercent then
-					msg.post(inactiveRangeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i])
+					local url = msg.url("main","/gate_bottom_out","enemyMageFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				else
-					msg.post(inactiveMaleeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i])
+					local url = msg.url("main","/gate_bottom_out","enemyMeleeFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			else
 				if rand <= rangePercent then
-					msg.post(inactiveRangeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "left"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[i])
+					local url = msg.url("main","/gate_left_out","enemyMageFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				else
-					msg.post(inactiveMaleeEnemiesIDs[i], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "left"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[i])
+					local url = msg.url("main","/gate_left_out","enemyMeleeFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			end
 		end
@@ -276,57 +211,46 @@ function M.initializeWave(rangePercent, gateAmount)
 		msg.post("/walls#wallsScript", "openLeft")
 		msg.post("/walls#wallsScript", "openRight")
 
-		for i = 1, enemiesAmount, 1
-		do
+		for i = 1, enemiesAmount, 1 do
 			rand = math.floor(math.random(1,100))
 			gateSide = math.floor(math.random(1,100))
 			if gateSide <= 25 then
 				if rand <= rangePercent then
-					msg.post(inactiveRangeEnemiesIDs[1], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[1])
-					table.remove(inactiveRangeEnemiesIDs, 1)
+					local url = msg.url("main","/gate_top_out","enemyMageFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				else
-					msg.post(inactiveMaleeEnemiesIDs[1], "setActive", { x = gate_top_out.x, y = gate_top_out.y, gate = "top"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[1])
-					table.remove(inactiveMaleeEnemiesIDs, 1)
+					local url = msg.url("main","/gate_top_out","enemyMeleeFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			elseif gateSide <= 50 then
 				if rand <= rangePercent then
-					msg.post(inactiveRangeEnemiesIDs[1], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[1])
-					table.remove(inactiveRangeEnemiesIDs, 1)
+					local url = msg.url("main","/gate_bottom_out","enemyMageFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				else
-					msg.post(inactiveMaleeEnemiesIDs[1], "setActive", { x = gate_bottom_out.x, y = gate_bottom_out.y, gate = "bottom"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[1])
-					table.remove(inactiveMaleeEnemiesIDs, 1)
-									end
+					local url = msg.url("main","/gate_bottom_out","enemyMeleeFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				end
 			elseif gateSide <= 75 then
 				if rand <= rangePercent then
-					msg.post(inactiveRangeEnemiesIDs[1], "setActive", { x = gate_bottom_out.x, y = gate_left_out.y, gate = "left"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[1])
-					table.remove(inactiveRangeEnemiesIDs, 1)
+					local url = msg.url("main","/gate_left_out","enemyMageFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				else
-					msg.post(inactiveMaleeEnemiesIDs[1], "setActive", { x = gate_bottom_out.x, y = gate_left_out.y, gate = "left"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[1])
-					table.remove(inactiveMaleeEnemiesIDs, 1)
+					local url = msg.url("main","/gate_left_out","enemyMeleeFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			else
 				if rand <= rangePercent then
-					msg.post(inactiveRangeEnemiesIDs[1], "setActive", { x = gate_bottom_out.x, y = gate_right_out.y, gate = "right"})
-					table.insert(activeRangeEnemiesIDs, inactiveRangeEnemiesIDs[1])
-					table.remove(inactiveRangeEnemiesIDs, 1)
+					local url = msg.url("main","/gate_right_out","enemyMageFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[4] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				else
-					msg.post(inactiveMaleeEnemiesIDs[1], "setActive", { x = gate_bottom_out.x, y = gate_right_out.y, gate = "right"})
-					table.insert(activeMaleeEnemiesIDs, inactiveMaleeEnemiesIDs[1])
-					table.remove(inactiveMaleeEnemiesIDs, 1)
+					local url = msg.url("main","/gate_right_out","enemyMeleeFactory")
+					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[4] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			end
 		end
 	end
 
-	print("SIZE OF ACTIVES:", #activeMaleeEnemiesIDs,#activeRangeEnemiesIDs)	
-	print("SIZE OF INACTIVES:", #inactiveMaleeEnemiesIDs,#inactiveRangeEnemiesIDs)
-	
+	print(#enemyIDs)
 end
 
 return M

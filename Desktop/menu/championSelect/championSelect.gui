@@ -19,8 +19,8 @@ background_color {
 }
 nodes {
   position {
-    x: 960.0
-    y: 540.0
+    x: 0.0
+    y: 0.0
     z: 0.0
     w: 1.0
   }
@@ -52,10 +52,10 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   texture: "menuAtlas/mainMenuBg"
   id: "bg"
-  xanchor: XANCHOR_NONE
-  yanchor: YANCHOR_NONE
-  pivot: PIVOT_CENTER
-  adjust_mode: ADJUST_MODE_FIT
+  xanchor: XANCHOR_LEFT
+  yanchor: YANCHOR_TOP
+  pivot: PIVOT_SW
+  adjust_mode: ADJUST_MODE_STRETCH
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -106,10 +106,10 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   texture: ""
   id: "Back"
-  xanchor: XANCHOR_NONE
-  yanchor: YANCHOR_NONE
+  xanchor: XANCHOR_LEFT
+  yanchor: YANCHOR_TOP
   pivot: PIVOT_CENTER
-  adjust_mode: ADJUST_MODE_FIT
+  adjust_mode: ADJUST_MODE_STRETCH
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -145,8 +145,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 380.0
-    y: 100.0
+    x: 631.0
+    y: 135.0
     z: 0.0
     w: 1.0
   }
@@ -278,10 +278,10 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   texture: ""
   id: "archer"
-  xanchor: XANCHOR_NONE
-  yanchor: YANCHOR_NONE
+  xanchor: XANCHOR_LEFT
+  yanchor: YANCHOR_TOP
   pivot: PIVOT_CENTER
-  adjust_mode: ADJUST_MODE_FIT
+  adjust_mode: ADJUST_MODE_STRETCH
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -450,10 +450,10 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   texture: ""
   id: "knight"
-  xanchor: XANCHOR_NONE
-  yanchor: YANCHOR_NONE
+  xanchor: XANCHOR_LEFT
+  yanchor: YANCHOR_TOP
   pivot: PIVOT_CENTER
-  adjust_mode: ADJUST_MODE_FIT
+  adjust_mode: ADJUST_MODE_STRETCH
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -622,10 +622,10 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   texture: ""
   id: "mage"
-  xanchor: XANCHOR_NONE
-  yanchor: YANCHOR_NONE
+  xanchor: XANCHOR_LEFT
+  yanchor: YANCHOR_TOP
   pivot: PIVOT_CENTER
-  adjust_mode: ADJUST_MODE_FIT
+  adjust_mode: ADJUST_MODE_STRETCH
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -794,10 +794,10 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   texture: ""
   id: "rogue"
-  xanchor: XANCHOR_NONE
-  yanchor: YANCHOR_NONE
+  xanchor: XANCHOR_LEFT
+  yanchor: YANCHOR_TOP
   pivot: PIVOT_CENTER
-  adjust_mode: ADJUST_MODE_FIT
+  adjust_mode: ADJUST_MODE_STRETCH
   layer: ""
   inherit_alpha: true
   slice9 {
@@ -933,8 +933,8 @@ nodes {
 }
 nodes {
   position {
-    x: 960.0
-    y: 540.0
+    x: 0.0
+    y: 0.0
     z: 0.0
     w: 1.0
   }
@@ -966,10 +966,10 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   texture: ""
   id: "blackBox"
-  xanchor: XANCHOR_NONE
-  yanchor: YANCHOR_NONE
-  pivot: PIVOT_CENTER
-  adjust_mode: ADJUST_MODE_FIT
+  xanchor: XANCHOR_LEFT
+  yanchor: YANCHOR_TOP
+  pivot: PIVOT_SW
+  adjust_mode: ADJUST_MODE_STRETCH
   layer: ""
   inherit_alpha: true
   slice9 {

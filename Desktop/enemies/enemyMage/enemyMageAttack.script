@@ -10,16 +10,13 @@ function init(self)
 	self.isEnemyMageKilled = false
 	self.shootingTimer = math.random(1,5)
 	-- Local Timers
-	--self.shootingTimer = 0
+	self.shootingTimer = 0
 end
 
 function update(self, dt)
 	if globals.getPause() == false then
 		if self.shootingTimer >= self.shootingDelay then
-			self.isEnemyMageKilled = go.get("#enemy", "isKilled")
-			if self.isEnemyMageKilled == false then
-				factory.create("#enemyMageHomingAttackFactory", nil)
-			end
+			factory.create("#enemyMageHomingAttackFactory", nil)
 			self.shootingTimer = 0
 		else
 			self.shootingTimer = self.shootingTimer + dt

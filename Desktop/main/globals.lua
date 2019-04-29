@@ -12,7 +12,6 @@ local playersURL = {msg.url("main","/player_archer","player")
 , msg.url("main","/player_rogue","player")}
 
 --spawnPoints
-local waiting_room = vmath.vector3(750,-1500,0)
 local gate_top_out = vmath.vector3(928,1400,0)
 local gate_bottom_out = vmath.vector3(928,-320,0)
 local gate_left_out = vmath.vector3(-320,540,0)
@@ -41,7 +40,7 @@ function M.getIsWaveOver()
 end
 
 function M.getSpawnPoints()
-	local spawnPoints = {waiting_room, gate_top_out, gate_bottom_out, gate_left_out, gate_right_out}
+	local spawnPoints = {gate_top_out, gate_bottom_out, gate_left_out, gate_right_out}
 	return spawnPoints;
 end
 

@@ -1,6 +1,6 @@
 components {
   id: "enemyMaleeFactory"
-  component: "/arena/enemySpawners/enemyMaleeFactory.factory"
+  component: "/arena/enemySpawners/enemyMeleeFactory.factory"
   position {
     x: 0.0
     y: 0.0

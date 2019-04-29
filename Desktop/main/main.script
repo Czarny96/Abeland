@@ -1,11 +1,8 @@
 require "debugging/debugging"
-local enemyManager = require "managers.enemyManager"
 local globals = require "main.globals"
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-
-	enemyManager.initializeEnemies(500)
 
 	-- disable (don't render and don't update) other menu components
 	msg.post("/menu", "disable")
@@ -98,9 +95,9 @@ end
 
 function on_input(self, action_id, action)
 	if action_id == hash("esc") and action.pressed and g_allowOpenPauseVariable == true and g_gameState ~= g_gameStateEnum.pause then
-		msg.post("/menu", "disable")
 		globals.setPause(true)
-		g_goToPauseScreen()
+		msg.post("/menu", "disable")
+		msg.post("/menu#pauseScreen", "restartGame")
 	elseif action_id == hash("esc") and action.pressed and g_gameState == g_gameStateEnum.pause then
 		globals.setPause(false)
 		g_allowOpenPause()

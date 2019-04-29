@@ -159,6 +159,166 @@ instances {
     z: 1.0
   }
 }
+instances {
+  id: "gate_bottom_in"
+  prototype: "/arena/enemySpawnPoints/gate_bottom_in.go"
+  position {
+    x: 928.0
+    y: 150.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 0.25
+    y: 0.25
+    z: 1.0
+  }
+}
+instances {
+  id: "gate_bottom_out"
+  prototype: "/arena/enemySpawnPoints/gate_bottom_out.go"
+  position {
+    x: 928.0
+    y: -320.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 0.25
+    y: 0.25
+    z: 1.0
+  }
+}
+instances {
+  id: "gate_left_in"
+  prototype: "/arena/enemySpawnPoints/gate_left_in.go"
+  position {
+    x: 120.0
+    y: 540.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 0.25
+    y: 0.25
+    z: 1.0
+  }
+}
+instances {
+  id: "gate_left_out"
+  prototype: "/arena/enemySpawnPoints/gate_left_out.go"
+  position {
+    x: -320.0
+    y: 540.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 0.25
+    y: 0.25
+    z: 1.0
+  }
+}
+instances {
+  id: "gate_right_in"
+  prototype: "/arena/enemySpawnPoints/gate_right_in.go"
+  position {
+    x: 1800.0
+    y: 540.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 0.25
+    y: 0.25
+    z: 1.0
+  }
+}
+instances {
+  id: "gate_right_out"
+  prototype: "/arena/enemySpawnPoints/gate_right_out.go"
+  position {
+    x: 2240.0
+    y: 540.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 0.25
+    y: 0.25
+    z: 1.0
+  }
+}
+instances {
+  id: "gate_top_in"
+  prototype: "/arena/enemySpawnPoints/gate_top_in.go"
+  position {
+    x: 928.0
+    y: 900.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 0.25
+    y: 0.25
+    z: 1.0
+  }
+}
+instances {
+  id: "gate_top_out"
+  prototype: "/arena/enemySpawnPoints/gate_top_out.go"
+  position {
+    x: 928.0
+    y: 1400.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 0.25
+    y: 0.25
+    z: 1.0
+  }
+}
 collection_instances {
   id: "TCP_server"
   collection: "/server/TCP_server.collection"
