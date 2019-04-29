@@ -8,43 +8,28 @@ go.property("movingDir", vmath.vector3(0))
 go.property("maxHealth", 100)
 go.property("health", 100)
 go.property("damage", 5)
-go.property("isKilled", true)
 go.property("isRanged", true)
 
 function init(self)
-	-- Set position
-	self.enemyPos = go.get_position()
-	-- Move settings
-	self.movingSpeed = 50
-	self.followDistance = 300
-	self.runAwayDistance = 200
-	-- Force settings
-	self.knockbackStrength = 250
-	self.forceReductionSpeed = 300
-	-- Force variables
-	self.force = vmath.vector3(0)
-	self.forceDir = vmath.vector3(0)
-	self.collisionEnemyFlag = false
-	-- Local colliders
-	self.wallCollisionCorrector = vmath.vector3(0)
+	-- Move force settings
+	self.movingSpeed = 180
+	self.followDistance = 500
+	self.runAwayDistance = 300
+	-- Other force settings
+	self.knockbackPlayer = 13500
 	-- Health label
 	label.set_text("#label_hp", self.health)
-	-- Local timers	
-	self.checkClosestPlayerPosTimer = 0
-	self.knockbackTimer = 0
-	self.forceTimer = 0
-	self.killedTimer = 0
 end
 
 local function lookForClosestPlayer(self)
 	-- Count possition diffrence between closest player and enemy to designate enemy moving direction
+	self.enemyPos = go.get_position()
 	local closestPlayerID = playersManager.getClosestPlayerID(self.enemyPos)
 	if closestPlayerID ~= 0 then
 		local closestPlayerPos = playersManager.getPlayerPos(closestPlayerID)
 		self.distanceToClosestPlayer = vmath.length(closestPlayerPos - self.enemyPos)
 		local positionDiffrence = closestPlayerPos - self.enemyPos
-		self.movingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
-		self.movingDir = vmath.normalize(self.movingDir)
+		self.movingDir = vmath.normalize(vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0))
 	else
 		self.distanceToClosestPlayer = (self.followDistance + self.runAwayDistance) / 2
 		self.movingDir = vmath.vector3(0)
@@ -74,80 +59,22 @@ local function updateAnimation(self)
 	end
 end
 
-local function moveEnemy(self, dt)
-	-- Change enemy position basen on his movements or forces that works on him
-	if self.collisionEnemyFlag then
-		self.force = vmath.vector3(self.forceDir.x * self.movingSpeed, self.forceDir.y * self.movingSpeed, 0)
-		self.collisionEnemyFlag = false
-	end
+local function applyMoveForce(self, dt)
 	if self.distanceToClosestPlayer >= self.followDistance then
-		self.enemyPos = self.enemyPos + self.movingDir * self.movingSpeed * dt + self.force * dt
+		msg.post("#collider", "apply_force", {force = self.movingDir * self.movingSpeed * go.get("#collider", "mass"), position = go.get_world_position()})
 	elseif self.distanceToClosestPlayer <= self.runAwayDistance then
-		self.enemyPos = self.enemyPos + self.movingDir * -self.movingSpeed * dt + self.force * dt
-	else
-		self.enemyPos = self.enemyPos + self.force * dt
+		msg.post("#collider", "apply_force", {force = -self.movingDir * self.movingSpeed * go.get("#collider", "mass"), position = go.get_world_position()})
 	end
-	go.set_position(self.enemyPos)
-	updateAnimation(self)
-end
-
-local function reduceForces(self, dt)
-	-- Reduce force that works on enemy
-	if self.force.x > 1 then
-		self.force.x = self.force.x - self.forceReductionSpeed * dt
-	elseif self.force.x < -1 then
-		self.force.x = self.force.x + self.forceReductionSpeed * dt
-	else
-		self.force.y = 0
-	end
-	if self.force.y > 1 then
-		self.force.y = self.force.y - self.forceReductionSpeed * dt
-	elseif self.force.y < -1 then
-		self.force.y = self.force.y + self.forceReductionSpeed * dt
-	else
-		self.force.y = 0
-	end
-end
-
-local function playDeathAnimation(self)
-	-- Change enemy to dead body, play death sound etc.
-	local pos = go.get_position()
-	go.set_position(vmath.vector3(pos.x, pos.y, -0.98))
-	msg.post("#sprite", "play_animation", {id = hash("enemy_mage_killed")})
-	msg.post("#death_sound", "play_sound", {gain = 0.5})
 end
 
 local function handleDeath(self, dt)
 	-- Handling death when health drops below 0
 	if self.health <= 0 then
-		if self.isKilled == false then
-			playDeathAnimation(self)
-			self.killedTimer = 5
-			self.isKilled = true
-		end
-		-- Set enemy as inactive and move him out of gamescreen
-		if self.killedTimer <= 0 then
-			enemyManager.setEnemyInactive(go.get_id())
-		else
-			self.killedTimer = self.killedTimer - dt
-		end
+		-- Play death sound
+		msg.post("#death_sound", "play_sound", {gain = 0.5})
+		enemyManager.removeEnemy(go.get_id())
+		go.delete()
 	end
-end
-
-local function resetTimers(self, dt)
-	if self.knockbackTimer > 0 then
-		self.knockbackTimer = self.knockbackTimer - 1 * dt
-	end
-	if self.forceTimer > 0 then
-		self.forceTimer = self.forceTimer - 1 * dt
-	end
-	if self.checkClosestPlayerPosTimer > 0 then
-		self.checkClosestPlayerPosTimer = self.checkClosestPlayerPosTimer - 1 * dt
-	end
-end
-
-local function resetWallColliders(self)
-	self.wallCollisionCorrector = vmath.vector3()
 end
 
 function update(self, dt)
@@ -155,74 +82,11 @@ function update(self, dt)
 	if globals.getPause() then
 		return
 	end	
-	if not self.isKilled then
-		-- Save go position once to limit number of "go.get_position" uses 		
-		self.enemyPos = go.get_position()
-		if self.checkClosestPlayerPosTimer <= 0 then 
-			lookForClosestPlayer(self)
-			self.checkClosestPlayerPosTimer = 0.25
-		end	
-		moveEnemy(self, dt)
-		reduceForces(self, dt)
-		resetTimers(self, dt)
-		resetWallColliders(self)
-	end
+
+	lookForClosestPlayer(self)
+	applyMoveForce(self, dt)
+	updateAnimation(self)
 	handleDeath(self, dt)
-end
-
-local function wallsCollisions(self, message_id, message, sender)
-	-- Get the info needed to move out of collision. We might
-	-- get several contact points back and have to calculate
-	-- how to move out of all of them by accumulating a
-	-- correction vector for this frame:
-	if message.distance > 0 then
-		-- First, project the accumulated correction onto
-		-- the penetration vector
-		local proj = vmath.project(self.wallCollisionCorrector, message.normal * message.distance)
-		if proj < 1 then
-			-- Only care for projections that does not overshoot.
-			local comp = (message.distance - message.distance * proj) * message.normal
-			-- Apply compensation
-			go.set_position(go.get_position() + comp)
-			-- Accumulate correction done
-			self.wallCollisionCorrector = self.wallCollisionCorrector + comp
-		end
-	end
-end
-
-local function enemiesCollisions(self, message_id, message, sender)
-	local otherEnemyPos = go.get_position(message.other_id)
-	local otherEnemyUrl = msg.url(nil, message.other_id, "enemy")
-	-- Get pushed from other enemy if its not a dead body
-	local isOtherEnemyKilled = go.get(otherEnemyUrl, "isKilled")
-	
-	if isOtherEnemyKilled == false then
-		-- Count direction of force that needs to be applied
-		local forceDir = vmath.vector3(self.enemyPos.x - otherEnemyPos.x, self.enemyPos.y - otherEnemyPos.y, 0)
-		forceDir = vmath.normalize(forceDir)
-		if self.forceDir == vmath.vector3(0) then
-			self.forceDir = forceDir
-		else
-			self.forceDir = vmath.vector3((self.forceDir.x + forceDir.x), (self.forceDir.y + forceDir.y), 0)
-			if self.forceDir.x ~= 0 then
-				self.forceDir.x = self.forceDir.x / 2
-			end
-			if self.forceDir.y ~= 0 then
-				self.forceDir.y = self.forceDir.y / 2
-			end
-		end
-		self.collisionEnemyFlag = true
-	end
-		--[[
-		self.moveForce = vmath.vector3(self.moveForce.x + forceDir.x * self.movingSpeed, self.moveForce.y + forceDir.y * self.movingSpeed, 0)
-		if self.moveForce.x > 1500 then
-			self.moveForce.x = 1500
-		end
-		if self.moveForce.y > 1500 then
-			self.moveForce.y = 1500
-		end
-	end
-	]]--
 end
 
 local function playersAttacksCollisions(self, message_id, message, sender)
@@ -233,50 +97,20 @@ local function playersAttacksCollisions(self, message_id, message, sender)
 end
 
 local function playersCollisions(self, message_id, message, sender)
-	local playerUrl = msg.url(nil, message.other_id, "player")
-	local isPlayerVurnerable = go.get(playerUrl, "isVulnerable")
-	--Send message about dealt damage
-	msg.post(playerUrl,"hit", {dmg = self.damage})
-	-- Get knockback if player took damage or get pushed if dont
-	if self.knockbackTimer <= 0 and isPlayerVurnerable then
-		self.force = vmath.vector3(self.force.x - self.movingDir.x * self.knockbackStrength, self.force.y - self.movingDir.y * self.knockbackStrength, 0)
-		self.knockbackTimer = 0.5
-		self.forceTimer = 0.1
-	elseif self.forceTimer <= 0 then
-		self.force = vmath.vector3(self.force.x - self.movingDir.x * self.movingSpeed * 2.5, self.force.y - self.movingDir.y * self.movingSpeed * 2.5, 0)
-		self.forceTimer = 0.1
-	end
+	local knockbackDir = vmath.normalize(go.get_position() - message.other_position)
+	msg.post("#collider", "apply_force", {force = knockbackDir * go.get("#collider", "mass") * self.knockbackPlayer, position = go.get_world_position()})
+	msg.post(message.other_id, "hit", {dmg = self.damage})
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("contact_point_response") then
-		wallsCollisions(self, message_id, message, sender)
-	elseif message_id == hash("collision_response") and self.isKilled == false then
-		if message.group == hash("enemy") then
-			enemiesCollisions(self, message_id, message, sender)
-		elseif message.group == hash("attack") then
+	if message_id == hash("collision_response") then
+		if message.group == hash("attack") then
 			playersAttacksCollisions(self, message_id, message, sender)
 		elseif message.group == hash("player") then
 			playersCollisions(self, message_id, message, sender)
 		end	
 	end
-	if message_id == hash("setInactive") then
-		go.set_position(globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100000, 100), math.random(-100000, 100), 0))
-		self.health = self.maxHealth
-		self.isKilled = true
-	elseif message_id == hash("setActive") then
-		local pos;
-		if message.gate == "top" then
-			pos = globals.getSpawnPoints()[2]  --number of gate to spawn at (1-waiting_room; 2-top; 3-bottom; 4-left; 5-right
-		elseif message.gate == "bottom" then
-			pos = globals.getSpawnPoints()[3]  --number of gate to spawn at (1-waiting_room; 2-top; 3-bottom; 4-left; 5-right
-		elseif message.gate == "left" then
-			pos = globals.getSpawnPoints()[4]  --number of gate to spawn at (1-waiting_room; 2-top; 3-bottom; 4-left; 5-right
-		elseif message.gate == "right" then
-			pos = globals.getSpawnPoints()[5]  --number of gate to spawn at (1-waiting_room; 2-top; 3-bottom; 4-left; 5-right
-		end
-		go.set_position(pos + vmath.vector3(math.random(-100, 100), math.random(-100, 100), 0))
-		label.set_text("#label_hp", self.health)
-		self.isKilled = false
+	if message_id == hash("kill") then
+		go.delete()
 	end
 end

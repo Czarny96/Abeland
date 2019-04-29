@@ -1,11 +1,8 @@
 require "debugging/debugging"
-local enemyManager = require "managers.enemyManager"
 local globals = require "main.globals"
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-
-	enemyManager.initializeEnemies(500)
 
 	-- disable (don't render and don't update) other menu components
 	msg.post("/menu", "disable")
