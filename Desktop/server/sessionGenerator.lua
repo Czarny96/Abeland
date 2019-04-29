@@ -87,7 +87,7 @@ function M.create()
 		msg.post("/menu#gameOver", "enable", {})
 		
 	end
-
+--TODO: Temporary, until cleaner solution will be found
 	local deadTime = 0
 	function session.update()
 		--check if game over
@@ -95,6 +95,7 @@ function M.create()
 			if deadTime >= 30 then
 				print("All players are dead")
 				session.setGameOverFlag(1)
+				deadTime = 0
 			else
 				deadTime = deadTime + 1
 			end
