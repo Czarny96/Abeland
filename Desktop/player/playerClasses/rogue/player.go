@@ -51,7 +51,7 @@ embedded_components {
 embedded_components {
   id: "attackFactory"
   type: "factory"
-  data: "prototype: \"/player/playerClasses/archer/projectile.go\"\n"
+  data: "prototype: \"/player/playerClasses/rogue/projectile.go\"\n"
   "load_dynamically: false\n"
   ""
   position {
