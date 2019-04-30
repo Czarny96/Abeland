@@ -9,7 +9,7 @@ function init(self)
 
 	-- start game with splash screen
 	g_goToSplashScreen()
-	
+
 end
 
 -- GAME STATE GLOBAL FUNCTIONS AND VARIABLES:

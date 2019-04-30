@@ -36,11 +36,10 @@ end
 local function start(self)
 	lockActions = false
 
-	-- reset text field and send current username to server
+	-- reset text field
 	textFieldFocused = false
 	gui.set_color(textFieldNode, vmath.vector4(1.0, 1.0, 1.0, 1.0))
 	gui.set_text(usernameTextNode, g_username)
-	msg.post("/go#client", "sendUsername")
 	
 	-- screen is going from black to white
 	gui.set_color(blackBoxNode, vmath.vector4(0,0,0,1))
@@ -109,11 +108,20 @@ function on_input(self, action_id, action)
 		
 	elseif action_id == hash("type") then
 		
-		if textFieldFocused then
-			if string.len(g_username) < 15 then
-				g_username = g_username .. action.text 
-				gui.set_text(usernameTextNode, g_username)
+		if textFieldFocused and string.len(g_username) < 15 then
+			print(action.text)
+			for i = 1, string.len(action.text) do
+				
+				local ch = string.sub(action.text, i, i)
+				
+				if string.match(ch, "%a") or string.match(ch, "%d") then
+					g_username = g_username .. ch
+					gui.set_text(usernameTextNode, g_username)
+				else
+					-- :(
+				end
 			end
+			
 		end
 		
 	elseif action_id == hash("key_backspace") and action.repeated then

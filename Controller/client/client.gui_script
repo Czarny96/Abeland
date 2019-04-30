@@ -125,7 +125,11 @@ function on_message(self, message_id, message, sender)
 		end
 	elseif message_id == hash("sendUsername") then
 		if client then
-			client.send("N;" .. g_username .. "\n\r")
+
+			if g_username ~= "" then
+				client.send("N;" .. g_username .. "\n\r")
+			end
+			
 		end
 	end
 
