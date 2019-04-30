@@ -4,7 +4,7 @@ local enemyManager = require "managers.enemyManager"
 local globals = require "main.globals"
 
 -- Global properties
-go.property("movingDir", vmath.vector3(0))
+go.property("movingDir", vmath.vector3(0,0,0))
 go.property("maxHealth", 100)
 go.property("health", 100)
 go.property("damage", 10)

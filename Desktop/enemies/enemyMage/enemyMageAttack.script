@@ -14,7 +14,7 @@ end
 function update(self, dt)
 	if globals.getPause() == false then
 		if self.shootingTimer >= self.shootingDelay then
-			if #getActivePlayersIDs() > 0 then
+			if #playersManager.getActivePlayersIDs() > 0 then
 				factory.create("#enemyMageHomingAttackFactory", nil)
 			end
 			self.shootingTimer = math.random(-1,1)
