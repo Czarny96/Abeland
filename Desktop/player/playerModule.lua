@@ -34,6 +34,7 @@ function M.messages(message_id, message, sender)
 	--Activating player
 	if message_id == hash("start") then
 		go.set_position(go.get_position("main:/spawnPoints/spawn_archer"))
+		go.set(url, "position", go.get_position(url))
 		msg.post("#sprite", "play_animation", {id = hash("player_down")})
 		sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 1))
 		go.set(url, "health", go.get(url, "maxHealth"))
