@@ -28,6 +28,7 @@ g_username = ""
 g_connectingWindowIsOn = false
 g_dcWindowIsOn = false
 g_confirmationWindowIsOn = false
+g_usernameFailureWindowIsOn = false
 
 function g_goToSplashScreen()
 	print("Entering splash screen")
@@ -99,21 +100,17 @@ function g_hideConfirmationWindow()
 	print("Hide confirmation window")
 	msg.post("/xmenu#confirmationWindow", "hide")
 end
+
+function g_showUsernameFailureWindow()
+	print("Show username failure window")
+	g_usernameFailureWindowIsOn = true
+	msg.post("/xmenu#usernameFailureWindow", "show")
+end
+
 -- END OF GAME STATE FUNCTIONS AND VARIABLES
 
 function on_input(self, action_id, action)
-	if action_id == hash("key_back") and action.pressed then
-		--if g_gameState == g_gameStateEnum.controller then
-			--g_goToMainMenu()
-		--	msg.post("/go#client", "disconnect")
-			-- TODO: are you sure window
-		--elseif g_gameState == g_gameStateEnum.mainMenu then
-		--	os.exit()
-		--elseif g_gameState == g_gameStateEnum.usernameField and not g_textFieldFocused then
-			--g_goToMainMenu()
-		--	msg.post("/go#client", "disconnect")
-		--end
-	end
+	
 end
 
 

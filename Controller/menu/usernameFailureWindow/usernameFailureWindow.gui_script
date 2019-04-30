@@ -1,0 +1,94 @@
+
+local scalingButton = require "util/scalingButton"
+
+local dcScreenNode = nil
+
+-- don't react after clicking button
+local lockActions = false
+
+local function buttonPressed(hashedNodeId)
+
+end
+
+local function buttonReleased(hashedNodeId)
+	if hashedNodeId == hash("cancelButton") then
+		print("Clicked ok")
+		msg.post("/xmenu#usernameFailureWindow", "hide")
+
+	end
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+
+	dcScreenNode = gui.get_node("dcScreen")
+
+	self.buttonHolder = {
+		cancelButtonButton = scalingButton.create("cancelButton", 0, buttonReleased, buttonPressed)
+	}
+
+end
+
+local function start(self)
+	lockActions = false
+
+	-- window scale animation
+	gui.set_scale(dcScreenNode, vmath.vector3(0,0,0))
+	gui.animate(dcScreenNode, gui.PROP_SCALE, vmath.vector3(0.7,0.7,0.7), gui.EASING_INOUTCUBIC, 1)
+
+end
+
+function final(self)
+
+end
+
+function update(self, dt)
+	
+end
+
+function on_message(self, message_id, message, sender)
+	
+	if message_id == hash("show") then
+		
+		msg.post("/xmenu#usernameFailureWindow", "enable")
+		start(self)
+		
+	elseif message_id == hash("hide") then
+		
+		lockActions = true
+		gui.cancel_animation(dcScreenNode, gui.PROP_SCALE)
+		gui.animate(dcScreenNode, gui.PROP_SCALE, vmath.vector3(0,0,0), 
+		gui.EASING_INOUTCUBIC, 0.5, 0, function() 
+			msg.post("/xmenu#usernameFailureWindow", "disable")
+			g_dcWindowIsOn = false
+		end)
+		
+	end
+	
+end
+
+function on_input(self, action_id, action)
+	
+	if lockActions then
+		return true
+	end
+	
+	if action_id == hash("mouse_left") then
+
+		for idx, button in pairs(self.buttonHolder) do
+			button.mouseUpdate(action)
+		end
+		
+	elseif action_id == hash("key_back") then
+		print("Clicked back")
+		msg.post("/xmenu#usernameFailureWindow", "hide")
+	end
+	
+	-- other screens shouldn't process input
+	return true
+	
+end
+
+function on_reload(self)
+
+end
