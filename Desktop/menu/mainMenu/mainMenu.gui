@@ -1,7 +1,7 @@
 script: "/menu/mainMenu/mainMenu.gui_script"
 fonts {
   name: "menuFont"
-  font: "/menu/menuFont.font"
+  font: "/menu/fonts/menuFont.font"
 }
 fonts {
   name: "menuFont_100"

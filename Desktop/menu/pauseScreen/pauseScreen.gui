@@ -5,7 +5,7 @@ fonts {
 }
 fonts {
   name: "menuFont"
-  font: "/menu/menuFont.font"
+  font: "/menu/fonts/menuFont.font"
 }
 textures {
   name: "menuAtlas"
