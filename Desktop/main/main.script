@@ -97,12 +97,10 @@ function on_input(self, action_id, action)
 	if action_id == hash("esc") and action.pressed and g_allowOpenPauseVariable == true and g_gameState ~= g_gameStateEnum.pause then
 		globals.setPause(true)
 		msg.post("/menu", "disable")
-		msg.post("/menu#pauseScreen", "restartGame")
+		g_goToPauseScreen()
 	elseif action_id == hash("esc") and action.pressed and g_gameState == g_gameStateEnum.pause then
-		globals.setPause(false)
-		g_allowOpenPause()
-		g_setUpInGameEnum()
-		msg.post("/menu", "disable")
+		--msg.post("/menu", "disable")
+		msg.post("/menu#pauseScreen", "resumeGame")
 	elseif action_id == hash("esc") and action.pressed then
 		os.exit()
 	end
