@@ -1,7 +1,7 @@
 local globals = require "main.globals"
 
-local firstPhaseTime = 3
-local secondPhaseTime = 2
+local firstPhaseTime = 2
+local secondPhaseTime = 1
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
