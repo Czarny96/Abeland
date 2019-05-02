@@ -18,17 +18,28 @@ local frame = ""
 
 
 local function onData(data)
-	print(data)
+	--print(data)
 	if data == "btn_data" then
 		msg.post("/menu#ctrlGui", "dataRequest")
 		if client then
+			--print("SENDING FRAME: ", frame)
 			client.send(frame)
 		end
 	elseif data == "StartGame" then
+		-- hide pop-up window
+		g_hideConfirmationWindow()
+
 		g_goToController()
 	elseif data == "EndGame" then
-		g_goToMainMenu()
-		msg.post("/go#client", "disconnect")
+		if g_gameState == g_gameStateEnum.controller then
+			-- hide pop-up window
+			g_hideConfirmationWindow()
+			msg.post("/menu#ctrlGui", "death")
+		else
+			-- What should we do if player receives EndGame frame while in username/champion select/game/menu/game over?
+			--g_goToMainMenu()
+			--msg.post("/go#client", "disconnect")
+		end
 	elseif data == "Reset" then
 		g_goToChampionSelect()
 	elseif string.sub(data, 1, 1) == "C" then
@@ -54,12 +65,10 @@ local function connectToServer(self, ip, port)
 		tryToConnect = false
 		g_hideConnectingWindow()
 		g_goToUsernameField()
-		--msg.post("/menu#ctrlGui", "setConnectionText", {text = "Connected"})
 
 	else
 		print("Connection failed. How?")
 		print(err)
-		--msg.post("/menu#ctrlGui", "setConnectionText", {text = "Connection failed"})
 	end
 end
 

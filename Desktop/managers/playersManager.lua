@@ -9,6 +9,19 @@ local M = {}
 
 local activePlayersIDs = {}
 
+
+function M.reviveDeadPlayers()
+	for i, player in pairs(activePlayersIDs) do
+		msg.post(player, "revive")
+	end
+end
+
+local function buildPlayerFromFabric(class)
+	local url = msg.url("main","/spawn", class)
+	globals.setArePlayersDead(false)
+	return factory.create(url)
+end
+
 function M.setActivePlayersIDs()
 -- Set indexable table of active players
 	local allPlayersByIP = clientsManager.getAllPlayers()
@@ -80,10 +93,8 @@ function M.setAllPlayersToWaitingRoom()
 	end
 end
 
-function M.setPlayerToArena(playerID)
-	--local playerURL = msg.url(nil, playerID, "player")
-	local playerURL = msg.url("main", playerID, "player")
-	msg.post(playerURL, "start")
+function M.setPlayerToArena(class)
+	return buildPlayerFromFabric(class)
 end
 
 function M.setPlayerToWaitingRoom(playerID)

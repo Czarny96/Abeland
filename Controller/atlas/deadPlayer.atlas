@@ -1,0 +1,15 @@
+images {
+  image: "/assets/interface/i_see_dead_people/archer_dead.png"
+}
+images {
+  image: "/assets/interface/i_see_dead_people/knight_dead.png"
+}
+images {
+  image: "/assets/interface/i_see_dead_people/mage_dead.png"
+}
+images {
+  image: "/assets/interface/i_see_dead_people/rogue_dead.png"
+}
+margin: 10
+extrude_borders: 0
+inner_padding: 0

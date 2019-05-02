@@ -123,6 +123,8 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("playerClassConfirm") then
 		self.playerClassLocked = message.playerClass
 
+		g_playerClass = message.playerClass
+		
 		-- change color of buttons
 		lockInPlayerClass(message.playerClass)
 	end

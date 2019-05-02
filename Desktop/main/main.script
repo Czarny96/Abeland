@@ -6,7 +6,6 @@ function init(self)
 
 	-- disable (don't render and don't update) other menu components
 	msg.post("/menu", "disable")
-	
 	-- start game with splash screen
 	g_goToSplashScreen()
 	--msg.post("@system:", "toggle_profile")
@@ -112,13 +111,5 @@ function on_input(self, action_id, action)
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("createKnight") then
-		factory.create("#knightFactory", vmath.vector3(render.get_width()/2, render.get_height()/2,0), nil, nil)
-	elseif message_id == hash("createArcher") then
-		factory.create("#archerFactory", vmath.vector3(render.get_width()/2, render.get_height()/2,0), nil, nil)
-	elseif message_id == hash("createMage") then
-		factory.create("#mageFactory", vmath.vector3(render.get_width()/2, render.get_height()/2,0), nil, nil)
-	elseif message_id == hash("createRogue") then
-		factory.create("#rogueFactory", vmath.vector3(render.get_width()/2, render.get_height()/2,0), nil, nil)
-	end
+	
 end

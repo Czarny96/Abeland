@@ -1,0 +1,41 @@
+local bodyManager = require "managers/bodyManager.bodyManager"
+
+go.property("isEternal", true)
+go.property("dissapearTimer", 5)
+go.property("type", hash("archer"))
+
+local function setProperSprite(self)
+	if self.type == hash("enemyMelee") then
+		msg.post("#sprite", "play_animation", {id = hash("enemyMelee")})
+	elseif self.type == hash("enemyMage") then
+		msg.post("#sprite", "play_animation", {id = hash("enemyMage")})
+	elseif self.type == hash("archer") then
+		msg.post("#sprite", "play_animation", {id = hash("archer")})
+	elseif self.type == hash("mage") then
+		msg.post("#sprite", "play_animation", {id = hash("mage")})
+	elseif self.type == hash("rogue") then
+		msg.post("#sprite", "play_animation", {id = hash("rogue")})
+	elseif self.type == hash("knight") then
+		msg.post("#sprite", "play_animation", {id = hash("knight")})
+	end	
+end
+
+function init(self)
+	setProperSprite(self)
+end
+
+function update(self, dt)
+	if not self.isEternal then
+		if self.dissapearTimer <= 0 then
+			go.delete()
+		else
+			self.dissapearTimer = self.dissapearTimer - dt
+		end
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("delete") then
+		go.delete()
+	end
+end

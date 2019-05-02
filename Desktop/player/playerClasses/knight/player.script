@@ -1,7 +1,7 @@
 --KNIGHT
-
+go.property("class", hash("knight"))
+go.property("position", vmath.vector3(992, 476, 0.99))
 go.property("movingDir", vmath.vector3(0, 0, 0))
-go.property("position", vmath.vector3(0, 0, 0))
 
 --Class Properties
 go.property("health", 200)
@@ -13,7 +13,6 @@ go.property("isKilled", false)
 go.property("isVulnerable", true)
 
 --Timers
-go.property("killedTimer", 0)
 go.property("nonVulnerableTimer", 0)
 go.property("nonOperativeTimer", 0)
 
@@ -24,14 +23,12 @@ go.property("isMoving", false)
 go.property("wallCollisionCorrector", vmath.vector3())
 
 
-
-
 local globals = require "main.globals"
 local playersManager = require "managers.playersManager"
 local playerModule = require "player.playerModule"
 
 function init(self)
-	playerModule.init()
+	playerModule.init(self)
 end
 
 function update(self, dt)
@@ -47,16 +44,16 @@ function update(self, dt)
 
 	--Death
 	if self.health <= 0 then
-		playerModule.death(dt)
+		playerModule.death(self, dt)
 	else
 		--Movement
 		if self.isMoving then
-			playerModule.move(self.movingDir, dt)
+			playerModule.move(self, dt)
 		end
 	end
-	playerModule.manageFlagsAndTimers(dt)
+	playerModule.manageFlagsAndTimers(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
-	playerModule.messages(message_id, message, sender)
+	playerModule.messages(self, message_id, message, sender)
 end

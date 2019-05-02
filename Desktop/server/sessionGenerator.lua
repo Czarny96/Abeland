@@ -16,35 +16,34 @@ function M.create()
 	local session = {}
 	local playersQueue = {}
 
-
-	function session.insertPlayerToQue(playerID)
-		table.insert(playersQueue,playerID)
-	end
-	function session.isPlayerInQue(playerID)
-		if #playersQueue > 0 then
-			for i,id in ipairs(playersQueue) do
-				if playersQueue[i] == id then
-					return true
-				end
-			end
-		end
-		return false
+	
+	function session.insertPlayerToQue(playerIP,playerClass)
+		playersQueue[playerIP] = playerClass
 	end
 	
-	function session.removePlayerInQue(playerID)
-		for i,id in ipairs(playersQueue) do
-			if playersQueue[i] == id then
-				table.remove(playersQueue,i)
-			end
+	function session.isPlayerInQue(playerIP)
+		local answer = false
+		if playersQueue[playerIP] ~= nil then
+			answer = true
 		end
 		
+		return answer
+	end
+	
+	function session.removePlayerInQue(playerIP)
+		playersQueue[playerIP] = nil
+		playersManager.setActivePlayersIDs()
+	end
+	function session.ressurectPlayers()
+		playersManager.reviveDeadPlayers()
 	end
 
 	function session.setPlayersFromQue()
-		for i,playerID in pairs(playersQueue) do
-			playersManager.setPlayerToArena(playerID)
-			table.remove(playersQueue,i)
+		for ip,class in pairs(playersQueue) do
+			clientsManager.setPlayerID(playersManager.setPlayerToArena(clientsManager.getPlayerClass(ip)), ip)
+			session.removePlayerInQue(ip)
 		end
+		playersManager.setActivePlayersIDs()
 	end
 	
 	function session.setGameOverFlag(value)
@@ -66,7 +65,7 @@ function M.create()
 		
 		print("Creating a new session with ID: " .. session.sessionID)
 		
-		playersManager.setAllPlayersToArena()
+		session.setPlayersFromQue()
 		playersManager.setActivePlayersIDs()
 		enemyManger.startNextWave()
 
@@ -78,9 +77,10 @@ function M.create()
 	-- ends session and releases resources
 	function session.destroy()
 		--Add code here to clean up session
-		print("Destroying session with ID: " .. session.sessionID)
-		playersManager.setAllPlayersToWaitingRoom()
+		print("Destroying session with ID: " .. s_SessionCounter)
+		--playersManager.setAllPlayersToWaitingRoom()
 		enemyManger.resetArena()
+		
 		if session.isPlayerInQue() then
 			playersQueue = nil
 		end
@@ -90,22 +90,8 @@ function M.create()
 --TODO: Temporary, until cleaner solution will be found
 	local deadTime = 0
 	function session.update()
-		--check if game over
-		if globals.getArePlayersDead() then
-			if deadTime >= 30 then
-				print("All players are dead")
-				session.setGameOverFlag(1)
-				deadTime = 0
-			else
-				deadTime = deadTime + 1
-			end
-		end
-		
 		if session.isGameOver() then
 			session.destroy()
-		elseif globals.getIsWaveOver() and #playersQueue > 0 then
-			session.setPlayersFromQue()
-			playersManager.setActivePlayersIDs()
 		end
 	end
 

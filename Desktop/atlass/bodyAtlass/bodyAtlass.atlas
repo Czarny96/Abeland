@@ -1,0 +1,63 @@
+animations {
+  id: "archer"
+  images {
+    image: "/assets/prototypes/archer/player_prot_dead.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 60
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "knight"
+  images {
+    image: "/assets/prototypes/knight/player_prot_dead.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 60
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "mage"
+  images {
+    image: "/assets/prototypes/mage/player_prot_dead.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 60
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "rogue"
+  images {
+    image: "/assets/prototypes/rogue/player_prot_dead.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 60
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "enemyMelee"
+  images {
+    image: "/assets/prototypes/enemy_killed.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 60
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "enemyMage"
+  images {
+    image: "/assets/prototypes/enemyMage_killed.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 60
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+margin: 5
+extrude_borders: 0
+inner_padding: 0

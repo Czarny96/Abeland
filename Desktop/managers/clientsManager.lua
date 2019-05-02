@@ -19,7 +19,19 @@ function M.getAllPlayers()
 end
 
 function M.getPlayerID(playerIP)
-	return playersTable[playerIP][2]
+	local playerID = nil
+
+	if playersTable[playerIP] ~= nil then
+		playerID = playersTable[playerIP][2]
+	end
+	
+	return playerID
+end
+
+function M.setPlayerID(playerID,playerIP)
+	if playersTable[playerIP] ~= nil then
+		playersTable[playerIP][2] = playerID
+	end
 end
 
 function M.returnAllClients()
@@ -31,17 +43,25 @@ function M.returnAllClients()
 end
 
 function M.isPlayerActive(playerIP)
-	return playersTable[playerIP][4] == true
+	local answer = false 
+	if playersTable[playerIP] ~= nil then
+		answer = playersTable[playerIP][4]
+	end
+	return answer
 end
 
 function M.activatePlayer(playerIP)
-	translationLayer.activatePlayer(M.getPlayerID(playerIP))
-	playersTable[playerIP][4] = true
+	if playersTable[playerIP] ~= nil then
+		translationLayer.activatePlayer(M.getPlayerID(playerIP))
+		playersTable[playerIP][4] = true
+	end
 end
 
 function M.desactivatePlayer(playerIP)
-	translationLayer.desactivatePlayer(M.getPlayerID(playerIP))
-	playersTable[playerIP][4] = false
+	if playersTable[playerIP] ~= nil then
+		translationLayer.desactivatePlayer(M.getPlayerID(playerIP))
+		playersTable[playerIP][4] = false
+	end
 end
 
 function M.isAnyPlayer()
@@ -49,29 +69,37 @@ function M.isAnyPlayer()
 end
 
 function M.resetPlayerInactivityTimeCounter(playerIP)
-	playersTable[playerIP][3] = 0.0
+	if playersTable[playerIP] ~= nil then
+		playersTable[playerIP][3] = 0.0
+	end
 end
 
 function M.incrementPlayerInactivityTimeCounterByDT(playerIP,dt)
-	playersTable[playerIP][3] = playersTable[playerIP][3] + dt
+	if playersTable[playerIP] ~= nil then
+		playersTable[playerIP][3] = playersTable[playerIP][3] + dt
+	end
 end
 
 function M.getPlayerInactivityTimeCounter(playerIP)
-	return playersTable[playerIP][3]
+	local inactivityCounter = 0.0
+	if playersTable[playerIP] ~= nil then
+		inactivityCounter = playersTable[playerIP][3]
+	end
+	return inactivityCounter
 end
 
 
-local function setPlayerNick(nick,playerIP)
-	playersTable[playerIP][5] = nick
-end
 
 local function lockPlayerClass(class,playerIP)
-	playersTable[playerIP][6] = class
-	playersTable[playerIP][2] = "/player_" .. class
+	if playersTable[playerIP] ~= nil then
+		playersTable[playerIP][6] = class
+	end
 end
 
 function M.setPlayerReadines(playerIP, readiness)
-	playersTable[playerIP][7] = readiness
+	if playersTable[playerIP] ~= nil then
+		playersTable[playerIP][7] = readiness
+	end
 end
 
 function M.returnActivePlayersIDs()
@@ -95,7 +123,9 @@ function M.returnActiveClients()
 end
 
 function M.translateDataToPlayer(data, playerIP)
-	translationLayer.translateFrameToPlayer(data, M.getPlayerID(playerIP))
+	if playersTable[playerIP] ~= nil then
+		translationLayer.translateFrameToPlayer(data, M.getPlayerID(playerIP))
+	end
 end
 
 function M.resetPlayersToDefault()
@@ -108,8 +138,8 @@ function M.addPlayer(playerIP,client)
 	if amountOfCurrentPlayers < ALLOWED_MAX_PLAYERS then 
 		-- key: playerIP 
 		-- values:
-		-- 1 - client; 2 - class url; 3 - inactivity time counter; 
-		-- 4 - is player inactive?;  5 - nick; 6 - class; 7 - is player ready
+		-- 1 - client; 2 - playerID; 3 - inactivity time counter; 
+		-- 4 - is player active?;  5 - nick; 6 - class; 7 - is player ready
 		--TODO: Think about prevention of calling object without url
 		if playersTable[playerIP] == nil then
 			playersTable[playerIP] = {client,"",0.0,true,"","", false}
@@ -119,14 +149,25 @@ function M.addPlayer(playerIP,client)
 end
 
 function M.removePlayer(playerIP)
-	amountOfCurrentPlayers = amountOfCurrentPlayers - 1 
-	translationLayer.RemovePlayerObject(M.getPlayerID(playerIP))
-	playersTable[playerIP] = nil
+	if playersTable[playerIP] ~= nil then
+		amountOfCurrentPlayers = amountOfCurrentPlayers - 1 
+		translationLayer.RemovePlayerObject(M.getPlayerID(playerIP))
+		playersTable[playerIP] = nil
+	end
 end
 
+local function setPlayerNick(nick,playerIP)
+	if playersTable[playerIP] ~= nil then
+		playersTable[playerIP][5] = nick
+	end
+end
+
+
 function M.addNickToPlayer(frame,playerIP)
-	nick = translationLayer.getNickFromFrame(frame)
-	setPlayerNick(nick,playerIP)
+	if playersTable[playerIP] ~= nil then
+		local nick = translationLayer.getNickFromFrame(frame)
+		setPlayerNick(nick,playerIP)
+	end
 end
 
 local function checkIfClassAvaible(class)
@@ -156,11 +197,19 @@ function M.tryToLockPlayerClass(frame,playerIP)
 end
 
 function M.getPlayerClass(playerIP)
-	return playersTable[playerIP][6]
+	local class = nil
+	if playersTable[playerIP] ~= nil then
+		class= playersTable[playerIP][6]
+	end
+	return class
 end
 
 function M.getPlayerNick(playerIP)
-	return playersTable[playerIP][5]
+	local nick = nil
+	if playersTable[playerIP] ~= nil then
+		nick= playersTable[playerIP][5]
+	end
+	return nick
 end
 
 function M.sendClassToMenu(playerIP)
@@ -177,7 +226,9 @@ function M.sendNickToMenu(playerIP)
 end
 
 function M.clearNickFromMenu(playerIP)
-	translationLayer.clearPlayerNick(playerIP)
+	if playersTable[playerIP] ~= nil then
+		translationLayer.clearPlayerNick(playerIP)
+	end
 end
 
 function M.clearNicksFromMenu()
@@ -195,5 +246,14 @@ function M.areAllPlayersReady()
 
 end
 
+function M.getPlayerClientFromID(playerID)
+	local client=nil
+	for ip,values in pairs(playersTable) do
+		if values[2] == playerID then
+			client = values[1] 
+		end
+	end
+	return client
+end
 return M
 

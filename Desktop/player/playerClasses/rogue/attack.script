@@ -27,11 +27,6 @@ function update(self, dt)
 		self.shootingTimer = self.shootingTimer - dt
 	end
 
-	local url = msg.url("main","/player_rogue","player")
-	if not go.get(url, "isKilled") then
-		playerModule.updateAnimation(dt)
-	end
-
 	--Reset flags
 	self.isShooting = false
 end

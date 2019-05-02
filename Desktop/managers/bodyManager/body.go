@@ -1,6 +1,6 @@
 components {
-  id: "temp"
-  component: "/arena/temp.script"
+  id: "bodyScript"
+  component: "/managers/bodyManager/bodyScript.script"
   position {
     x: 0.0
     y: 0.0
@@ -16,8 +16,8 @@ components {
 embedded_components {
   id: "sprite"
   type: "sprite"
-  data: "tile_set: \"/arena/spawnPoints.atlas\"\n"
-  "default_animation: \"red-arrow\"\n"
+  data: "tile_set: \"/atlass/bodyAtlass/bodyAtlass.atlas\"\n"
+  "default_animation: \"archer\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
   ""

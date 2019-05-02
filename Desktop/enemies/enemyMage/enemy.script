@@ -2,6 +2,7 @@
 local playersManager = require "managers.playersManager"
 local enemyManager = require "managers.enemyManager"
 local globals = require "main.globals"
+local bodyManager = require "managers/bodyManager.bodyManager"
 
 -- Global properties
 go.property("movingDir", vmath.vector3(0,0,0))
@@ -73,6 +74,7 @@ local function handleDeath(self, dt)
 		-- Play death sound
 		msg.post("#death_sound", "play_sound", {gain = 0.5})
 		enemyManager.removeEnemy(go.get_id())
+		bodyManager.createTimedBody(go.get_position(), hash("enemyMage"), 5)
 		go.delete()
 	end
 end

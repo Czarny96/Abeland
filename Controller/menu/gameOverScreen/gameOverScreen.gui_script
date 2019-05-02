@@ -1,0 +1,83 @@
+local scalingButton = require "util/scalingButton"
+
+local usernameTextNode = nil
+local textFieldNode = nil
+local textFieldFocused = false
+
+local blackBoxNode = nil
+
+local lockActions = nil
+
+local playerIconNode = nil
+
+local function buttonPressed(hashedNodeId)
+
+end
+
+local function buttonReleased(hashedNodeId)
+	if hashedNodeId == hash("Back") then
+		print("Clicked exit game")
+
+		g_showConfirmationWindow()
+		
+	end
+end
+
+local function start(self)
+	lockActions = false
+
+	gui.play_flipbook(playerIconNode, g_playerClass .. "_dead")
+	
+	-- screen is going from black to white
+	gui.set_color(blackBoxNode, vmath.vector4(0,0,0,1))
+	gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,0), gui.EASING_LINEAR, 0.5)
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	
+	blackBoxNode = gui.get_node("blackBox")
+	playerIconNode = gui.get_node("ripInPeace")
+	
+	self.buttonHolder = {
+		backButton = scalingButton.create("Back", 0, buttonReleased, buttonPressed)
+	}
+end
+
+function final(self)
+	
+end
+
+function update(self, dt)
+	
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("enable") then
+		start(self)
+	elseif message_id == hash("disable") then
+		
+	end
+end
+
+function on_input(self, action_id, action)
+	if lockActions then
+		return 
+	end
+	
+	if action_id == hash("mouse_left") then
+
+		-- BUTTONS
+		self.buttonHolder.backButton.mouseUpdate(action)
+		-- END OF BUTTONS
+		
+	elseif action_id == hash("key_back") and action.pressed then
+
+		g_showConfirmationWindow()
+		
+	end
+end
+
+function on_reload(self)
+	
+end

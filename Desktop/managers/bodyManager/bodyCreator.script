@@ -1,0 +1,10 @@
+local bodyManager = require "managers/bodyManager.bodyManager"
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("createTimedBody") then
+		factory.create("#bodyFactory", message.pos, nil, { isEternal = false, timer = message.timer, type = message.type })
+	end
+	if message_id == hash("createEternalBody") then
+		bodyManager.addEternalBody(factory.create("#bodyFactory", message.pos, nil, { isEternal = true, type = message.type }), message.type)
+	end
+end

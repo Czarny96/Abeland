@@ -6,6 +6,7 @@
 local M = {}
 
 local globals = require "main.globals"
+local playersManager = require "managers.playersManager"
 
 --Enemies are split into two groups: range, malee
 --Thats why we have:
@@ -117,6 +118,7 @@ end
 
 
 function M.initializeWave(rangePercent, gateAmount)
+	
 	--Teleports enemies to arena (behind gates / to gate_[direction]_out
 	--rangePercent == what is a ratio of ranged attack enemies to malee attacking enemies 
 	--gateAmount == to how many of 4 gates enemies should be distributed
@@ -124,7 +126,7 @@ function M.initializeWave(rangePercent, gateAmount)
 	local enemiesAmount = globals.getWaveNr()
 	local gateSide
 	-- info for session generator to know that wave has started
-	globals.setIsWaveOver(false)
+	msg.post("/TCP_server/go#TCP_server_gui", "waveWasOver")
 
 	--Set wave number counter on main screen
 	label.set_text(wave_label, "Wave: " .. globals.getWaveNr())
@@ -249,6 +251,7 @@ function M.initializeWave(rangePercent, gateAmount)
 			end
 		end
 	end
+	
 end
 
 return M

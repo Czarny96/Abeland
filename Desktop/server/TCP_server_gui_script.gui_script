@@ -1,8 +1,7 @@
 local tcpServer = require "defnet.tcp_server"
 local p2pDiscovery = require "defnet.p2p_discovery"
-
-local clientsManager = require "managers.clientsManager"
 local playersManager = require "managers.playersManager"
+local clientsManager = require "managers.clientsManager"
 
 local sessionGenerator = require "server.sessionGenerator"
 
@@ -26,21 +25,23 @@ end
 function createSession()
 	if currentSession == nil then
 		currentSession = sessionGenerator.create()
+		
+		for ip,value in pairs(clientsManager.getAllPlayers()) do
+			currentSession.insertPlayerToQue(ip, clientsManager.getPlayerClass(ip))
+		end
+		
 		currentSession.start()
 		sendMessageToAllActivePlayers("StartGame")
 	end
 end
 
-local function msgActivePlayersChange()
-	playersManager.setActivePlayersIDs()
-end
 
 local function routeFrameToRespFunc(frame,ip, client)
 	local frameId = string.sub(frame,1,1)
 
 	if frameId == "M" and currentSession ~=nil then 
 		clientsManager.translateDataToPlayer(frame, ip)
-	elseif frameId == "N" then 
+	elseif frameId == "N" then
 		clientsManager.addNickToPlayer(frame, ip)
 		clientsManager.sendNickToMenu(ip)
 	elseif frameId == "C" then 
@@ -51,7 +52,7 @@ local function routeFrameToRespFunc(frame,ip, client)
 	elseif frameId == "G" then
 		clientsManager.setPlayerReadines(ip, true)
 		if currentSession~=nil then
-			currentSession.insertPlayerToQue(clientsManager.getPlayerID(ip))
+			currentSession.insertPlayerToQue(ip, clientsManager.getPlayerClass(ip))
 			serverHandler.send("StartGame".."\n\r", client)
 		elseif clientsManager.areAllPlayersReady() and currentSession==nil then
 			createSession()
@@ -67,7 +68,6 @@ local function on_data(data, ip, port, client)
 	
 	if  not clientsManager.isPlayerActive(ip) then
 		clientsManager.activatePlayer(ip)
-		msgActivePlayersChange()
 	end
 	
 	routeFrameToRespFunc(data,ip,client)
@@ -80,11 +80,10 @@ end
 local function on_client_disconnected(ip, port, client)
 	--TODO: add function, to remove data from menu
 	if currentSession ~= nil then 
-		currentSession.removePlayerInQue(clientsManager.getPlayerID(ip))
+		currentSession.removePlayerInQue(ip)
 	end
 	clientsManager.clearNickFromMenu(ip)
 	clientsManager.removePlayer(ip)
-	msgActivePlayersChange()
 
 	if not clientsManager.isAnyPlayer() and currentSession~=nil then
 		currentSession.setGameOverFlag(1)
@@ -124,13 +123,11 @@ function update(self, dt)
 			if clientsManager.isPlayerActive(ip) then
 				self.server.send("btn_data\n\r", client)
 			end
-
+			
 			clientsManager.incrementPlayerInactivityTimeCounterByDT(ip,dtPassed)
-		
 
 			if clientsManager.getPlayerInactivityTimeCounter(ip) > 1 and clientsManager.isPlayerActive(ip) then
 				clientsManager.desactivatePlayer(ip)
-				msgActivePlayersChange()
 			elseif clientsManager.getPlayerInactivityTimeCounter(ip) > 5 and not clientsManager.isPlayerActive(ip) then
 				self.server.remove_client(client)
 			end
@@ -169,7 +166,17 @@ function on_message(self, message_id, message, sender)
 		for ip,client in pairs(clientsManager.returnAllClients()) do
 			self.server.remove_client(client)
 		end
+	elseif  message_id == hash("playersAreDead") then
+		currentSession.setGameOverFlag(1)
+	elseif  message_id == hash("waveWasOver") then
+		currentSession.setPlayersFromQue()
+		currentSession.ressurectPlayers()
+	elseif  message_id == hash("playerDied") then
+		serverHandler.send("EndGame".."\n\r", clientsManager.getPlayerClientFromID(message.playerID))
+	elseif  message_id == hash("playerRessurected") then
+		serverHandler.send("StartGame".."\n\r", clientsManager.getPlayerClientFromID(message.playerID))
 	end
+	
 
 end
 

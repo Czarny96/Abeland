@@ -18,12 +18,14 @@ g_gameStateEnum = {
 	mainMenu = {},
 	usernameField = {},
 	championSelect = {},
-	controller = {}
+	controller = {},
+	gameOverScreen = {}
 }
 
 g_gameState = g_gameStateEnum.splashScreen
 
 g_username = ""
+g_playerClass = "" -- mage, archer, rogue, knight
 
 g_connectingWindowIsOn = false
 g_dcWindowIsOn = false
@@ -63,6 +65,13 @@ function g_goToController()
 	g_gameState = g_gameStateEnum.controller
 	msg.post("/menu", "disable")
 	msg.post("/menu#ctrlGui", "enable")
+end
+
+function g_goToGameOverScreen()
+	print("Entering GameOver screen")
+	g_gameState = g_gameStateEnum.gameOverScreen
+	msg.post("/menu", "disable")
+	msg.post("/menu#gameOverScreen", "enable")
 end
 
 function g_showConnectingWindow()
