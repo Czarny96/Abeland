@@ -1,6 +1,6 @@
 components {
   id: "player"
-  component: "/player/playerClasses/archer/player.script"
+  component: "/player/playerClasses/rogue/player.script"
   position {
     x: 0.0
     y: 0.0
@@ -15,7 +15,7 @@ components {
 }
 components {
   id: "attack"
-  component: "/player/playerClasses/archer/attack.script"
+  component: "/player/playerClasses/rogue/attack.script"
   position {
     x: 0.0
     y: 0.0

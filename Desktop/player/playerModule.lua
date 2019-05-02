@@ -213,7 +213,7 @@ function M.death(self, dt)
 	if not self.isKilled then
 		self.isKilled = true
 		msg.post("#sprite", "play_animation", {id = hash("player_killed")})
-		msg.post("#death_sound", "play_sound", {gain = 0.5})
+		msg.post("#death_sound", "play_sound", {gain = 0.5})	
 		--Creates body of a player
 		bodyManager.createEternalBody(self.position, self.class)
 		--Set player position out of arena (temporarily, because it can be revived)
