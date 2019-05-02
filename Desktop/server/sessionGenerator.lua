@@ -2,6 +2,7 @@
 
 local clientsManager = require "managers.clientsManager"
 local playersManager = require "managers.playersManager"
+local bodyManager = require "managers/bodyManager.bodyManager"
 local enemyManger = require "managers.enemyManager"
 local globals = require "main.globals"
 
@@ -64,7 +65,8 @@ function M.create()
 		session.sessionID = s_SessionCounter
 		
 		print("Creating a new session with ID: " .. session.sessionID)
-		
+
+		bodyManager.deleteAllEternalBodies()
 		session.setPlayersFromQue()
 		playersManager.setActivePlayersIDs()
 		enemyManger.startNextWave()

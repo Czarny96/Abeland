@@ -28,7 +28,6 @@ end
 
 -- Delete eternal body from table and game
 function M.deleteEternalBody(class)
-	local bodyToDestroy
 	local bodies = eternalBodyTable
 	for i, body in pairs(bodies) do
 		if body.type == class then
@@ -37,7 +36,14 @@ function M.deleteEternalBody(class)
 			return
 		end
 	end	
-	
+end
+
+function M.deleteAllEternalBodies()
+	local bodies = eternalBodyTable
+	for i, body in pairs(bodies) do
+		msg.post(body.bodyID, "delete")
+		table.remove(eternalBodyTable, i)
+	end
 end
 
 return M
