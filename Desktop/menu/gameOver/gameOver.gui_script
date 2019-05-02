@@ -20,7 +20,7 @@ local function RestartGame()
 	lockActions = true
 	gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
 	gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
-	gui.EASING_LINEAR, 1, 0, function() g_goToChampionSelect() end)
+	gui.EASING_LINEAR, 0.5, 0, function() g_goToChampionSelect() end)
 	msg.post("/TCP_server/go#TCP_server_gui", "reset")
 end
 
@@ -33,7 +33,7 @@ local function buttonReleased(hashedNodeId)
 		lockActions = true
 		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
 		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
-		gui.EASING_LINEAR, 1, 0, function() os.exit() end)
+		gui.EASING_LINEAR, 0.8, 0, function() os.exit() end)
 	end
 end
 

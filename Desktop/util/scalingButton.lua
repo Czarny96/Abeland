@@ -5,7 +5,7 @@
 
 local M = {}
 
-local BUTTON_SCALE = 0.8 -- button will be rescaled to this value after clicking
+local BUTTON_SCALE = 0.9 -- button will be rescaled to this value after clicking
 
 function M.create(nodeId, onReleaseCallback, onClickCallback)
 	local button = {}

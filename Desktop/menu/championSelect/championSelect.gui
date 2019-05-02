@@ -1,7 +1,7 @@
 script: "/menu/championSelect/championSelect.gui_script"
 fonts {
   name: "menuFont"
-  font: "/menu/menuFont.font"
+  font: "/menu/fonts/menuFont.font"
 }
 fonts {
   name: "menuFont_100"
@@ -73,7 +73,7 @@ nodes {
 }
 nodes {
   position {
-    x: 333.0
+    x: 950.0
     y: 139.0
     z: 0.0
     w: 1.0
@@ -91,8 +91,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 400.0
-    y: 100.0
+    x: 631.0
+    y: 135.0
     z: 0.0
     w: 1.0
   }
@@ -299,7 +299,7 @@ nodes {
 }
 nodes {
   position {
-    x: 500.0
+    x: 700.0
     y: 730.0
     z: 0.0
     w: 1.0
@@ -354,7 +354,7 @@ nodes {
 }
 nodes {
   position {
-    x: 510.0
+    x: 710.0
     y: 600.0
     z: 0.0
     w: 1.0
@@ -471,7 +471,7 @@ nodes {
 }
 nodes {
   position {
-    x: 1300.0
+    x: 1500.0
     y: 400.0
     z: 0.0
     w: 1.0
@@ -526,7 +526,7 @@ nodes {
 }
 nodes {
   position {
-    x: 1310.0
+    x: 1510.0
     y: 270.0
     z: 0.0
     w: 1.0
@@ -643,7 +643,7 @@ nodes {
 }
 nodes {
   position {
-    x: 1300.0
+    x: 1500.0
     y: 730.0
     z: 0.0
     w: 1.0
@@ -698,7 +698,7 @@ nodes {
 }
 nodes {
   position {
-    x: 1310.0
+    x: 1510.0
     y: 600.0
     z: 0.0
     w: 1.0
@@ -815,7 +815,7 @@ nodes {
 }
 nodes {
   position {
-    x: 500.0
+    x: 700.0
     y: 400.0
     z: 0.0
     w: 1.0
@@ -870,7 +870,7 @@ nodes {
 }
 nodes {
   position {
-    x: 510.0
+    x: 710.0
     y: 270.0
     z: 0.0
     w: 1.0

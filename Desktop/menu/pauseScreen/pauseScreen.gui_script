@@ -14,24 +14,27 @@ local function buttonPressed(hashedNodeId)
 
 end
 
+local function ResumeGameAction()
+	-- print("Clicked Resume Game")
+	g_allowOpenPause()
+	g_setUpInGameEnum()
+
+	globals.setPause(false)
+	lockActions = true
+	gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
+	gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
+	gui.EASING_LINEAR, 0.5, 0, function() msg.post("/menu", "disable") end)
+end
+
 local function buttonReleased(hashedNodeId)
 	if hashedNodeId == hash("ResumeGameButton") then
-		-- print("Clicked Resume Game")
-		g_allowOpenPause()
-		g_setUpInGameEnum()
-		
-		globals.setPause(false)
-		lockActions = true
-		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
-		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
-		gui.EASING_LINEAR, 1, 0, function() msg.post("/menu", "disable") end)
-
+		ResumeGameAction()
 	elseif hashedNodeId == hash("Exit") then
 		-- print("Clicked Exit Button")
 		lockActions = true
 		gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
 		gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
-		gui.EASING_LINEAR, 1, 0, function() os.exit() end)
+		gui.EASING_LINEAR, 0.5, 0, function() os.exit() end)
 	end
 end
 
@@ -46,7 +49,6 @@ function init(self)
 		newGameButton = scalingButton.create("ResumeGameButton", buttonReleased, buttonPressed),
 		exitButton = scalingButton.create("Exit", buttonReleased, buttonPressed)
 	}
-
 end
 
 local function start(self)
@@ -74,6 +76,8 @@ function on_message(self, message_id, message, sender)
 		start(self)
 	elseif message_id == hash("disable") then
 
+	elseif message_id == hash("resumeGame") then
+		ResumeGameAction()
 	end
 end
 
