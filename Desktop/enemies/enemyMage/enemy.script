@@ -102,9 +102,9 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash("collision_response") then	
 		if message.group == hash("attack") then
-			label.set_text("#label_hp", self.health)
+			
 		elseif message.group == hash("player") then
-			label.set_text("#label_hp", self.health)
+			
 		end
 	end
 	if message_id == hash("kill") then

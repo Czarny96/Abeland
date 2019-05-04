@@ -200,6 +200,16 @@ animations {
   flip_horizontal: 0
   flip_vertical: 0
 }
+animations {
+  id: "player_attack_basic_area"
+  images {
+    image: "/assets/prototypes/mage/player_area_projectile.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 8
+  flip_horizontal: 0
+  flip_vertical: 0
+}
 margin: 5
 extrude_borders: 0
 inner_padding: 0

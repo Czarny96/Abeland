@@ -2,17 +2,29 @@
 go.property("projectileDir", vmath.vector3())
 go.property("range", 700)
 go.property("speed", 250)
-go.property("damage", 35)
+go.property("damage", 0.5)
 
 function init(self)
+	self.isExploded = false
 	self.projectilelife = self.range / self.speed
+	msg.post("#area_triggerCollider", "disable")
 end
 
 function update(self, dt)
-	go.set_position(go.get_position() + self.projectileDir * self.speed * dt)
+	if not self.isExploded then
+		go.set_position(go.get_position() + self.projectileDir * self.speed * dt)
+	end
 
 	if self.projectilelife <= 0 then
-		go.delete()
+		if self.isExploded then
+			go.delete()
+		else
+			self.isExploded = true
+			self.projectilelife = 1
+			msg.post("#triggerCollider", "disable")
+			msg.post("#area_triggerCollider", "enable")
+			msg.post("#sprite", "play_animation", {id = hash("player_attack_basic_area")})
+		end
 	else
 		self.projectilelife = self.projectilelife - dt
 	end 
@@ -22,12 +34,15 @@ function on_message(self, message_id, message, sender)
 	--Destroy on hit
 	if message_id == hash("collision_response") then
 		if message.group == hash("enemy") then
-			go.delete()
-		end
-	end
-	if message_id == hash("contact_point_response") then
-		if message.group ~= hash("enemy") then
-			go.delete()
+			local url = msg.url(nil, message.other_id, "enemy")
+			go.set(url, "health", go.get(url, "health") - self.damage)
+			if not self.isExploded then
+				self.isExploded = true
+				self.projectilelife = 1
+				msg.post("#triggerCollider", "disable")
+				msg.post("#area_triggerCollider", "enable")
+				msg.post("#sprite", "play_animation", {id = hash("player_attack_basic_area")})
+			end
 		end
 	end
 end
