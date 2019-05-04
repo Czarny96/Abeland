@@ -21,14 +21,14 @@ function update(self, dt)
 	if self.isShooting and self.shootingTimer <= 0 then
 		self.shootingDir = vmath.normalize(self.shootingDir)
 		local l_angle = math.atan2(self.shootingDir.y, self.shootingDir.x)
-
-		local l_x = self.shootingDir.x * math.cos(math.pi/6) - self.shootingDir.y * math.sin(math.pi/6)
-		local l_y = self.shootingDir.x * math.sin(math.pi/6) + self.shootingDir.y * math.cos(math.pi/6)
+local rad = math.pi/12
+		local l_x = self.shootingDir.x * math.cos(rad) - self.shootingDir.y * math.sin(rad)
+		local l_y = self.shootingDir.x * math.sin(rad) + self.shootingDir.y * math.cos(rad)
 		local l_dir1 = vmath.normalize(vmath.vector3(l_x, l_y, 0))
 		local l_angle1 = math.atan2(l_dir1.y, l_dir1.x)
 
-		l_x = self.shootingDir.x * math.cos(-math.pi/6) - self.shootingDir.y * math.sin(-math.pi/6)
-		l_y = self.shootingDir.x * math.sin(-math.pi/6) + self.shootingDir.y * math.cos(-math.pi/6)
+		l_x = self.shootingDir.x * math.cos(-rad) - self.shootingDir.y * math.sin(-rad)
+		l_y = self.shootingDir.x * math.sin(-rad) + self.shootingDir.y * math.cos(-rad)
 		local l_dir2 = vmath.normalize(vmath.vector3(l_x, l_y, 0))
 		local l_angle2 = math.atan2(l_dir2.y, l_dir2.x)
 		factory.create("#attackFactory", nil, vmath.quat_rotation_z(l_angle1), { projectileDir = l_dir1 })
