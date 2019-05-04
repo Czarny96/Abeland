@@ -82,18 +82,12 @@ function update(self, dt)
 	if globals.getPause() then
 		return
 	end
-
+	-- Health label
+	label.set_text("#label_hp", self.health)
 	lookForClosestPlayer(self)
 	applyMoveForce(self, dt)
 	updateAnimation(self)
 	handleDeath(self, dt)
-end
-
-local function playersAttacksCollisions(self, message_id, message, sender)
-	local attackUrl = msg.url(nil, message.other_id, "attack")
-	local attackDmg = go.get(attackUrl, "damage")
-	self.health = self.health - attackDmg
-	label.set_text("#label_hp", self.health)
 end
 
 local function playersCollisions(self, message_id, message, sender)
@@ -105,9 +99,9 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash("collision_response") then	
 		if message.group == hash("attack") then
-			playersAttacksCollisions(self, message_id, message, sender)
+			label.set_text("#label_hp", self.health)
 		elseif message.group == hash("player") then
-			playersCollisions(self, message_id, message, sender)
+			label.set_text("#label_hp", self.health)
 		end
 	end
 	if message_id == hash("kill") then

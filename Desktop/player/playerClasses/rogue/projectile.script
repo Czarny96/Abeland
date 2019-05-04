@@ -1,8 +1,8 @@
 --ROGUE
 go.property("projectileDir", vmath.vector3())
-go.property("range", 60)
-go.property("speed", 700)
-go.property("damage", 35)
+go.property("range", 100)
+go.property("speed", 500)
+go.property("damage", 30)
 
 function init(self)
 	self.projectilelife = self.range / self.speed
@@ -21,11 +21,8 @@ function on_message(self, message_id, message, sender)
 	--Destroy on hit
 	if message_id == hash("collision_response") then
 		if message.group == hash("enemy") then
-			go.delete()
-		end
-	end
-	if message_id == hash("contact_point_response") then
-		if message.group ~= hash("enemy") then
+			local url = msg.url(nil, message.other_id, "enemy")
+			go.set(url, "health", go.get(url, "health") - self.damage)
 			go.delete()
 		end
 	end
