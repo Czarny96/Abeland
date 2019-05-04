@@ -5,6 +5,7 @@ go.property("speed", 500)
 go.property("damage", 25)
 
 function init(self)
+	self.enemiesHit = {}
 	self.projectilelife = self.range / self.speed
 end
 
@@ -19,15 +20,22 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
-	--Destroy on hit
+	--Enemy Hit
 	if message_id == hash("collision_response") then
 		if message.group == hash("enemy") then
-			go.delete()
-		end
-	end
-	if message_id == hash("contact_point_response") then
-		if message.group ~= hash("enemy") then
-			go.delete()
+			for i, enemy in pairs(self.enemiesHit) do
+				if enemy == message.other_id then
+					return
+				end
+			end
+			
+			local url = msg.url(nil, message.other_id, "enemy")
+			go.set(url, "health", go.get(url, "health") - self.damage)
+			
+			table.insert(self.enemiesHit, message.other_id)
+			if #self.enemiesHit >= 2 then
+				go.delete()
+			end
 		end
 	end
 end
