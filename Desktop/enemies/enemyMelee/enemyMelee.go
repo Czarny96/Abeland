@@ -120,6 +120,7 @@ embedded_components {
   "mask: \"player\"\n"
   "mask: \"attack\"\n"
   "mask: \"wall\"\n"
+  "mask: \"enemyPusher\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_SPHERE\n"

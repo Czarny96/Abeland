@@ -1,0 +1,30 @@
+local enemyManager = require "managers.enemyManager"
+
+function init(self)
+	self.initPos = go.get_position()
+	self.pushingSpeed = 80
+	self.pushingFlag = false
+	self.arenaCentrum = vmath.vector3(960, 540, 0)
+end
+
+function update(self, dt)
+	if self.pushingFlag then
+		local movingDir = vmath.normalize(self.arenaCentrum - go.get_position())
+		go.set_position(go.get_position() + movingDir * self.pushingSpeed * dt)
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("collision_response") then
+		if message.group == hash("enemyPusherStop") then
+			self.pushingFlag = false
+			enemyManager.closeAllGates()
+			go.set_position(self.initPos)
+			pprint(msg.url())
+			pprint("stop")
+		end
+	end
+	if message_id == hash("waveStart") then
+		self.pushingFlag = true
+	end	
+end

@@ -28,41 +28,13 @@ local gate_bottom_enemies = 0;
 local gate_left_enemies = 0;
 local gate_right_enemies = 0;
 
-
-function M.closeGate(gate)
-	if gate == "top" then
-		msg.post("/topWalls#topWallsScript", "closeTop")
-	elseif gate == "bottom" then
-		msg.post("/walls#wallsScript", "closeBottom")
-	elseif gate == "left" then
-		msg.post("/walls#wallsScript", "closeLeft")
-	elseif gate == "right" then
-		msg.post("/walls#wallsScript", "closeRight")
-	end
-end
-
-function M.canCloseGate(gate)
-	if gate == "top" then
-		gate_top_enemies = gate_top_enemies - 1
-		if gate_top_enemies <= 0 then
-			M.closeGate(gate)
-		end
-	elseif gate == "bottom" then
-		gate_bottom_enemies = gate_bottom_enemies - 1
-		if gate_bottom_enemies <= 0 then
-			M.closeGate(gate)
-		end
-	elseif gate == "left" then
-		gate_left_enemies = gate_left_enemies - 1
-		if gate_left_enemies <= 0 then
-			M.closeGate(gate)
-		end
-	elseif gate == "right" then
-		gate_right_enemies = gate_right_enemies - 1
-		if gate_right_enemies <= 0 then
-			M.closeGate(gate)
-		end
-	end
+function M.closeAllGates()
+	msg.post("/topWalls#topWallsScript", "closeTop")
+	msg.post("/walls#wallsScript", "closeBottom")
+	msg.post("/walls#wallsScript", "closeLeft")
+	msg.post("/topWalls#topWallsScript", "closeLeft")
+	msg.post("/walls#wallsScript", "closeRight")
+	msg.post("/topWalls#topWallsScript", "closeRight")
 end
 
 function M.isWaveOver()
@@ -76,6 +48,13 @@ function M.isWaveOver()
 	end
 end
 
+function M.enableEnemyPushers()
+	msg.post("main:/enemyPusher#enemyPusherScript", "waveStart")
+	msg.post("main:/enemyPusher1#enemyPusherScript", "waveStart")
+	msg.post("main:/enemyPusher2#enemyPusherScript", "waveStart")
+	msg.post("main:/enemyPusher3#enemyPusherScript", "waveStart")
+end
+
 function M.startNextWave()
 	--Starts new wave
 	if globals.getWaveNr() < 5 then
@@ -87,6 +66,7 @@ function M.startNextWave()
 	else
 		M.initializeWave(25, 4)
 	end
+	M.enableEnemyPushers()
 end
 
 function M.removeEnemy(enemy)

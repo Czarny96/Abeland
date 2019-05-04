@@ -38,6 +38,7 @@ function M.deleteEternalBody(class)
 	end	
 end
 
+-- Delete all eternal bodies from table and game
 function M.deleteAllEternalBodies()
 	local bodies = eternalBodyTable
 	for i, body in pairs(bodies) do
