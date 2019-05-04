@@ -1,5 +1,5 @@
 --KNIGHT
-go.property("shootingDelay", 0.35) 
+go.property("shootingDelay", 0.6) 
 go.property("shootingDir", vmath.vector3(0,0,0))
 
 --Flags
