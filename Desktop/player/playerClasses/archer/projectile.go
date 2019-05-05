@@ -16,7 +16,7 @@ components {
 embedded_components {
   id: "sprite"
   type: "sprite"
-  data: "tile_set: \"/atlass/playerClassAtlass/archer.atlas\"\n"
+  data: "tile_set: \"/player/playerClasses/archer/archer.atlas\"\n"
   "default_animation: \"player_attack_basic\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
@@ -88,7 +88,7 @@ embedded_components {
   "mass: 0.0\n"
   "friction: 1.0\n"
   "restitution: 0.0\n"
-  "group: \"attacks\"\n"
+  "group: \"attack\"\n"
   "mask: \"walls\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"

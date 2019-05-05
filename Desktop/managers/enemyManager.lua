@@ -8,13 +8,6 @@ local M = {}
 local globals = require "main.globals"
 local playersManager = require "managers.playersManager"
 
---Enemies are split into two groups: range, malee
---Thats why we have:
---	4 arrays that helds enemy objects
---		2 of each kind 
---			1 for active 
---			1 for inactive
-
 local enemyIDs = {}
 
 --Variable for random number
@@ -48,6 +41,13 @@ function M.isWaveOver()
 	end
 end
 
+function M.resetAllEnemyPushers()
+	msg.post("main:/enemyPusher#enemyPusherScript", "reset")
+	msg.post("main:/enemyPusher1#enemyPusherScript", "reset")
+	msg.post("main:/enemyPusher2#enemyPusherScript", "reset")
+	msg.post("main:/enemyPusher3#enemyPusherScript", "reset")
+end
+
 function M.enableEnemyPushers()
 	msg.post("main:/enemyPusher#enemyPusherScript", "waveStart")
 	msg.post("main:/enemyPusher1#enemyPusherScript", "waveStart")
@@ -58,13 +58,13 @@ end
 function M.startNextWave()
 	--Starts new wave
 	if globals.getWaveNr() < 5 then
-		M.initializeWave(10, 1)
+		M.initializeWave(1)
 	elseif globals.getWaveNr() < 10 then
-		M.initializeWave(15, 2)
+		M.initializeWave(2)
 	elseif globals.getWaveNr() < 15 then
-		M.initializeWave(20, 3)
+		M.initializeWave(3)
 	else
-		M.initializeWave(25, 4)
+		M.initializeWave(4)
 	end
 	M.enableEnemyPushers()
 end
@@ -92,18 +92,18 @@ function M.resetArena()
 		msg.post(enemy, "kill")
 	end
 	enemyIDs = {}
-
+	
 	globals.setWaveNr(1)
 end
 
 
-function M.initializeWave(rangePercent, gateAmount)
-	
+function M.initializeWave(gateAmount)
+	local enemyTypesAmount = 5
 	--Teleports enemies to arena (behind gates / to gate_[direction]_out
 	--rangePercent == what is a ratio of ranged attack enemies to malee attacking enemies 
 	--gateAmount == to how many of 4 gates enemies should be distributed
 	print("Initializing wave nr", globals.getWaveNr())
-	local enemiesAmount = globals.getWaveNr()
+	local enemiesAmount = 3 * globals.getWaveNr() + 2
 	local gateSide
 	-- info for session generator to know that wave has started
 	msg.post("/TCP_server/go#TCP_server_gui", "waveWasOver")
@@ -115,15 +115,20 @@ function M.initializeWave(rangePercent, gateAmount)
 	if gateAmount <= 1 then
 		--Spawn enemies only at top gate
 		msg.post("/topWalls#topWallsScript", "openTop")
+		
 		for i = 1, enemiesAmount, 1
 		do
 			rand = math.floor(math.random(1,100))
-			if rand <= rangePercent then
-				local url = msg.url("main","/gate_top_out","enemyMageFactory")
-				table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
-			else
-				local url = msg.url("main","/gate_top_out","enemyMeleeFactory")
-				table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+			if rand % enemyTypesAmount == 0 then
+				table.insert(enemyIDs, factory.create("/enemyFactory#mageFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+			elseif rand % enemyTypesAmount == 1 then
+				table.insert( enemyIDs, factory.create("/enemyFactory#zombieFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+			elseif rand % enemyTypesAmount == 2 then
+				table.insert( enemyIDs, factory.create("/enemyFactory#skeletonMeleeFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+			elseif rand % enemyTypesAmount == 3 then
+				table.insert( enemyIDs, factory.create("/enemyFactory#skeletonArcherFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+			elseif rand % enemyTypesAmount == 4 then
+				table.insert( enemyIDs, factory.create("/enemyFactory#ghostFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 			end
 		end
 	elseif gateAmount == 2 then
@@ -134,20 +139,28 @@ function M.initializeWave(rangePercent, gateAmount)
 			rand = math.floor(math.random(1,100))
 			gateSide = math.floor(math.random(1,100))
 			if gateSide <= 50 then
-				if rand <= rangePercent then
-					local url = msg.url("main","/gate_top_out","enemyMageFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
-				else
-					local url = msg.url("main","/gate_top_out","enemyMeleeFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				if rand % enemyTypesAmount == 0 then
+					table.insert(enemyIDs, factory.create("/enemyFactory#mageFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 1 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#zombieFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 2 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonMeleeFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 3 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonArcherFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 4 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#ghostFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			else
-				if rand <= rangePercent then
-					local url = msg.url("main","/gate_bottom_out","enemyMageFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
-				else
-					local url = msg.url("main","/gate_bottom_out","enemyMeleeFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				if rand % enemyTypesAmount == 0 then
+					table.insert(enemyIDs, factory.create("/enemyFactory#mageFactory", globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 1 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#zombieFactory", globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 2 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonMeleeFactory", globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 3 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonArcherFactory", globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 4 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#ghostFactory", globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			end
 		end
@@ -161,28 +174,40 @@ function M.initializeWave(rangePercent, gateAmount)
 			rand = math.floor(math.random(1,100))
 			gateSide = math.floor(math.random(1,100))
 			if gateSide <= 33 then
-				if rand <= rangePercent then
-					local url = msg.url("main","/gate_top_out","enemyMageFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
-				else
-					local url = msg.url("main","/gate_top_out","enemyMeleeFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				if rand % enemyTypesAmount == 0 then
+					table.insert(enemyIDs, factory.create("/enemyFactory#mageFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 1 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#zombieFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 2 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonMeleeFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 3 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonArcherFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 4 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#ghostFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			elseif gateSide <= 66 then
-				if rand <= rangePercent then
-					local url = msg.url("main","/gate_bottom_out","enemyMageFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
-				else
-					local url = msg.url("main","/gate_bottom_out","enemyMeleeFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				if rand % enemyTypesAmount == 0 then
+					table.insert(enemyIDs, factory.create("/enemyFactory#mageFactory", globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 1 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#zombieFactory", globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 2 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonMeleeFactory", globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 3 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonArcherFactory", globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 4 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#ghostFactory", globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			else
-				if rand <= rangePercent then
-					local url = msg.url("main","/gate_left_out","enemyMageFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
-				else
-					local url = msg.url("main","/gate_left_out","enemyMeleeFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				if rand % enemyTypesAmount == 0 then
+					table.insert(enemyIDs, factory.create("/enemyFactory#mageFactory", globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 1 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#zombieFactory", globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 2 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonMeleeFactory", globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 3 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonArcherFactory", globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 4 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#ghostFactory", globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			end
 		end
@@ -197,36 +222,52 @@ function M.initializeWave(rangePercent, gateAmount)
 			rand = math.floor(math.random(1,100))
 			gateSide = math.floor(math.random(1,100))
 			if gateSide <= 25 then
-				if rand <= rangePercent then
-					local url = msg.url("main","/gate_top_out","enemyMageFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
-				else
-					local url = msg.url("main","/gate_top_out","enemyMeleeFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				if rand % enemyTypesAmount == 0 then
+					table.insert(enemyIDs, factory.create("/enemyFactory#mageFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 1 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#zombieFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 2 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonMeleeFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 3 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonArcherFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 4 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#ghostFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			elseif gateSide <= 50 then
-				if rand <= rangePercent then
-					local url = msg.url("main","/gate_bottom_out","enemyMageFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
-				else
-					local url = msg.url("main","/gate_bottom_out","enemyMeleeFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				if rand % enemyTypesAmount == 0 then
+					table.insert(enemyIDs, factory.create("/enemyFactory#mageFactory", globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 1 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#zombieFactory", globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 2 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonMeleeFactory", globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 3 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonArcherFactory", globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 4 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#ghostFactory", globals.getSpawnPoints()[2] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			elseif gateSide <= 75 then
-				if rand <= rangePercent then
-					local url = msg.url("main","/gate_left_out","enemyMageFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
-				else
-					local url = msg.url("main","/gate_left_out","enemyMeleeFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				if rand % enemyTypesAmount == 0 then
+					table.insert(enemyIDs, factory.create("/enemyFactory#mageFactory", globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 1 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#zombieFactory", globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 2 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonMeleeFactory", globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 3 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonArcherFactory", globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 4 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#ghostFactory", globals.getSpawnPoints()[3] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			else
-				if rand <= rangePercent then
-					local url = msg.url("main","/gate_right_out","enemyMageFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[4] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
-				else
-					local url = msg.url("main","/gate_right_out","enemyMeleeFactory")
-					table.insert(enemyIDs, factory.create(url, globals.getSpawnPoints()[4] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				if rand % enemyTypesAmount == 0 then
+					table.insert(enemyIDs, factory.create("/enemyFactory#mageFactory", globals.getSpawnPoints()[4] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 1 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#zombieFactory", globals.getSpawnPoints()[4] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 2 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonMeleeFactory", globals.getSpawnPoints()[4] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 3 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#skeletonArcherFactory", globals.getSpawnPoints()[4] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				elseif rand % enemyTypesAmount == 4 then
+					table.insert( enemyIDs, factory.create("/enemyFactory#ghostFactory", globals.getSpawnPoints()[4] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 				end
 			end
 		end

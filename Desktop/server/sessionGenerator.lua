@@ -82,6 +82,7 @@ function M.create()
 		print("Destroying session with ID: " .. s_SessionCounter)
 		--playersManager.setAllPlayersToWaitingRoom()
 		enemyManger.resetArena()
+		enemyManger.resetAllEnemyPushers()
 		
 		if session.isPlayerInQue() then
 			playersQueue = nil

@@ -1,0 +1,33 @@
+images {
+  image: "/assets/images/ghost/particle.png"
+}
+images {
+  image: "/assets/images/ghost/player_prot_dead.png"
+}
+images {
+  image: "/assets/images/ghost/player_prot_down.png"
+}
+images {
+  image: "/assets/images/ghost/player_prot_down_left.png"
+}
+images {
+  image: "/assets/images/ghost/player_prot_down_right.png"
+}
+images {
+  image: "/assets/images/ghost/player_prot_left.png"
+}
+images {
+  image: "/assets/images/ghost/player_prot_right.png"
+}
+images {
+  image: "/assets/images/ghost/player_prot_up.png"
+}
+images {
+  image: "/assets/images/ghost/player_prot_up_left.png"
+}
+images {
+  image: "/assets/images/ghost/player_prot_up_right.png"
+}
+margin: 10
+extrude_borders: 0
+inner_padding: 0

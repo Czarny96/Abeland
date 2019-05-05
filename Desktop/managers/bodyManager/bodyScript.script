@@ -17,6 +17,14 @@ local function setProperSprite(self)
 		msg.post("#sprite", "play_animation", {id = hash("rogue")})
 	elseif self.type == hash("knight") then
 		msg.post("#sprite", "play_animation", {id = hash("knight")})
+	elseif self.type == hash("zombie") then
+		msg.post("#sprite", "play_animation", {id = hash("zombie")})
+	elseif self.type == hash("skeletonMelee") then
+		msg.post("#sprite", "play_animation", {id = hash("skeletonMelee")})
+	elseif self.type == hash("skeletonArcher") then
+		msg.post("#sprite", "play_animation", {id = hash("skeletonArcher")})
+	elseif self.type == hash("ghost") then
+		msg.post("#sprite", "play_animation", {id = hash("ghost")})
 	end	
 end
 

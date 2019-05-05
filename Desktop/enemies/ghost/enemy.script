@@ -1,0 +1,204 @@
+--GHOST
+
+local enemyManager = require "managers.enemyManager"
+local bodyManager = require "managers/bodyManager.bodyManager"
+
+-- Global properties
+go.property("health", 100)
+go.property("damage", 5)
+go.property("isRanged", false)
+
+local playerManager = require "managers.playersManager"
+
+function init(self)
+	-- every enemy has different behavior
+	self.random = math.random(4, 10)
+
+	self.actionTimer = 0
+	self.chargeTimer = 5
+	self.attackTimer = 5
+
+	self.playerWithLowestHp = nil
+	self.playerInRange = nil
+
+	self.lastHitVector = nil
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+-- returns false if all players are dead
+local function setTarget(self)
+	self.targetId = playerManager.getClosestPlayerID(go.get_position())
+
+	if self.targetId == 0 then
+		return false
+	else 
+		return true
+	end
+end
+
+local function setDirection(self, moveVector)
+	
+	if moveVector.x < -0.3 and moveVector.y > 0.3 then
+		msg.post("#sprite", "play_animation", {id = hash("player_prot_up_left")})
+	elseif moveVector.x > 0.3 and moveVector.y > 0.3 then
+		msg.post("#sprite", "play_animation", {id = hash("player_prot_up_right")})
+	elseif moveVector.x < -0.3 and moveVector.y < -0.3 then
+		msg.post("#sprite", "play_animation", {id = hash("player_prot_down_left")})
+	elseif moveVector.x > 0.3 and moveVector.y < -0.3 then
+		msg.post("#sprite", "play_animation", {id = hash("player_prot_down_right")})
+	elseif moveVector.y > 0.3  then
+		msg.post("#sprite", "play_animation", {id = hash("player_prot_up")})
+	elseif moveVector.y < -0.3  then
+		msg.post("#sprite", "play_animation", {id = hash("player_prot_down")})
+	elseif moveVector.x < -0.3  then
+		msg.post("#sprite", "play_animation", {id = hash("player_prot_left")})
+	elseif moveVector.x > 0.3  then
+		msg.post("#sprite", "play_animation", {id = hash("player_prot_right")})
+	else 
+		msg.post("#sprite", "play_animation", {id = hash("player_prot_down")})
+	end
+	
+end
+
+-- HIDE SPRITE 
+
+local function hideSprite(self)
+	self.spriteHidden = true
+	msg.post("#hpLabel", "disable")
+	go.cancel_animations("#sprite", "tint.w")
+	go.animate("#sprite", "tint.w", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_INOUTQUART, 3)
+end
+
+local function showSprite(self)
+	self.spriteHidden = false
+	msg.post("#hpLabel", "enable")
+	go.cancel_animations("#sprite", "tint.w")
+	go.animate("#sprite", "tint.w", go.PLAYBACK_ONCE_FORWARD, 1, go.EASING_INOUTQUART, 3)
+end
+
+-- END OF HIDE SPRITE
+
+local function handleDeath(self, dt)
+	-- Handling death when health drops below 0
+	if self.health <= 0 then
+		-- Play death sound
+		--msg.post("#death_sound", "play_sound", {gain = 0.5})
+		enemyManager.removeEnemy(go.get_id())
+		bodyManager.createTimedBody(go.get_position(), hash("ghost"), 5)
+		go.delete()
+	end
+end
+
+local function attack(self, message_id, message, sender)
+	if self.attackTimer > 1 and self.chargeTimer>2 then
+		self.attackTimer = 0
+
+		--msg.post(message.other_id, "hit", {enemy_position = go.get_position()})
+		msg.post(message.other_id, "hit", {dmg = self.damage})
+
+		local dir = vmath.normalize(message.other_position - go.get_position())
+		local angle = math.atan2(dir.x, -dir.y)
+		local rotation = vmath.quat_rotation_z(angle)
+		local pos = go.get_position() + dir*50
+		pos.z = 0
+		factory.create("#attackFactory", pos, rotation)
+		self.lastHitVector = dir
+	end
+end
+
+function damageEnemy(self, message_id, message, sender)
+	-- knock back enemy
+	local kickDir = vmath.normalize( go.get_position() - message.other_position )
+	msg.post("#co", "apply_force", {force = kickDir * go.get("#co", "mass") * 1000, position = go.get_world_position()})
+end
+
+function update(self, dt)
+	self.actionTimer = self.actionTimer + dt
+	self.chargeTimer = self.chargeTimer + dt
+	self.attackTimer = self.attackTimer + dt
+	
+	label.set_text("#hpLabel", tostring(self.health))
+
+	handleDeath(self, dt)
+
+	if not setTarget(self) then
+		-- all players are dead, so enemy will do nothing
+		return
+	end	
+	
+	if self.targetId then
+		self.targetPosition = go.get_position(self.targetId)
+	else
+		self.targetPosition = nil
+	end
+	
+	-- RANDOM ACTIONS (invisibility)
+	if self.actionTimer > self.random then
+		self.random = math.random(5, 10)
+		self.actionTimer = 0
+
+		if self.spriteHidden then
+			showSprite(self)
+		else 
+			hideSprite(self)
+		end	
+	end
+	-- END OF RANDOM ACTIONS
+
+	-- MOVEMENT
+
+	if self.targetPosition then
+		if self.attackTimer < 0.5 then
+			setDirection(self, self.lastHitVector)
+		else
+			local movement = self.targetPosition - go.get_position()
+			self.targetPosition = vmath.normalize(movement)
+			setDirection(self, vmath.normalize(movement))
+			msg.post("#co", "apply_force", {force = vmath.normalize(movement) * 100 * go.get("#co", "mass"), position = go.get_world_position()})
+		end
+		
+	end
+	-- END OF ENEMY MOVEMENT
+	
+end
+
+function on_message(self, message_id, message, sender)
+	
+	-- Handle collision
+	
+	if message_id == hash("collision_response") then
+		
+		if message.own_group == hash("chargeRange") then
+			
+			if self.chargeTimer > 5 and self.targetPosition then
+				self.chargeTimer = 0
+				
+				go.animate("#sprite", "tint.y", go.PLAYBACK_ONCE_FORWARD, 0.1, go.EASING_INOUTQUART, 1, 0, 
+				function() 
+					msg.post("#co", "apply_force", 
+					{
+						force = self.targetPosition * 30000 * go.get("#co", "mass"), 
+						position = go.get_world_position()}
+					)
+					go.animate("#sprite", "tint.y", go.PLAYBACK_ONCE_FORWARD, 1, go.EASING_INOUTQUART, 2)
+				end)
+				
+				go.animate("#sprite", "tint.z", go.PLAYBACK_ONCE_FORWARD, 0.1, go.EASING_INOUTQUART, 1, 0, 
+				function() 
+					go.animate("#sprite", "tint.z", go.PLAYBACK_ONCE_FORWARD, 1, go.EASING_INOUTQUART, 2)
+				end)
+				
+			end
+
+		elseif message.own_group == hash("enemy") and message.other_group == hash("attack") then
+			damageEnemy(self, message_id, message, sender)
+		elseif message.own_group == hash("attackRange") then
+			attack(self, message_id, message, sender)
+		end
+		
+	end
+end

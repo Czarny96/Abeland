@@ -1,0 +1,55 @@
+go.property("direction", vmath.vector3())
+go.property("damage", 5)
+
+local arrowSpeed = 500
+
+function init(self)
+	-- Add initialization code here
+	-- Remove this function if not needed
+	self.lifeTime = 0
+	--pprint(go.get_rotation())
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	local pos = go.get_position()
+	
+	pos.x = pos.x + self.direction.x * dt * arrowSpeed
+	pos.y = pos.y + self.direction.y * dt * arrowSpeed
+
+	go.set_position(pos)
+	
+	self.lifeTime= self.lifeTime + dt
+	if self.lifeTime > 0.8 then
+		go.delete()
+	end
+	-- Add update code here
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("collision_response") then
+
+		if message.group == hash("player") then
+			msg.post(message.other_id, "hit", {dmg = self.damage})
+			--msg.post(message.other_id, "hit", {enemy_position = go.get_position()})
+		end		
+
+		msg.post("#arrowCollider", "disable")
+		go.delete()
+	end
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end

@@ -16,7 +16,7 @@ components {
 embedded_components {
   id: "sprite"
   type: "sprite"
-  data: "tile_set: \"/atlass/playerClassAtlass/mage.atlas\"\n"
+  data: "tile_set: \"/player/playerClasses/mage/mage.atlas\"\n"
   "default_animation: \"player_attack_basic\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"

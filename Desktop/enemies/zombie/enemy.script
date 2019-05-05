@@ -1,0 +1,209 @@
+--ZOMBIE
+
+local enemyManager = require "managers.enemyManager"
+local bodyManager = require "managers/bodyManager.bodyManager"
+
+-- Global properties
+go.property("health", 100)
+go.property("damage", 5)
+go.property("isRanged", false)
+
+local playerManager = require "managers.playersManager"
+
+-- returns false if all players are dead
+local function setTarget(self)
+
+	self.targetId = playerManager.getClosestPlayerID(go.get_position())
+	
+	if self.targetId == 0 then
+		return false
+	else 
+		return true
+	end
+end
+
+function init(self)
+
+	-- every enemy has different behavior
+	self.random = math.random(0, 2)
+
+	self.actionTimer = 0
+	self.attackTimer = 2
+
+	self.lastHitVector = nil
+
+	self.targetId = nil
+	self.targetPosition = nil
+
+	setTarget(self)
+end
+
+function final(self)
+	
+end
+
+
+
+-- optimisation ;]
+local zombieAnims = {
+	hash("player_prot_up_left"),			--1
+	hash("player_prot_up_right"),
+	hash("player_prot_down_left"),
+	hash("player_prot_down_right"),
+	hash("player_prot_up"),
+	hash("player_prot_down"),
+	hash("player_prot_left"),
+	hash("player_prot_right"),
+	hash("player_prot_down"),				--9
+	hash("player_prot_up_left_attack"),		--10
+	hash("player_prot_up_right_attack"),
+	hash("player_prot_down_left_attack"),
+	hash("player_prot_down_right_attack"),	
+	hash("player_prot_up_attack"),
+	hash("player_prot_down_attack"),
+	hash("player_prot_left_attack"),
+	hash("player_prot_right_attack"),
+	hash("player_prot_down_attack")			--18
+
+}
+
+local function setDirection(self, moveVector)
+	
+	local idx = 1
+	-- Look at zombieAnims table above
+	if moveVector.x < -0.3 and moveVector.y > 0.3 then
+		idx = 1
+	elseif moveVector.x > 0.3 and moveVector.y > 0.3 then
+		idx = 2
+	elseif moveVector.x < -0.3 and moveVector.y < -0.3 then
+		idx = 3
+	elseif moveVector.x > 0.3 and moveVector.y < -0.3 then
+		idx = 4
+	elseif moveVector.y > 0.3  then
+		idx = 5
+	elseif moveVector.y < -0.3  then
+		idx = 6
+	elseif moveVector.x < -0.3  then
+		idx = 7
+	elseif moveVector.x > 0.3  then
+		idx = 8
+	else 
+		idx = 9
+	end
+
+	-- if enemy is attacking, then show frames 10-18
+	if self.attackTimer < 0.3 then
+		idx = idx + 9
+	end
+	
+	msg.post("#sprite", "play_animation", {id = zombieAnims[idx]})
+	
+end
+
+local function handleDeath(self, dt)
+	-- Handling death when health drops below 0
+	if self.health <= 0 then
+		-- Play death sound
+		--msg.post("#death_sound", "play_sound", {gain = 0.5})
+		enemyManager.removeEnemy(go.get_id())
+		bodyManager.createTimedBody(go.get_position(), hash("zombie"), 5)
+		go.delete()
+	end
+end
+
+local function attack(self, message_id, message, sender)
+	if self.attackTimer > 1 then
+
+		self.attackTimer = 0
+
+		-- send msg to player who was hit
+		--msg.post(message.other_id, "hit", {enemy_position = go.get_position()})
+		msg.post(message.other_id, "hit", {dmg = self.damage})
+
+		-- crate slash 
+		local dir = vmath.normalize(message.other_position - go.get_position())
+		local angle = math.atan2(dir.x, -dir.y)
+		local rotation = vmath.quat_rotation_z(angle)
+		local pos = go.get_position() + dir*50
+		pos.z = 0
+		factory.create("#attackFactory", pos, rotation)
+
+		self.lastHitVector = dir
+
+	end
+end
+
+function damageEnemy(self, message_id, message, sender)
+	-- knock back enemy
+	local kickDir = vmath.normalize( go.get_position() - message.other_position )
+	msg.post("#co", "apply_force", {force = kickDir * go.get("#co", "mass") * 1000, position = go.get_world_position()})
+	
+end
+
+function update(self, dt)
+	
+	self.actionTimer = self.actionTimer + dt
+	self.attackTimer = self.attackTimer + dt
+
+	label.set_text("#hpLabel", tostring(self.health))
+
+	handleDeath(self, dt)
+
+	-- MOVEMENT
+
+	if not setTarget(self) then
+		-- all players are dead, so enemy will do nothing
+		return
+	end	
+	
+	if self.targetId then
+		self.targetPosition = go.get_position(self.targetId)
+	else
+		self.targetPosition = nil
+	end
+	
+	if self.targetPosition then
+
+		if self.attackTimer < 0.5 then
+			setDirection(self, self.lastHitVector)
+		else
+			local movement = self.targetPosition - go.get_position()
+			self.targetPosition = vmath.normalize(movement)
+			setDirection(self, vmath.normalize(movement))
+			msg.post("#co", "apply_force", {force = vmath.normalize(movement) * 100 * go.get("#co", "mass"), position = go.get_world_position()})
+		end
+		
+	end
+	-- END OF ENEMY MOVEMENT
+	
+end
+
+function on_message(self, message_id, message, sender)
+	
+	-- Handle collision
+	
+	if message_id == hash("collision_response") then
+		
+		if message.own_group == hash("enemy") and message.other_group == hash("attack") then
+
+			damageEnemy(self, message_id, message, sender)
+			
+		elseif message.own_group == hash("attackRange") then
+			attack(self, message_id, message, sender)
+
+		end
+		
+	end
+	
+	
+	
+end
+
+function on_input(self, action_id, action)
+	
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end

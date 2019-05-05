@@ -80,166 +80,6 @@ instances {
   }
 }
 instances {
-  id: "gate_bottom_in"
-  prototype: "/arena/enemySpawnPoints/gate_bottom_in.go"
-  position {
-    x: 928.0
-    y: 150.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 0.25
-    y: 0.25
-    z: 1.0
-  }
-}
-instances {
-  id: "gate_bottom_out"
-  prototype: "/arena/enemySpawnPoints/gate_bottom_out.go"
-  position {
-    x: 928.0
-    y: -320.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 0.25
-    y: 0.25
-    z: 1.0
-  }
-}
-instances {
-  id: "gate_left_in"
-  prototype: "/arena/enemySpawnPoints/gate_left_in.go"
-  position {
-    x: 120.0
-    y: 540.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 0.25
-    y: 0.25
-    z: 1.0
-  }
-}
-instances {
-  id: "gate_left_out"
-  prototype: "/arena/enemySpawnPoints/gate_left_out.go"
-  position {
-    x: -320.0
-    y: 540.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 0.25
-    y: 0.25
-    z: 1.0
-  }
-}
-instances {
-  id: "gate_right_in"
-  prototype: "/arena/enemySpawnPoints/gate_right_in.go"
-  position {
-    x: 1800.0
-    y: 540.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 0.25
-    y: 0.25
-    z: 1.0
-  }
-}
-instances {
-  id: "gate_right_out"
-  prototype: "/arena/enemySpawnPoints/gate_right_out.go"
-  position {
-    x: 2240.0
-    y: 540.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 0.25
-    y: 0.25
-    z: 1.0
-  }
-}
-instances {
-  id: "gate_top_in"
-  prototype: "/arena/enemySpawnPoints/gate_top_in.go"
-  position {
-    x: 928.0
-    y: 900.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 0.25
-    y: 0.25
-    z: 1.0
-  }
-}
-instances {
-  id: "gate_top_out"
-  prototype: "/arena/enemySpawnPoints/gate_top_out.go"
-  position {
-    x: 928.0
-    y: 1400.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 0.25
-    y: 0.25
-    z: 1.0
-  }
-}
-instances {
   id: "bodyCreator"
   prototype: "/managers/bodyManager/bodyCreator.go"
   position {
@@ -622,6 +462,116 @@ embedded_instances {
   "components {\n"
   "  id: \"pauseScreen\"\n"
   "  component: \"/menu/pauseScreen/pauseScreen.gui\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "enemyFactory"
+  data: "embedded_components {\n"
+  "  id: \"ghostFactory\"\n"
+  "  type: \"factory\"\n"
+  "  data: \"prototype: \\\"/enemies/ghost/enemy.go\\\"\\n"
+  "load_dynamically: false\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"skeletonArcherFactory\"\n"
+  "  type: \"factory\"\n"
+  "  data: \"prototype: \\\"/enemies/skeletonArcher/enemy.go\\\"\\n"
+  "load_dynamically: false\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"skeletonMeleeFactory\"\n"
+  "  type: \"factory\"\n"
+  "  data: \"prototype: \\\"/enemies/skeletonMelee/enemy.go\\\"\\n"
+  "load_dynamically: false\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"zombieFactory\"\n"
+  "  type: \"factory\"\n"
+  "  data: \"prototype: \\\"/enemies/zombie/enemy.go\\\"\\n"
+  "load_dynamically: false\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"mageFactory\"\n"
+  "  type: \"factory\"\n"
+  "  data: \"prototype: \\\"/enemies/enemyMage/enemyMage.go\\\"\\n"
+  "load_dynamically: false\\n"
+  "\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"

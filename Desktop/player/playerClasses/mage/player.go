@@ -31,7 +31,7 @@ components {
 embedded_components {
   id: "sprite"
   type: "sprite"
-  data: "tile_set: \"/atlass/playerClassAtlass/mage.atlas\"\n"
+  data: "tile_set: \"/player/playerClasses/mage/mage.atlas\"\n"
   "default_animation: \"player_up\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
@@ -153,6 +153,8 @@ embedded_components {
   "group: \"player\"\n"
   "mask: \"enemy\"\n"
   "mask: \"player\"\n"
+  "mask: \"attackRange\"\n"
+  "mask: \"chargeRange\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"

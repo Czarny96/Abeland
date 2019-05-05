@@ -14,17 +14,22 @@ function update(self, dt)
 	end
 end
 
+local function reset()
+	self.pushingFlag = false
+	enemyManager.closeAllGates()
+	go.set_position(self.initPos)
+end
+
 function on_message(self, message_id, message, sender)
 	if message_id == hash("collision_response") then
 		if message.group == hash("enemyPusherStop") then
-			self.pushingFlag = false
-			enemyManager.closeAllGates()
-			go.set_position(self.initPos)
-			pprint(msg.url())
-			pprint("stop")
+			reset()
 		end
 	end
 	if message_id == hash("waveStart") then
 		self.pushingFlag = true
-	end	
+	end
+	if message_id == hash("reset") then
+		reset()
+	end
 end

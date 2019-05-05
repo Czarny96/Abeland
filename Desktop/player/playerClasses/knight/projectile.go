@@ -16,7 +16,7 @@ components {
 embedded_components {
   id: "sprite"
   type: "sprite"
-  data: "tile_set: \"/atlass/playerClassAtlass/knight.atlas\"\n"
+  data: "tile_set: \"/player/playerClasses/knight/knight.atlas\"\n"
   "default_animation: \"player_attack_basic\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
