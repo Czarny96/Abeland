@@ -93,6 +93,8 @@ end
 local function start(self)
 	lockActions = false
 
+	msg.post("/menu#gameOverScreen", "setResurrectionFlag", { flag = true })
+
 	-- screen is going from black to white
 	gui.set_color(blackBoxNode, vmath.vector4(0,0,0,1))
 	gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,0), gui.EASING_LINEAR, 0.5)

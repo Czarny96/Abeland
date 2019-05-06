@@ -54,11 +54,9 @@ local function onData(data)
 		
 		msg.post("/menu#championSelect", "playerClassConfirm", {playerClass = string.sub(data, 3, #data)})
 		
-	elseif string.sub(data, 1, 1) == "A" then
-		-- example: "A;2" - 2 players alive
+	elseif data == "AllDead" then
 		
-		local _alivePlayers = tonumber(string.sub(data, 3, 3))
-		msg.post("/menu#gameOverScreen", "alivePlayers", {alivePlayers = _alivePlayers}) -- it should be one digit
+		msg.post("/menu#gameOverScreen", "setResurrectionFlag", { flag = false })
 		
 	end
 end
@@ -149,19 +147,13 @@ function on_message(self, message_id, message, sender)
 			client.send("G;ready\n\r")
 		end
 	elseif message_id == hash("sendUsername") then
+		
 		if client then
 
 			if g_username ~= "" then
 				client.send("N;" .. g_username .. "\n\r")
 			end
 			
-		end
-	elseif message_id == hash("alivePlayersRequest") then
-		-- ask server about number of alive players 
-		if client then
-			
-			client.send("AlivePlayers\n\r")
-
 		end
 		
 	end
