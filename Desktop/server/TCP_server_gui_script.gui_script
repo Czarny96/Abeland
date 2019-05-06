@@ -22,6 +22,8 @@ local function sendMessageToAllActivePlayers(mess)
 	end
 end
 
+
+
 function createSession()
 	if currentSession == nil then
 		currentSession = sessionGenerator.create()
@@ -77,6 +79,11 @@ local function on_client_connected(ip, port, client)
 	clientsManager.addPlayer(ip, client)
 end
 
+local function endGame()
+	sendMessageToAllActivePlayers("AllDead")
+	currentSession.setGameOverFlag(1)
+end
+
 local function on_client_disconnected(ip, port, client)
 	--TODO: add function, to remove data from menu
 	if currentSession ~= nil then 
@@ -86,7 +93,7 @@ local function on_client_disconnected(ip, port, client)
 	clientsManager.removePlayer(ip)
 
 	if not clientsManager.isAnyPlayer() and currentSession~=nil then
-		currentSession.setGameOverFlag(1)
+		endGame()
 	end
 end
 
@@ -167,7 +174,7 @@ function on_message(self, message_id, message, sender)
 			self.server.remove_client(client)
 		end
 	elseif  message_id == hash("playersAreDead") then
-		currentSession.setGameOverFlag(1)
+		endGame()
 	elseif  message_id == hash("waveWasOver") then
 		currentSession.setPlayersFromQue()
 		currentSession.ressurectPlayers()
