@@ -49,6 +49,9 @@ function update(self, dt)
 		self.projectileLife = self.projectileLife - dt
 		self.checkClosestPlayerPosTimer = self.checkClosestPlayerPosTimer - dt
 	end 
+
+	-- DRAW ORDER
+	g_applyDrawOrder(go.get_id(), 2)
 end
 
 local function playersCollision(self, message_id, message, sender)

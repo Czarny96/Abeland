@@ -17,6 +17,9 @@ function update(self, dt)
 	if self.projectilelife <= 0 then
 		go.delete()
 	end 
+
+	-- DRAW ORDER
+	g_applyDrawOrder(go.get_id(), 2)
 end
 
 function on_message(self, message_id, message, sender)

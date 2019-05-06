@@ -40,6 +40,9 @@ function update(self, dt)
 			self.dissapearTimer = self.dissapearTimer - dt
 		end
 	end
+
+	-- DRAW ORDER
+	g_applyDrawOrder(go.get_id(), 2)
 end
 
 function on_message(self, message_id, message, sender)

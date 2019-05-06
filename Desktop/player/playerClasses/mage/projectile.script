@@ -29,6 +29,9 @@ function update(self, dt)
 	else
 		self.projectilelife = self.projectilelife - dt
 	end 
+
+	-- DRAW ORDER
+	g_applyDrawOrder(go.get_id(), 2)
 end
 
 function on_message(self, message_id, message, sender)

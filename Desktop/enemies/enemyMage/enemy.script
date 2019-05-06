@@ -91,6 +91,9 @@ function update(self, dt)
 	applyMoveForce(self, dt)
 	updateAnimation(self)
 	handleDeath(self, dt)
+
+	-- DRAW ORDER
+	g_applyDrawOrder(go.get_id(), 2)
 end
 
 local function playersCollisions(self, message_id, message, sender)

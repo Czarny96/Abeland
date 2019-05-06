@@ -163,6 +163,9 @@ function update(self, dt)
 		
 	end
 	-- END OF ENEMY MOVEMENT
+
+	-- DRAW ORDER
+	g_applyDrawOrder(go.get_id(), 2)
 	
 end
 

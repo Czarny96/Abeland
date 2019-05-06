@@ -94,8 +94,8 @@ end
 
 -- draw order is based on current 'y' position of game object.
 -- Group 1 - z = [0, 0.1]	-- THINGS ON GROUND
--- Group 2 - z = [0.1, 0.2] -- PLAYERS
--- Group 3 - z = [0.2, 0.3] -- PROJECTILES
+-- Group 2 - z = [0.1, 0.2] -- PLAYERS AND PROJECTILES
+-- Group 3 - z = [0.2, 0.3] -- ?
 -- etc.
 
 local drawOrderDenominator = 10800.0 -- gameHeight * 10.0
@@ -107,7 +107,7 @@ function g_applyDrawOrder(gameObjectUrl, group)
 	local _pos = go.get_position(gameObjectUrl)
 	local maxZ = group * 0.1
 	
-	_pos.z = maxZ - _pos.y / g_drawOrderDenominator
+	_pos.z = maxZ - _pos.y / drawOrderDenominator
 	
 	if _pos.z < maxZ - 0.1 then 
 		_pos.z = maxZ - 0.1

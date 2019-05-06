@@ -232,6 +232,9 @@ function M.move(self, dt)
 	playerPos = playerPos + self.movingDir * self.movingSpeed * dt
 	go.set_position(playerPos)
 	self.position = go.get_position()
+	
+	-- DRAW ORDER
+	g_applyDrawOrder(go.get_id(), 2)
 end
 
 function M.death(self, dt)
