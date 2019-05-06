@@ -14,7 +14,7 @@ function update(self, dt)
 	end
 end
 
-local function reset()
+local function reset(self)
 	self.pushingFlag = false
 	enemyManager.closeAllGates()
 	go.set_position(self.initPos)
@@ -23,13 +23,13 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash("collision_response") then
 		if message.group == hash("enemyPusherStop") then
-			reset()
+			reset(self)
 		end
 	end
 	if message_id == hash("waveStart") then
 		self.pushingFlag = true
 	end
 	if message_id == hash("reset") then
-		reset()
+		reset(self)
 	end
 end
