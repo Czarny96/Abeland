@@ -452,7 +452,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "You will be revived in the next wave"
   font: "menuFont"
-  id: "text1"
+  id: "reviveText"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER

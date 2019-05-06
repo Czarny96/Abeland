@@ -20,17 +20,21 @@ local frame = ""
 local function onData(data)
 	--print(data)
 	if data == "btn_data" then
+		
 		msg.post("/menu#ctrlGui", "dataRequest")
 		if client then
 			--print("SENDING FRAME: ", frame)
 			client.send(frame)
 		end
+		
 	elseif data == "StartGame" then
 		-- hide pop-up window
 		g_hideConfirmationWindow()
 
 		g_goToController()
+		
 	elseif data == "EndGame" then
+		
 		if g_gameState == g_gameStateEnum.controller then
 			-- hide pop-up window
 			g_hideConfirmationWindow()
@@ -40,10 +44,22 @@ local function onData(data)
 			--g_goToMainMenu()
 			--msg.post("/go#client", "disconnect")
 		end
+		
 	elseif data == "Reset" then
+		
 		g_goToChampionSelect()
+		
 	elseif string.sub(data, 1, 1) == "C" then
+		-- example: "C;mage" - server confirms, that mage is locked in by this client
+		
 		msg.post("/menu#championSelect", "playerClassConfirm", {playerClass = string.sub(data, 3, #data)})
+		
+	elseif string.sub(data, 1, 1) == "A" then
+		-- example: "A;2" - 2 players alive
+		
+		local _alivePlayers = tonumber(string.sub(data, 3, 3))
+		msg.post("/menu#gameOverScreen", "alivePlayers", {alivePlayers = _alivePlayers}) -- it should be one digit
+		
 	end
 end
 
@@ -140,6 +156,14 @@ function on_message(self, message_id, message, sender)
 			end
 			
 		end
+	elseif message_id == hash("alivePlayersRequest") then
+		-- ask server about number of alive players 
+		if client then
+			
+			client.send("AlivePlayers\n\r")
+
+		end
+		
 	end
 
 end

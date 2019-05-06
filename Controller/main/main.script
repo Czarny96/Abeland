@@ -1,6 +1,7 @@
 
 
 function init(self)
+
 	msg.post(".", "acquire_input_focus")
 
 	-- disable (don't render and don't update) other menu components
@@ -25,7 +26,7 @@ g_gameStateEnum = {
 g_gameState = g_gameStateEnum.splashScreen
 
 g_username = ""
-g_playerClass = "" -- mage, archer, rogue, knight
+g_playerClass = "archer" -- mage, archer, rogue, knight
 
 g_connectingWindowIsOn = false
 g_dcWindowIsOn = false
