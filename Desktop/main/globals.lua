@@ -18,7 +18,6 @@ local waveNumber = 1
 local pause = false
 
 local isWaveOver = false
-local arePlayersDead = true
 
 function M.getPlayersURL()
 	return playersURL
@@ -35,14 +34,6 @@ end
 function M.getSpawnPoints()
 	local spawnPoints = {gate_top_out, gate_bottom_out, gate_left_out, gate_right_out}
 	return spawnPoints;
-end
-
-function M.setArePlayersDead(state)
-	arePlayersDead = state
-end
-
-function M.getArePlayersDead()
-	return arePlayersDead
 end
 
 --waveNumber getter
