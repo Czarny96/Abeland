@@ -5,6 +5,28 @@ local bodyManager = require "managers/bodyManager.bodyManager"
 local M = {}
 local animTimer = 0
 
+local animations = {
+	--Movement animations
+	hash("player_up_left"),			--1
+	hash("player_down_left"),		--2
+	hash("player_left"),			--3
+	hash("player_up_right"),		--4
+	hash("player_down_right"),		--5
+	hash("player_right"),			--6
+	hash("player_up"),				--7
+	hash("player_down"),			--8
+	--Attack animations
+	hash("player_att_up_left"),		--9
+	hash("player_att_down_left"),	--10
+	hash("player_att_left"),		--11
+	hash("player_att_up_right"),	--12
+	hash("player_att_down_right"),	--13
+	hash("player_att_right"),		--14
+	hash("player_att_up"),			--15
+	hash("player_att_down"),		--16
+}
+
+
 function M.init(self)
 	self.isKilled = false
 	self.informedAboutBeingKilled = false
@@ -146,67 +168,69 @@ function M.messages(self, message_id, message, sender)
 end
 
 function M.updateAnimation(self, dt)
+	local idx = 1
 	local url = msg.url("main", go.get_id(), "attack")
-	if go.get(url, "isShooting") then
-		animTimer = 0.3
+	if go.get(url, "isShooting") and go.get(url, "shootingTimer") > 8 / 10 * go.get(url, "shootingDelay") then
+		animTimer = 2 / 10 * go.get(url, "shootingDelay")
 	end
 
 	if animTimer >= 0 then
 		local vector = go.get(url, "shootingDir")
 		if vector.x < -0.3 then
 			if vector.y > 0.3 then
-				msg.post("#sprite", "play_animation", {id = hash("player_att_up_left")})
+				idx = 1 + 8
 			elseif vector.y < -0.3 then
-				msg.post("#sprite", "play_animation", {id = hash("player_att_down_left")})
+				idx = 2 + 8
 			else
-				msg.post("#sprite", "play_animation", {id = hash("player_att_left")})
+				idx = 3 + 8
 			end
 		elseif vector.x > 0.3 then
 			if vector.y > 0.3 then
-				msg.post("#sprite", "play_animation", {id = hash("player_att_up_right")})
+				idx = 4 + 8
 			elseif vector.y < -0.3 then
-				msg.post("#sprite", "play_animation", {id = hash("player_att_down_right")})
+				idx = 5 + 8
 			else
-				msg.post("#sprite", "play_animation", {id = hash("player_att_right")})
+				idx = 6 + 8
 			end
 		elseif vector.y > 0.3  then
-			msg.post("#sprite", "play_animation", {id = hash("player_att_up")})
+			idx = 7 + 8
 		elseif vector.y < -0.3  then
-			msg.post("#sprite", "play_animation", {id = hash("player_att_down")})
+			idx = 8 + 8
 		end
 	else
 		if self.movingDir.x < -0.3 then
 			if self.movingDir.y > 0.3 then
-				msg.post("#sprite", "play_animation", {id = hash("player_up_left")})
+				idx = 1
 			elseif self.movingDir.y < -0.3 then
-				msg.post("#sprite", "play_animation", {id = hash("player_down_left")})
+				idx = 2
 			else
-				msg.post("#sprite", "play_animation", {id = hash("player_left")})
+				idx = 3
 			end
 		elseif self.movingDir.x > 0.3 then
 			if self.movingDir.y > 0.3 then
-				msg.post("#sprite", "play_animation", {id = hash("player_up_right")})
+				idx = 4
 			elseif self.movingDir.y < -0.3 then
-				msg.post("#sprite", "play_animation", {id = hash("player_down_right")})
+				idx = 5
 			else
-				msg.post("#sprite", "play_animation", {id = hash("player_right")})
+				idx = 6
 			end
 		elseif self.movingDir.y > 0.3  then
-			msg.post("#sprite", "play_animation", {id = hash("player_up")})
+			idx = 7
 		elseif self.movingDir.y < -0.3  then
-			msg.post("#sprite", "play_animation", {id = hash("player_down")})
+			idx = 8
 		end
 	end
+
+	msg.post("#sprite", "play_animation", {id = animations[idx]})
+	
 	animTimer = animTimer - dt
 end
 
 function M.move(self, dt)
-	M.updateAnimation(self, dt)
 	local playerPos = go.get_position()
 	playerPos = playerPos + self.movingDir * self.movingSpeed * dt
 	go.set_position(playerPos)
 	self.position = go.get_position()
-
 end
 
 function M.death(self, dt)

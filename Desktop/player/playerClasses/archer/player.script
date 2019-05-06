@@ -51,6 +51,7 @@ function update(self, dt)
 			playerModule.move(self, dt)
 		end
 	end
+	playerModule.updateAnimation(self, dt)
 	playerModule.manageFlagsAndTimers(self, dt)
 end
 

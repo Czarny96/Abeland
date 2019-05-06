@@ -36,6 +36,9 @@ function on_message(self, message_id, message, sender)
 			if #self.enemiesHit >= 2 then
 				go.delete()
 			end
+		else
+			go.delete()
 		end
+		
 	end
 end

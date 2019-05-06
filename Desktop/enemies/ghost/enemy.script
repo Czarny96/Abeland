@@ -169,7 +169,6 @@ end
 function on_message(self, message_id, message, sender)
 	
 	-- Handle collision
-	
 	if message_id == hash("collision_response") then
 		
 		if message.own_group == hash("chargeRange") then
@@ -199,6 +198,9 @@ function on_message(self, message_id, message, sender)
 		elseif message.own_group == hash("attackRange") then
 			attack(self, message_id, message, sender)
 		end
-		
+	end
+
+	if message_id == hash("kill") then
+		go.delete()
 	end
 end

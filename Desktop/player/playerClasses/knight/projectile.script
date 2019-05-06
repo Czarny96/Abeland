@@ -33,6 +33,8 @@ function on_message(self, message_id, message, sender)
 			go.set(url, "health", go.get(url, "health") - self.damage)
 
 			table.insert(self.enemiesHit, message.other_id)
+		else
+			go.delete()
 		end
 	end
 	
