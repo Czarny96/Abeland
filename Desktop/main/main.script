@@ -90,6 +90,37 @@ function g_setUpInGameEnum()
 	g_gameState = g_gameStateEnum.inGame
 end
 
+-- DRAW ORDER GLOBAL FUNCTIONS
+
+-- draw order is based on current 'y' position of game object.
+-- Group 1 - z = [0, 0.1]	-- THINGS ON GROUND
+-- Group 2 - z = [0.1, 0.2] -- PLAYERS
+-- Group 3 - z = [0.2, 0.3] -- PROJECTILES
+-- etc.
+
+local drawOrderDenominator = 10800.0 -- gameHeight * 10.0
+
+-- place this function in every game object:
+-- g_applyDrawOrder(go.get_id(), 2)
+function g_applyDrawOrder(gameObjectUrl, group)
+	
+	local _pos = go.get_position(gameObjectUrl)
+	local maxZ = group * 0.1
+	
+	_pos.z = maxZ - _pos.y / g_drawOrderDenominator
+	
+	if _pos.z < maxZ - 0.1 then 
+		_pos.z = maxZ - 0.1
+		
+	elseif _pos.z > maxZ then 
+		_pos.z = maxZ
+		
+	end
+	
+	go.set_position(_pos, gameObjectUrl)
+	
+end
+
 -- END OF GAME STATE FUNCTIONS AND VARIABLES
 
 function on_input(self, action_id, action)
