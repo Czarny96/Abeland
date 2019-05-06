@@ -3,7 +3,6 @@ local playersManager = require "managers.playersManager"
 local bodyManager = require "managers/bodyManager.bodyManager"
 
 local M = {}
-local animTimer = 0
 
 local animations = {
 	--Movement animations
