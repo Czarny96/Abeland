@@ -83,13 +83,14 @@ function M.messages(self, message_id, message, sender)
 		
 		go.set_position(self.position)
 		label.set_text("#label_hp", self.health)
-		msg.post("/TCP_server/go#TCP_server_gui", "playerRessurected",{playerID=go.get_id()})
+		msg.post("/TCP_server/go#TCP_server_gui", "playerRessurected",{playerID = go.get_id()})
 
 	end
 	
-	if (self.isKilled or self.nonOperativeTimer > 0) and self.informedAboutBeingKilled == false then
+	if self.isKilled and self.informedAboutBeingKilled == false then
 		self.informedAboutBeingKilled = true
 		msg.post("/TCP_server/go#TCP_server_gui", "playerDied",{playerID=go.get_id()})
+		
 		for i, player in pairs(playersManager.getActivePlayersIDs()) do
 			local url = msg.url(nil,player,"player")
 			if not go.get(url, "isKilled") then
@@ -125,14 +126,14 @@ function M.messages(self, message_id, message, sender)
 	if message_id == hash("desactivate") then
 		sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 0.33))
 		self.isVulnerable = false
+		self.nonVulnerableTimer = 999
 		self.nonOperativeTimer = 999
 		playersManager.setActivePlayersIDs()
 	--Activate if player came back
 	elseif message_id == hash("activate") then
 		sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 1))
 		msg.post("#sprite", "play_animation", {id = hash("player_afk")})
-		
-		self.nonVulnerableTimer = 50
+		self.nonVulnerableTimer = 3
 		self.isVulnerable = false
 		self.nonOperativeTimer = 2
 		playersManager.setActivePlayersIDs()

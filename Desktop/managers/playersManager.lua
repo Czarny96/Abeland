@@ -18,7 +18,6 @@ end
 
 local function buildPlayerFromFabric(class)
 	local url = msg.url("main","/spawn", class)
-	globals.setArePlayersDead(false)
 	return factory.create(url)
 end
 
