@@ -57,5 +57,8 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
+	if globals.getPause() then
+		return
+	end
 	playerModule.messages(self, message_id, message, sender)
 end

@@ -1,4 +1,5 @@
 local enemyManager = require "managers.enemyManager"
+local globals = require "main.globals"
 
 function init(self)
 	self.initPos = go.get_position()
@@ -8,6 +9,9 @@ function init(self)
 end
 
 function update(self, dt)
+	if globals.getPause() then
+		return
+	end
 	if self.pushingFlag then
 		local movingDir = vmath.normalize(self.arenaCentrum - go.get_position())
 		go.set_position(go.get_position() + movingDir * self.pushingSpeed * dt)

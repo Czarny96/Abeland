@@ -9,6 +9,7 @@ go.property("isShooting", false)
 go.property("shootingTimer", 0)
 
 local playerModule = require "player.playerModule"
+local globals = require "main.globals"
 
 function init(self)
 	self.shootingTimer = 0
@@ -17,6 +18,9 @@ function init(self)
 end
 
 function update(self, dt)
+	if globals.getPause() then
+		return
+	end
 	--Shooting
 	if self.isShooting and self.shootingTimer <= 0 then
 		self.shootingDir = vmath.normalize(self.shootingDir)
@@ -32,6 +36,9 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
+	if globals.getPause() then
+		return
+	end
 	if message_id == hash("shoot") then
 		self.isShooting = true
 		self.shootingDir = vmath.vector3(message.x, message.y, 0)

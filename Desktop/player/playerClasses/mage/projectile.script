@@ -4,6 +4,8 @@ go.property("range", 700)
 go.property("speed", 250)
 go.property("damage", 30)
 
+local globals = require "main.globals"
+
 function init(self)
 	self.enemiesHit = {}
 	self.isExploded = false
@@ -35,6 +37,9 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
+	if globals.getPause() then
+		return
+	end
 	--Destroy on hit
 	if message_id == hash("collision_response") then
 		if message.group == hash("enemy") then

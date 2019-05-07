@@ -4,12 +4,17 @@ go.property("range", 500)
 go.property("speed", 500)
 go.property("damage", 25)
 
+local globals = require "main.globals"
+
 function init(self)
 	self.enemiesHit = {}
 	self.projectilelife = self.range / self.speed
 end
 
 function update(self, dt)
+	if globals.getPause() then
+		return
+	end
 	go.set_position(go.get_position() + self.projectileDir * self.speed * dt)
 	
 	if self.projectilelife <= 0 then
@@ -23,6 +28,9 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
+	if globals.getPause() then
+		return
+	end
 	--Enemy Hit
 	if message_id == hash("collision_response") then
 		if message.group == hash("enemy") then
