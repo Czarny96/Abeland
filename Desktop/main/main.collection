@@ -124,7 +124,7 @@ instances {
   prototype: "/arena/enemyPushers/enemyPusher.go"
   position {
     x: 2580.0
-    y: 540.0
+    y: 550.0
     z: 0.0
   }
   rotation {
@@ -144,7 +144,7 @@ instances {
   prototype: "/arena/enemyPushers/enemyPusher.go"
   position {
     x: -660.0
-    y: 540.0
+    y: 550.0
     z: 0.0
   }
   rotation {
@@ -163,7 +163,7 @@ instances {
   id: "enemyPusher2"
   prototype: "/arena/enemyPushers/enemyPusher.go"
   position {
-    x: 960.0
+    x: 930.0
     y: 1680.0
     z: 0.0
   }
@@ -183,7 +183,7 @@ instances {
   id: "enemyPusher3"
   prototype: "/arena/enemyPushers/enemyPusher.go"
   position {
-    x: 960.0
+    x: 930.0
     y: -610.0
     z: 0.0
   }
@@ -204,7 +204,7 @@ instances {
   prototype: "/arena/enemyPushers/enemyPusherStop.go"
   position {
     x: 960.0
-    y: 960.0
+    y: 950.0
     z: 0.0
   }
   rotation {
@@ -224,7 +224,7 @@ instances {
   prototype: "/arena/enemyPushers/enemyPusherStop.go"
   position {
     x: 960.0
-    y: 110.0
+    y: 120.0
     z: 0.0
   }
   rotation {
@@ -243,7 +243,7 @@ instances {
   id: "enemyPusherStop2"
   prototype: "/arena/enemyPushers/enemyPusherStop.go"
   position {
-    x: 1860.0
+    x: 1850.0
     y: 530.0
     z: 0.0
   }
@@ -263,7 +263,7 @@ instances {
   id: "enemyPusherStop3"
   prototype: "/arena/enemyPushers/enemyPusherStop.go"
   position {
-    x: 60.0
+    x: 70.0
     y: 540.0
     z: 0.0
   }
