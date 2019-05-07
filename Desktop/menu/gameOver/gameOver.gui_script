@@ -72,6 +72,7 @@ function on_message(self, message_id, message, sender)
 	-- Add message-handling code here
 	-- Remove this function if not needed
 	if message_id == hash("enable") then
+		g_doNotAllowOpenPause()
 		start(self)
 	elseif message_id == hash("disable") then
 
