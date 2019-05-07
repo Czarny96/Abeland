@@ -3,7 +3,6 @@ local playersManager = require "managers.playersManager"
 local bodyManager = require "managers/bodyManager.bodyManager"
 
 local M = {}
-local animTimer = 0
 
 local animations = {
 	--Movement animations
@@ -169,14 +168,14 @@ function M.messages(self, message_id, message, sender)
 end
 
 function M.updateAnimation(self, dt)
-	local idx = 1
+	local idx = 8
 	local url = msg.url("main", go.get_id(), "attack")
+	local vector = go.get(url, "shootingDir")
 	if go.get(url, "isShooting") and go.get(url, "shootingTimer") > 8 / 10 * go.get(url, "shootingDelay") then
-		animTimer = 2 / 10 * go.get(url, "shootingDelay")
+		self.animTimer = 2 / 10 * go.get(url, "shootingDelay")
 	end
 
-	if animTimer >= 0 then
-		local vector = go.get(url, "shootingDir")
+	if self.animTimer >= 0 then
 		if vector.x < -0.3 then
 			if vector.y > 0.3 then
 				idx = 1 + 8
@@ -223,8 +222,7 @@ function M.updateAnimation(self, dt)
 	end
 
 	msg.post("#sprite", "play_animation", {id = animations[idx]})
-	
-	animTimer = animTimer - dt
+	self.animTimer = self.animTimer - dt
 end
 
 function M.move(self, dt)
