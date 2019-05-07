@@ -18,11 +18,14 @@ end
 
 local function countDistanceAndDirection(self)
 	-- Count possition diffrence between closest player and enemy to designate enemy moving direction
-	local closestPlayerPos = playersManager.getPlayerPos(self.closestPlayerID)
-	self.distanceToClosestPlayer = math.pow((closestPlayerPos.x - self.enemyPos.x), 2) +  math.pow((closestPlayerPos.y - self.enemyPos.y), 2)
-	local positionDiffrence = closestPlayerPos - self.enemyPos
-	self.movingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
-	self.movingDir = vmath.normalize(self.movingDir)
+	self.closestPlayerID = playersManager.getClosestPlayerID(go.get_position())
+	if self.closestPlayerID ~= 0 then
+		local closestPlayerPos = playersManager.getPlayerPos(self.closestPlayerID)
+		self.distanceToClosestPlayer = math.pow((closestPlayerPos.x - self.enemyPos.x), 2) +  math.pow((closestPlayerPos.y - self.enemyPos.y), 2)
+		local positionDiffrence = closestPlayerPos - self.enemyPos
+		self.movingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
+		self.movingDir = vmath.normalize(self.movingDir)
+	end
 end
 
 local function moveEnemy(self, dt)
