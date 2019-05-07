@@ -130,6 +130,14 @@ function on_message(self, message_id, message, sender)
 		print("Set connection flag: " .. tostring(message.on))
 		tryToConnect = message.on
 		broadcastTimer = 0
+		
+		if client and message.on then
+			print("Destroy client while looking for new server. This should never happen.")
+			client.destroy()
+			client = nil
+			SERVER_IP = nil
+		end
+		
 	elseif message_id == hash("disconnect") then
 		print("Disconnect")
 		if client then
