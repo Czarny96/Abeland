@@ -1,6 +1,8 @@
 go.property("direction", vmath.vector3())
 go.property("damage", 5)
 
+local globals = require "main.globals"
+
 local arrowSpeed = 500
 
 function init(self)
@@ -16,6 +18,11 @@ function final(self)
 end
 
 function update(self, dt)
+
+	if globals.getPause() then
+		return
+	end
+	
 	local pos = go.get_position()
 	
 	pos.x = pos.x + self.direction.x * dt * arrowSpeed

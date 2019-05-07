@@ -4,6 +4,8 @@ local enemyManager = require "managers.enemyManager"
 local bodyManager = require "managers/bodyManager.bodyManager"
 local playerManager = require "managers.playersManager"
 
+local globals = require "main.globals"
+
 -- Global properties
 go.property("health", 100)
 go.property("isRanged", true)
@@ -21,7 +23,7 @@ local function setTarget(self)
 end
 
 function init(self)
-
+	
 	-- every enemy has different behavior
 	self.random = math.random(0, 2)
 
@@ -139,6 +141,10 @@ function damageEnemy(self, message_id, message, sender)
 end
 
 function update(self, dt)
+
+	if globals.getPause() then
+		return
+	end
 	
 	self.actionTimer = self.actionTimer + dt
 	self.attackTimer = self.attackTimer + dt

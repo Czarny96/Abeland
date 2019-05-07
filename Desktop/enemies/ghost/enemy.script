@@ -2,6 +2,7 @@
 
 local enemyManager = require "managers.enemyManager"
 local bodyManager = require "managers/bodyManager.bodyManager"
+local globals = require "main.globals"
 
 -- Global properties
 go.property("health", 100)
@@ -117,6 +118,11 @@ function damageEnemy(self, message_id, message, sender)
 end
 
 function update(self, dt)
+	
+	if globals.getPause() then
+		return
+	end
+	
 	self.actionTimer = self.actionTimer + dt
 	self.chargeTimer = self.chargeTimer + dt
 	self.attackTimer = self.attackTimer + dt
