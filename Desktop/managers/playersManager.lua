@@ -66,6 +66,7 @@ function M.getClosestPlayerID(pos)
 		local playerURL = msg.url(nil, playerID, "player")
 			if go.get(playerURL, "isKilled") == false then
 				closestPlayerID = activePlayersIDsTable[i]
+				break
 			end
 		end
 		if closestPlayerID ~= 0 then
@@ -74,8 +75,9 @@ function M.getClosestPlayerID(pos)
 				local distanceToCurrentPlayer = math.pow((playersPos[i].x - pos.x), 2) + math.pow((playersPos[i].y - pos.y), 2)
 				if distanceToCurrentPlayer < distanceToClosestPlayer then			
 					distanceToClosestPlayer = distanceToCurrentPlayer
-					local playerURL = msg.url(nil, playerID, "player")
-					if go.get(playerURL, "isKilled") == false then
+					local playerURL = msg.url(nil, activePlayersIDsTable[i], "player")
+					local isPlayerKilled = go.get(playerURL, "isKilled")
+					if isPlayerKilled == false then
 						closestPlayerID = activePlayersIDsTable[i]
 					end
 				end
