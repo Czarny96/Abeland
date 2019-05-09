@@ -51,6 +51,7 @@ function on_message(self, message_id, message, sender)
 		if message.group == hash("enemy") then
 			if self.enemyHit == nil then
 				self.enemyHit = message.other_id
+				sprite.set_constant("#sprite", "tint", vmath.vector4(0))
 			end
 		else
 			go.delete()
