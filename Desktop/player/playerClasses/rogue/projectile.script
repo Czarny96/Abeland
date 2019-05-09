@@ -1,6 +1,6 @@
 --ROGUE
 go.property("projectileDir", vmath.vector3())
-go.property("range", 100)
+go.property("range", 120)
 go.property("speed", 400)
 go.property("damage", 5)			--HP
 go.property("poisonDuration", 5)	--s
