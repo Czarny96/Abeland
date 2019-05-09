@@ -137,9 +137,11 @@ end
 
 function damageEnemy(self, message_id, message, sender)
 	-- knock back enemy
-	local kickDir = vmath.normalize( go.get_position() - message.other_position )
+	local kickDir = vmath.vector3()
+	if message.pos ~= nil then
+		kickDir = vmath.normalize( go.get_position() - message.pos)
+	end
 	msg.post("#co", "apply_force", {force = kickDir * go.get("#co", "mass") * 1000, position = go.get_world_position()})
-	
 end
 
 function update(self, dt)
@@ -188,18 +190,17 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
-	
+
+	if message_id == hash("knockback") then
+		damageEnemy(self, message_id, message, sender)
+	end
 	-- Handle collision
-	
 	if message_id == hash("collision_response") then
 		
-		if message.own_group == hash("enemy") and message.other_group == hash("attack") then
-
+		if message.own_group == hash("enemy") and message.other_group ~= hash("attack") then
 			damageEnemy(self, message_id, message, sender)
-			
 		elseif message.own_group == hash("attackRange") then
 			attack(self, message_id, message, sender)
-
 		end
 		
 	end

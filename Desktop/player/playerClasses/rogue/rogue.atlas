@@ -103,7 +103,7 @@ animations {
 animations {
   id: "player_attack_basic"
   images {
-    image: "/assets/prototypes/rogue/player_attack_particle.png"
+    image: "/assets/prototypes/rogue/player_attack_projectile.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 8

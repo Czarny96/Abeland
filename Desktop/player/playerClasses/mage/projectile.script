@@ -50,13 +50,14 @@ function on_message(self, message_id, message, sender)
 				msg.post("#area_triggerCollider", "enable")
 				msg.post("#sprite", "play_animation", {id = hash("player_attack_basic_area")})
 			else
+				local url = msg.url(nil, message.other_id, "enemy")
+				msg.post(url, "knockback", {pos = go.get_position()})
 				for i, enemy in pairs(self.enemiesHit) do
 					if enemy == message.other_id then
 						return
 					end
 				end
-
-				local url = msg.url(nil, message.other_id, "enemy")
+				
 				go.set(url, "health", go.get(url, "health") - self.damage)
 
 				table.insert(self.enemiesHit, message.other_id)
