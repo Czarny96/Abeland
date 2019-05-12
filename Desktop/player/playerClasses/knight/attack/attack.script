@@ -1,0 +1,66 @@
+--KNIGHT
+go.property("basicCD", 0.6) 
+--Skills CoolDowns
+go.property("yellowCD", 10)
+go.property("redCD", 1)
+go.property("greenCD", 1)
+go.property("blueCD", 1)
+
+go.property("shootingDir", vmath.vector3(0,0,0))
+
+--Flags
+go.property("isShooting", false)
+go.property("isYellowHit", false)
+go.property("isRedHit", false)
+go.property("isGreenHit", false)
+go.property("isBlueHit", false)
+
+--Timers
+go.property("basicCD_Timer", 0)
+--Button Timers
+go.property("yellowCD_Timer", 0)
+go.property("redCD_Timer", 0)
+go.property("greenCD_Timer", 0)
+go.property("blueCD_Timer", 0)
+
+local attack = require "player/playerClasses/knight/attack.skillsModule"
+local playerModule = require "player.playerModule"
+local globals = require "main.globals"
+
+function init(self)
+	self.basicCD_Timer = 0
+	self.isShooting = false
+	self.shootingDir = vmath.vector3(0, 0, 0)
+end
+
+function update(self, dt)
+	if globals.getPause() then
+		return
+	end
+
+	attack.basic(self, dt)
+	attack.shieldUp(self, dt)
+	attack.shieldCharge(self, dt)
+	attack.taunt(self, dt)
+	attack.warStomp(self, dt)
+end
+
+function on_message(self, message_id, message, sender)
+	if globals.getPause() then
+		return
+	end
+	if message_id == hash("shoot") then
+		self.isShooting = true
+		self.shootingDir = vmath.vector3(message.x, message.y, 0)
+	end
+
+	if message_id == hash("btnYellow") then
+		self.isYellowHit = true
+	elseif message_id == hash("btnRed") then
+		self.isRedHit = true
+	elseif message_id == hash("btnGreen") then
+		self.isGreenHit = true
+	elseif message_id == hash("btnBlue") then
+		self.isBlueHit = true
+	end
+end

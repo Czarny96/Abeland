@@ -8,9 +8,14 @@ go.property("health", 60)
 go.property("maxHealth", 60)
 go.property("movingSpeed", 210)
 
+--Absord Properties
+go.property("absorb", 0)
+go.property("absorbTimer", 0)
+
 --Flags
 go.property("isKilled", false)
 go.property("isVulnerable", true)
+go.property("isTargetable", true)
 
 --Timers
 go.property("nonVulnerableTimer", 0)

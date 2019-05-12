@@ -11,6 +11,11 @@ go.property("movingSpeed", 120)
 --Flags
 go.property("isKilled", false)
 go.property("isVulnerable", true)
+go.property("isTargetable", true)
+
+--Absord Properties
+go.property("absorb", 0)
+go.property("absorbTimer", 0)
 
 --Timers
 go.property("nonVulnerableTimer", 0)

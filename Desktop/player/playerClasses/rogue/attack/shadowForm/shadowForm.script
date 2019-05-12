@@ -1,0 +1,43 @@
+
+require "managers/shaderManager"
+
+function init(self)
+	self.buffDuration = 7
+	self.timer = 0
+	self.buffAppliedFlag = false
+	self.rogueBuffMovementSpeedMultiplier = 1.3
+	self.doOnceFlag = true
+	self.rogueStandardMovementSpeed = 0
+	self.rogueBuffedMovementSpeed = 0
+end
+
+function update(self, dt)
+	if self.doOnceFlag then
+		self.rogueStandardMovementSpeed = go.get("#player", "movingSpeed")
+		self.rogueBuffedMovementSpeed = self.rogueStandardMovementSpeed * self.rogueBuffMovementSpeedMultiplier
+		self.doOnceFlag = false
+	end
+
+	
+	if self.timer > 0 then
+		if not self.buffAppliedFlag then
+			go.set("#player", "movingSpeed", self.rogueBuffedMovementSpeed)
+			go.set("#player", "isTargetable", false)
+			go.set("#attack", "shadowFormFlag", true)
+			self.buffAppliedFlag = true
+		end
+		self.timer = self.timer - dt
+	else
+		go.set("#player", "movingSpeed", self.rogueStandardMovementSpeed)
+		go.set("#player", "isTargetable", true)
+		go.set("#attack", "shadowFormFlag", false)
+		self.buffAppliedFlag = false
+		shaderManager.resetColorizeFilter("#sprite")
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("activate") then
+		self.timer = self.buffDuration
+	end
+end

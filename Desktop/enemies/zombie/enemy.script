@@ -1,7 +1,9 @@
 --ZOMBIE
 
+local shaderManager = require "managers/shaderManager"
 local enemyManager = require "managers.enemyManager"
 local bodyManager = require "managers/bodyManager.bodyManager"
+local shaderManager = require "managers/shaderManager"
 local globals = require "main.globals"
 
 
@@ -10,12 +12,26 @@ go.property("health", 100)
 go.property("damage", 5)
 go.property("isRanged", false)
 
+--States
+go.property("stunDuration", 0)			--duration of stun in s
+
+go.property("tauntTarget", hash("")) --id of entity whose taunt is it 
+go.property("tauntDuration", 0) --duration of taunt in s
+
+go.property("slowAmount", 0)	--percent of slow, ex: movementSpeed * slow/100
+go.property("slowDuration", 0)	--duration of slow in s
+
+go.property("rootDuration", 0)			--duration of root in s
+
 local playerManager = require "managers.playersManager"
 
 -- returns false if all players are dead
 local function setTarget(self)
-
-	self.targetId = playerManager.getClosestPlayerID(go.get_position())
+	if self.tauntTarget == nil and self.tauntDuration <= 0 then
+		self.targetId = playerManager.getClosestPlayerID(go.get_position())
+	else
+		self.targetId = self.tauntTarget
+	end
 	
 	if self.targetId == 0 then
 		return false
@@ -41,7 +57,7 @@ function init(self)
 end
 
 function final(self)
-	
+
 end
 
 
@@ -70,7 +86,7 @@ local zombieAnims = {
 }
 
 local function setDirection(self, moveVector)
-	
+
 	local idx = 1
 	-- Look at zombieAnims table above
 	if moveVector.x < -0.3 and moveVector.y > 0.3 then
@@ -97,9 +113,36 @@ local function setDirection(self, moveVector)
 	if self.attackTimer < 0.3 then
 		idx = idx + 9
 	end
-	
+
 	msg.post("#sprite", "play_animation", {id = zombieAnims[idx]})
-	
+
+end
+
+local function manageStates(self, dt)
+	--Stun
+	if self.stunDuration > 0 then
+		self.stunDuration = self.stunDuration - dt
+	end
+
+	--Root
+	if self.rootDuration > 0 then
+		self.rootDuration = self.rootDuration - dt
+	end
+
+	--Slow
+	if self.slowDuration > 0 then
+		self.slowDuration = self.slowDuration - dt
+	else
+		shaderManager.resetColorizeFilter("#sprite")
+		self.slowAmount = 0
+	end
+
+	--Taunt
+	if self.tauntDuration > 0 then
+		self.tauntDuration = self.tauntDuration - dt
+	else
+		self.tauntTarget = nil
+	end
 end
 
 local function handleDeath(self, dt)
@@ -114,7 +157,7 @@ local function handleDeath(self, dt)
 end
 
 local function attack(self, message_id, message, sender)
-	if self.attackTimer > 1 then
+	if self.stunDuration <= 0 and self.attackTimer > 1 then
 
 		self.attackTimer = 0
 
@@ -126,7 +169,7 @@ local function attack(self, message_id, message, sender)
 		local dir = vmath.normalize(message.other_position - go.get_position())
 		local angle = math.atan2(dir.x, -dir.y)
 		local rotation = vmath.quat_rotation_z(angle)
-		local pos = go.get_position() + dir*50
+		local pos = go.get_position() + dir * 50
 		pos.z = 0
 		factory.create("#attackFactory", pos, rotation)
 
@@ -135,13 +178,16 @@ local function attack(self, message_id, message, sender)
 	end
 end
 
-function damageEnemy(self, message_id, message, sender)
-	-- knock back enemy
-	local kickDir = vmath.vector3()
-	if message.pos ~= nil then
-		kickDir = vmath.normalize( go.get_position() - message.pos)
+function knockBack(self, message)
+	if self.stunDuration <= 0 or self.rootDuration <= 0 then
+		--KnockBack self
+		local kickDir = vmath.vector3()
+		if message.pos ~= nil then
+			kickDir = vmath.normalize(go.get_position() - message.pos)
+		end
+
+		msg.post("#co", "apply_force", {force = kickDir * go.get("#co", "mass") * 1000, position = go.get_world_position()})
 	end
-	msg.post("#co", "apply_force", {force = kickDir * go.get("#co", "mass") * 1000, position = go.get_world_position()})
 end
 
 function update(self, dt)
@@ -149,8 +195,9 @@ function update(self, dt)
 	if globals.getPause() then
 		return
 	end
-	
-	
+
+	manageStates(self, dt)
+
 	self.actionTimer = self.actionTimer + dt
 	self.attackTimer = self.attackTimer + dt
 
@@ -159,19 +206,18 @@ function update(self, dt)
 	handleDeath(self, dt)
 
 	-- MOVEMENT
-
 	if not setTarget(self) then
 		-- all players are dead, so enemy will do nothing
 		return
 	end	
-	
+
 	if self.targetId then
 		self.targetPosition = go.get_position(self.targetId)
 	else
 		self.targetPosition = nil
 	end
-	
-	if self.targetPosition then
+
+	if self.stunDuration <= 0 and self.targetPosition  then
 
 		if self.attackTimer < 0.5 then
 			setDirection(self, self.lastHitVector)
@@ -179,34 +225,59 @@ function update(self, dt)
 			local movement = self.targetPosition - go.get_position()
 			self.targetPosition = vmath.normalize(movement)
 			setDirection(self, vmath.normalize(movement))
-			msg.post("#co", "apply_force", {force = vmath.normalize(movement) * 100 * go.get("#co", "mass"), position = go.get_world_position()})
+			
+			if self.rootDuration <= 0 then
+				msg.post("#co", "apply_force", {force = vmath.normalize(movement) * (100 - self.slowAmount) * go.get("#co", "mass"), position = go.get_world_position()})
+			end
 		end
-		
+
 	end
 	-- END OF ENEMY MOVEMENT
-	
+
 	-- DRAW ORDER
 	g_applyDrawOrder(go.get_id(), 2)
 end
 
 function on_message(self, message_id, message, sender)
 
+	--Knockback
 	if message_id == hash("knockback") then
-		damageEnemy(self, message_id, message, sender)
+		knockBack(self, message)
 	end
-	-- Handle collision
+	--Handle collision
 	if message_id == hash("collision_response") then
-		
 		if message.own_group == hash("enemy") and message.other_group ~= hash("attack") then
-			damageEnemy(self, message_id, message, sender)
+			knockBack(self, message)
 		elseif message.own_group == hash("attackRange") then
-			attack(self, message_id, message, sender)
+			local playerURL = msg.url(nil, message.other_id, "player")
+			if go.get(playerURL, "isTargetable") then
+				attack(self, message_id, message, sender)
+			end
 		end
-		
 	end
-	
+
+	--Stun
+	if message_id == hash("stun") then
+		self.stunDuration = message.duration
+	end
+	--Taunt
+	if message_id == hash("taunt") then
+		self.tauntTarget = message.other_id
+		self.tauntDuration = message.duration
+	end
+	--Slow
+	if message_id == hash("slow") then
+		shaderManager.freezeEffect("#sprite")
+		self.slowAmount = message.amount
+		self.slowDuration = message.duration
+	end
+	--Root
+	if message_id == hash("root") then
+		self.rootDuration = message.duration
+	end
+
+	--Deleting object	
 	if message_id == hash("kill") then
 		go.delete()
 	end
-	
 end

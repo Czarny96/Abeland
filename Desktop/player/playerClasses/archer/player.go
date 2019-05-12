@@ -15,7 +15,7 @@ components {
 }
 components {
   id: "attack"
-  component: "/player/playerClasses/archer/attack.script"
+  component: "/player/playerClasses/archer/attack/attack.script"
   position {
     x: 0.0
     y: 0.0
@@ -41,11 +41,12 @@ embedded_components {
   "mask: \"player\"\n"
   "mask: \"attackRange\"\n"
   "mask: \"chargeRange\"\n"
+  "mask: \"buff\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_SPHERE\n"
   "    position {\n"
-  "      x: 1.0\n"
+  "      x: 0.0\n"
   "      y: -11.0\n"
   "      z: 0.0\n"
   "    }\n"
@@ -97,9 +98,9 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "attackFactory"
+  id: "attack-basicFactory"
   type: "factory"
-  data: "prototype: \"/player/playerClasses/archer/projectile.go\"\n"
+  data: "prototype: \"/player/playerClasses/archer/attack/basic/projectile.go\"\n"
   "load_dynamically: false\n"
   ""
   position {
@@ -227,6 +228,78 @@ embedded_components {
   position {
     x: 0.0
     y: 40.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "arrowsConeFactory"
+  type: "factory"
+  data: "prototype: \"/player/playerClasses/archer/attack/arrowsCone/projectile.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "label_absorb"
+  type: "label"
+  data: "size {\n"
+  "  x: 128.0\n"
+  "  y: 32.0\n"
+  "  z: 0.0\n"
+  "  w: 0.0\n"
+  "}\n"
+  "scale {\n"
+  "  x: 1.0\n"
+  "  y: 1.0\n"
+  "  z: 1.0\n"
+  "  w: 0.0\n"
+  "}\n"
+  "color {\n"
+  "  x: 1.0\n"
+  "  y: 1.0\n"
+  "  z: 0.0\n"
+  "  w: 1.0\n"
+  "}\n"
+  "outline {\n"
+  "  x: 0.7019608\n"
+  "  y: 0.7019608\n"
+  "  z: 0.101960786\n"
+  "  w: 1.0\n"
+  "}\n"
+  "shadow {\n"
+  "  x: 0.7019608\n"
+  "  y: 0.7019608\n"
+  "  z: 0.101960786\n"
+  "  w: 1.0\n"
+  "}\n"
+  "leading: 1.0\n"
+  "tracking: 0.0\n"
+  "pivot: PIVOT_CENTER\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  "line_break: false\n"
+  "text: \"\"\n"
+  "font: \"/builtins/fonts/system_font.font\"\n"
+  "material: \"/builtins/fonts/label.material\"\n"
+  ""
+  position {
+    x: 0.0
+    y: 53.0
     z: 0.0
   }
   rotation {

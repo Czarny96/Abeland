@@ -18,7 +18,7 @@ embedded_components {
   type: "sprite"
   data: "tile_set: \"/enemies/zombie/zombie.atlas\"\n"
   "default_animation: \"player_prot_down\"\n"
-  "material: \"/builtins/materials/sprite.material\"\n"
+  "material: \"/shaders/colorize/colorize.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
   ""
   position {

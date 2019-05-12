@@ -1,6 +1,6 @@
 components {
   id: "attack"
-  component: "/player/playerClasses/archer/projectile.script"
+  component: "/player/playerClasses/archer/attack/basic/projectile.script"
   position {
     x: 0.0
     y: 0.0

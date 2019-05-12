@@ -29,6 +29,7 @@ local animations = {
 function M.init(self)
 	self.isKilled = false
 	self.informedAboutBeingKilled = false
+	label.set_text("#label_absorb", "")
 	label.set_text("#label_hp", self.health)
 	go.set_position(self.position)
 end
@@ -38,13 +39,18 @@ function M.manageFlagsAndTimers(self, dt)
 	if self.nonVulnerableTimer <= 0 then
 		self.isVulnerable = true
 	end
-
+	if self.absorbTimer <= 0 and self.absord ~= 0 then
+		self.absorb = 0
+		label.set_text("#label_absorb", "")
+	end
+	
 	--Collider correction
 	self.wallCollisionCorrector = vmath.vector3()
 
 	--Timers
 	self.nonVulnerableTimer = self.nonVulnerableTimer - dt
 	self.nonOperativeTimer = self.nonOperativeTimer - dt
+	self.absorbTimer = self.absorbTimer - dt
 end
 
 function M.messages(self, message_id, message, sender)
@@ -57,10 +63,13 @@ function M.messages(self, message_id, message, sender)
 		
 		--self.position = go.get_position(url)
 		self.health = self.maxHealth
+		self.absorb = 0
+		self.absorbTimer = 0
 		self.isKilled = false
 		self.informedAboutBeingKilled = false
 		self.nonVulnerableTimer = 0
-		
+
+		label.set_text("#label_absorb", "")
 		label.set_text("#label_hp", self.health)
 		go.set_position(self.position)
 		playersManager.setActivePlayersIDs()
@@ -76,11 +85,14 @@ function M.messages(self, message_id, message, sender)
 		sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 1))
 
 		self.health = self.maxHealth
+		self.absorb = 0
+		self.absorbTimer = 0
 		self.isKilled = false
 		self.informedAboutBeingKilled = false
 		self.nonVulnerableTimer = 0
 		
 		go.set_position(self.position)
+		label.set_text("#label_absorb", "")
 		label.set_text("#label_hp", self.health)
 		msg.post("/TCP_server/go#TCP_server_gui", "playerRessurected",{playerID = go.get_id()})
 
@@ -114,13 +126,38 @@ function M.messages(self, message_id, message, sender)
 	if self.isVulnerable then
 		--Got Hit
 		if message_id == hash("hit") then
-			self.health = self.health - message.dmg
+			if self.absorb >= message.dmg then
+				self.absorb = self.absorb - message.dmg
+			elseif self.absorb > 0 and self.absorb < message.dmg then
+				local dmgLeft = message.dmg - self.absorb
+				self.absorb = 0
+				self.health = self.health - dmgLeft
+			else
+				self.health = self.health - message.dmg
+			end
+			if self.absorb == 0 then
+				label.set_text("#label_absorb", "")
+			else
+				label.set_text("#label_absorb", self.absorb)
+			end
 			label.set_text("#label_hp", self.health)
 			self.nonVulnerableTimer =  0.5
 			self.isVulnerable = false
 		end
 	end
 
+	if message_id == hash("absorb") then
+		self.absorb = self.absorb + message.absorb
+		if self.absorbTimer < message.timer then
+			self.absorbTimer = message.timer
+		end
+		if self.absorb == 0 then
+			label.set_text("#label_absorb", "")
+		else
+			label.set_text("#label_absorb", self.absorb)
+		end
+	end
+	
 	--AFK
 	if message_id == hash("desactivate") then
 		sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 0.33))
@@ -171,8 +208,8 @@ function M.updateAnimation(self, dt)
 	local idx = 8
 	local url = msg.url("main", go.get_id(), "attack")
 	local vector = go.get(url, "shootingDir")
-	if go.get(url, "isShooting") and go.get(url, "shootingTimer") > 8 / 10 * go.get(url, "shootingDelay") then
-		self.animTimer = 2 / 10 * go.get(url, "shootingDelay")
+	if go.get(url, "isShooting") and go.get(url, "basicCD_Timer") > 8 / 10 * go.get(url, "basicCD") then
+		self.animTimer = 2 / 10 * go.get(url, "basicCD")
 	end
 
 	if self.animTimer >= 0 then

@@ -1,0 +1,44 @@
+--KNIGHT
+local globals = require "main.globals"
+
+function init(self)
+	self.shieldKnight = 40
+	self.shieldAll = 20
+	self.absordTimer = 10
+	self.life = 0.1
+	self.playersHit = {}
+	sprite.set_constant("#sprite", "tint", vmath.vector4(1,1,1,0.3))
+end
+
+function update(self, dt)
+	if self.life > 0 then
+		self.life = self.life - dt
+	else
+		go.delete()
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if globals.getPause() then
+		return
+	end
+
+	if message_id == hash("collision_response") then
+		if message.group == hash("player") then
+			local url = msg.url(nil, message.other_id, "player")
+			for i, player in pairs(self.playersHit) do
+				if player == message.other_id then
+					return
+				end
+			end
+			
+			table.insert(self.playersHit, message.other_id)
+			
+			if go.get(url, "class") == hash("knight") then
+				msg.post(url, "absorb", {absorb = self.shieldKnight, timer = self.absordTimer})
+			else	
+				msg.post(url, "absorb", {absorb = self.shieldAll, timer = self.absordTimer})
+			end
+		end
+	end
+end

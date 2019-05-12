@@ -3,6 +3,7 @@ local playersManager = require "managers.playersManager"
 local enemyManager = require "managers.enemyManager"
 local globals = require "main.globals"
 local bodyManager = require "managers/bodyManager.bodyManager"
+local shaderManager = require "managers/shaderManager"
 
 -- Global properties
 go.property("movingDir", vmath.vector3(0,0,0))

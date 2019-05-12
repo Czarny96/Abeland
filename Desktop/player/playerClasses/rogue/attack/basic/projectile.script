@@ -1,9 +1,10 @@
 --ROGUE
 go.property("projectileDir", vmath.vector3())
-go.property("range", 120)
+go.property("range", 230)
 go.property("speed", 400)
-go.property("damage", 5)			--HP
-go.property("poisonDuration", 5)	--s
+go.property("poisonDamage", 5)			--HP
+go.property("directDamage", 10)
+go.property("poisonDuration", 3.5)	--s
 
 local globals = require "main.globals"
 
@@ -12,7 +13,7 @@ function init(self)
 	self.enemyHit = nil
 	self.url = nil
 	self.projectilelife = self.range / self.speed
-	self.poisonTimer = -1
+	self.poisonTimer = 1
 end
 
 function update(self, dt)
@@ -22,17 +23,10 @@ function update(self, dt)
 	if self.enemyHit == nil  then
 		go.set_position(go.get_position() + self.projectileDir * self.speed * dt)
 	else
-		self.url = msg.url(nil, self.enemyHit, "enemy")
-		go.set_position(go.get_position(self.url))
-		if self.poisonTimer <= 0 then
-			self.poisonTimer = 1
-			self.projectileLife = 5 
-			go.set(self.url, "health", go.get(self.url, "health") - self.damage)
-		else
-			self.poisonDuration = self.poisonDuration - dt
-			self.poisonTimer = self.poisonTimer - dt
-		end
+		self.poisonDuration = self.poisonDuration - dt
+		self.poisonTimer = self.poisonTimer - dt
 	end
+	
 	self.projectilelife = self.projectilelife - dt
 	if (self.projectilelife <= 0  and self.enemyHit == nil) or self.poisonDuration <= 0 then
 		go.delete()
@@ -51,7 +45,19 @@ function on_message(self, message_id, message, sender)
 		if message.group == hash("enemy") then
 			if self.enemyHit == nil then
 				self.enemyHit = message.other_id
+				self.url = msg.url(nil, self.enemyHit, "enemy")
 				sprite.set_constant("#sprite", "tint", vmath.vector4(0))
+				local url = msg.url(nil,message.other_id,"enemy")
+				go.set(url, "health", go.get(url, "health") - self.directDamage)
+				msg.post("#wallCollider", "disable")
+			elseif self.enemyHit == message.other_id then
+				if self.poisonTimer <= 0 then
+					self.poisonTimer = 1
+					self.projectileLife = 5 
+					go.set(self.url, "health", go.get(self.url, "health") - self.poisonDamage)
+				else
+					go.set_position(go.get_position(self.enemyHit))
+				end
 			end
 		else
 			go.delete()

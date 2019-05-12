@@ -1,0 +1,45 @@
+--MAGE
+go.property("damage", 5)
+
+local globals = require "main.globals"
+
+function init(self)
+	self.enemiesHit = {}
+	self.projectilelife = 0.6
+end
+
+function update(self, dt)
+	if self.projectilelife <= 0 then
+		go.delete()
+	else
+		self.projectilelife = self.projectilelife - dt
+	end 
+
+	-- DRAW ORDER
+	g_applyDrawOrder(go.get_id(), 1)
+end
+
+function on_message(self, message_id, message, sender)
+	if globals.getPause() then
+		return
+	end
+	
+	--Destroy on hit
+	if message_id == hash("collision_response") then
+		if message.group == hash("enemy") then
+
+			local url = msg.url(nil, message.other_id, "enemy")
+			for i, enemy in pairs(self.enemiesHit) do
+				if enemy == message.other_id then
+					return
+				end
+			end
+
+			go.set(url, "health", go.get(url, "health") - self.damage)
+			msg.post(url, "slow", {amount = 50, duration = 3})
+			table.insert(self.enemiesHit, message.other_id)
+		else
+			go.delete()
+		end
+	end
+end

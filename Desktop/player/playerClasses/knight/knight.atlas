@@ -200,6 +200,64 @@ animations {
   flip_horizontal: 0
   flip_vertical: 0
 }
+animations {
+  id: "shieldUp"
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp1.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp2.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp3.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp4.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp5.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp6.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp7.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp8.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp9.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp91.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp92.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp93.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp94.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp95.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp96.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldUp/shieldUp97.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 128
+  flip_horizontal: 0
+  flip_vertical: 0
+}
 margin: 5
 extrude_borders: 0
 inner_padding: 0

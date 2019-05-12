@@ -1,0 +1,56 @@
+--ARCHER
+go.property("projectileDir", vmath.vector3())
+go.property("range", 500)
+go.property("speed", 500)
+go.property("damage", 10)
+
+local globals = require "main.globals"
+
+function init(self)
+	self.enemiesHit = {}
+	self.projectilelife = self.range / self.speed
+end
+
+function update(self, dt)
+	if globals.getPause() then
+		return
+	end
+	go.set_position(go.get_position() + self.projectileDir * self.speed * dt)
+	
+	if self.projectilelife <= 0 then
+		go.delete()
+	else
+		self.projectilelife = self.projectilelife - dt
+	end 
+
+	-- DRAW ORDER
+	g_applyDrawOrder(go.get_id(), 2)
+end
+
+function on_message(self, message_id, message, sender)
+	if globals.getPause() then
+		return
+	end
+	--Enemy Hit
+	if message_id == hash("collision_response") then
+		if message.group == hash("enemy") then
+			local url = msg.url(nil, message.other_id, "enemy")
+			msg.post(url, "knockback", {pos = go.get_position()})
+			for i, enemy in pairs(self.enemiesHit) do
+				if enemy == message.other_id then
+					return
+				end
+			end
+			
+			go.set(url, "health", go.get(url, "health") - self.damage)
+			
+			table.insert(self.enemiesHit, message.other_id)
+			if #self.enemiesHit >= 2 then
+				go.delete()
+			end
+		else
+			go.delete()
+		end
+		
+	end
+end

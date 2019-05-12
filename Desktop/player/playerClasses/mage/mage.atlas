@@ -210,6 +210,37 @@ animations {
   flip_horizontal: 0
   flip_vertical: 0
 }
+animations {
+  id: "ice_nova"
+  images {
+    image: "/assets/prototypes/mage/ice_nova/ice-nova.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/ice_nova/ice-nova1.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/ice_nova/ice-nova2.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/ice_nova/ice-nova3.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/ice_nova/ice-nova4.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/ice_nova/ice-nova5.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/ice_nova/ice-nova6.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/ice_nova/ice-nova7.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 16
+  flip_horizontal: 0
+  flip_vertical: 0
+}
 margin: 5
 extrude_borders: 0
 inner_padding: 0
