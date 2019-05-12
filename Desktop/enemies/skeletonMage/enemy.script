@@ -1,19 +1,16 @@
---ZOMBIE
-
+--SKELETON MAGE
 local shaderManager = require "managers/shaderManager"
 local enemyManager = require "managers.enemyManager"
 local bodyManager = require "managers/bodyManager.bodyManager"
-local shaderManager = require "managers/shaderManager"
 local globals = require "main.globals"
 local shaderManager = require "managers/shaderManager"
 local playerManager = require "managers.playersManager"
 local enemyModule = require "enemies.enemyModule"
 
 -- Global properties
-go.property("type", hash("zombie"))
+go.property("type", hash("skeletonMage"))
 go.property("health", 100)
-go.property("damage", 5)
-go.property("isRanged", false)
+go.property("isRanged", true)
 
 --States
 go.property("stunDuration", 0)			--duration of stun in s
@@ -26,15 +23,11 @@ go.property("slowDuration", 0)	--duration of slow in s
 
 go.property("rootDuration", 0)			--duration of root in s
 
-
 function init(self)
-	-- every enemy has different behavior
-	self.random = math.random(0, 2)
-
-	self.actionTimer = 0
-	self.attackCD = 1
+	self.attackCD = 5
+	self.attackCDrandomized = self.attackCD + math.random(-2, 2)
 	self.moveAfterAttCD = 0
-	self.attackTimer = self.attackCD
+	self.attackTimer = self.attackCDrandomized
 
 	self.lastHitVector = nil
 
@@ -45,21 +38,20 @@ function init(self)
 end
 
 local function attack(self, message_id, message, sender)
-	if self.stunDuration <= 0 and self.attackTimer >= self.attackCD then
-
+	if self.attackTimer >= self.attackCDrandomized then
+		self.attackCDrandomized = self.attackCD + math.random(-2, 2)
 		self.attackTimer = 0
 
-		-- send msg to player who was hit
-		--msg.post(message.other_id, "hit", {enemy_position = go.get_position()})
-		msg.post(message.other_id, "hit", {dmg = self.damage})
-
-		-- crate slash 
+		-- create homing missile
 		local dir = vmath.normalize(message.other_position - go.get_position())
+		dir.x = dir.x + math.random()/2.0 - 0.25
+		dir.y = dir.y + math.random()/2.0 - 0.25
+		dir = vmath.normalize(dir)
 		local angle = math.atan2(dir.x, -dir.y)
 		local rotation = vmath.quat_rotation_z(angle)
-		local pos = go.get_position() + dir * 50
+		local pos = go.get_position() + dir*20
 		pos.z = 0
-		factory.create("#attackFactory", pos, rotation)
+		factory.create("#enemyMageHomingAttackFactory", pos, rotation, {direction = dir})
 
 		self.lastHitVector = dir
 	end
@@ -89,8 +81,8 @@ function update(self, dt)
 	enemyModule.move(self, dt)
 
 	
-	self.actionTimer = self.actionTimer + dt
 	self.attackTimer = self.attackTimer + dt
+	self.moveAfterAttCD = self.moveAfterAttCD - dt
 
 	-- DRAW ORDER
 	g_applyDrawOrder(go.get_id(), 2)
@@ -100,9 +92,10 @@ function on_message(self, message_id, message, sender)
 	--Handle collision
 	if message_id == hash("collision_response") then
 		if message.own_group == hash("enemy") and message.other_group ~= hash("attack") then
-			enemyModule.knockBack(self, message)
+			enemyModule.collisionWithEntity(self, message_id, message, sender)
 		elseif message.own_group == hash("attackRange") then
 			local playerURL = msg.url(nil, message.other_id, "player")
+			self.moveAfterAttCD = 0.3
 			if go.get(playerURL, "isTargetable") then
 				attack(self, message_id, message, sender)
 			end

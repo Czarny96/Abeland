@@ -67,7 +67,7 @@ function M.quickHands(self, dt)
 end
 
 function M.powerArrow(self, dt)
-	if self.isBlueHit and self.BlueCD_Timer <= 0 then
+	if self.isBlueHit and self.blueCD_Timer <= 0 then
 		--Handle all of this attack in this function
 		--It is already called in attack.script coresponding to this class
 	end

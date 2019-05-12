@@ -16,7 +16,7 @@ components {
 embedded_components {
   id: "sprite"
   type: "sprite"
-  data: "tile_set: \"/atlass/bodyAtlass/bodyAtlass.atlas\"\n"
+  data: "tile_set: \"/managers/bodyManager/bodyAtlass.atlas\"\n"
   "default_animation: \"archer\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"

@@ -5,8 +5,11 @@ local enemyManager = require "managers.enemyManager"
 local bodyManager = require "managers/bodyManager.bodyManager"
 local globals = require "main.globals"
 local shaderManager = require "managers/shaderManager"
+local playerManager = require "managers.playersManager"
+local enemyModule = require "enemies.enemyModule"
 
 -- Global properties
+go.property("type", hash("ghost"))
 go.property("health", 100)
 go.property("damage", 5)
 go.property("isRanged", false)
@@ -22,7 +25,6 @@ go.property("slowDuration", 0)	--duration of slow in s
 
 go.property("rootDuration", 0)			--duration of root in s
 
-local playerManager = require "managers.playersManager"
 
 function init(self)
 	-- every enemy has different behavior
@@ -30,83 +32,16 @@ function init(self)
 
 	self.actionTimer = 0
 	self.chargeTimer = 5
-	self.attackTimer = 5
+	self.attackCD = 5
+	self.moveAfterAttCD = 0
+	self.attackTimer = self.attackCD
 
 	self.playerWithLowestHp = nil
 	self.playerInRange = nil
 
 	self.lastHitVector = nil
-end
 
-function final(self)
-	-- Add finalization code here
-	-- Remove this function if not needed
-end
-
--- returns false if all players are dead
-local function setTarget(self)
-	if self.tauntTarget == nil and self.tauntDuration <= 0 then
-		self.targetId = playerManager.getClosestPlayerID(go.get_position())
-	else
-		self.targetId = self.tauntTarget
-	end
-
-	if self.targetId == 0 then
-		return false
-	else 
-		return true
-	end
-end
-
-local function setDirection(self, moveVector)
-	
-	if moveVector.x < -0.3 and moveVector.y > 0.3 then
-		msg.post("#sprite", "play_animation", {id = hash("player_prot_up_left")})
-	elseif moveVector.x > 0.3 and moveVector.y > 0.3 then
-		msg.post("#sprite", "play_animation", {id = hash("player_prot_up_right")})
-	elseif moveVector.x < -0.3 and moveVector.y < -0.3 then
-		msg.post("#sprite", "play_animation", {id = hash("player_prot_down_left")})
-	elseif moveVector.x > 0.3 and moveVector.y < -0.3 then
-		msg.post("#sprite", "play_animation", {id = hash("player_prot_down_right")})
-	elseif moveVector.y > 0.3  then
-		msg.post("#sprite", "play_animation", {id = hash("player_prot_up")})
-	elseif moveVector.y < -0.3  then
-		msg.post("#sprite", "play_animation", {id = hash("player_prot_down")})
-	elseif moveVector.x < -0.3  then
-		msg.post("#sprite", "play_animation", {id = hash("player_prot_left")})
-	elseif moveVector.x > 0.3  then
-		msg.post("#sprite", "play_animation", {id = hash("player_prot_right")})
-	else 
-		msg.post("#sprite", "play_animation", {id = hash("player_prot_down")})
-	end
-	
-end
-
-local function manageStates(self, dt)
-	--Stun
-	if self.stunDuration > 0 then
-		self.stunDuration = self.stunDuration - dt
-	end
-
-	--Root
-	if self.rootDuration > 0 then
-		self.rootDuration = self.rootDuration - dt
-	end
-
-	--Slow
-	if self.slowDuration > 0 then
-		self.slowDuration = self.slowDuration - dt
-	else
-		shaderManager.resetColorizeFilter("#sprite")
-		self.slowAmount = 0
-	end
-
-	--Taunt
-	if self.tauntDuration > 0 then
-		self.tauntDuration = self.tauntDuration - dt
-	else
-		self.tauntTarget = nil
-	end
+	enemyModule.setTarget(self)
 end
 
 -- HIDE SPRITE 
@@ -126,19 +61,8 @@ end
 
 -- END OF HIDE SPRITE
 
-local function handleDeath(self, dt)
-	-- Handling death when health drops below 0
-	if self.health <= 0 then
-		-- Play death sound
-		--msg.post("#death_sound", "play_sound", {gain = 0.5})
-		enemyManager.removeEnemy(go.get_id())
-		bodyManager.createTimedBody(go.get_position(), hash("ghost"), 5)
-		go.delete()
-	end
-end
-
 local function attack(self, message_id, message, sender)
-	if self.attackTimer > 1 and self.chargeTimer>2 then
+	if self.attackTimer >= self.attackCD and self.chargeTimer > 2 then
 		self.attackTimer = 0
 
 		--msg.post(message.other_id, "hit", {enemy_position = go.get_position()})
@@ -154,32 +78,19 @@ local function attack(self, message_id, message, sender)
 	end
 end
 
-function damageEnemy(self, message_id, message, sender)
-	-- knock back enemy
-	local kickDir = vmath.vector3()
-	if message.pos ~= nil then
-		kickDir = vmath.normalize( go.get_position() - message.pos)
-	end
-	msg.post("#co", "apply_force", {force = kickDir * go.get("#co", "mass") * 1000, position = go.get_world_position()})
-end
-
 function update(self, dt)
-	
 	if globals.getPause() then
 		return
 	end
 
-	manageStates(self, dt)
-	
-	self.actionTimer = self.actionTimer + dt
-	self.chargeTimer = self.chargeTimer + dt
-	self.attackTimer = self.attackTimer + dt
+	enemyModule.manageStates(self, dt)
 	
 	label.set_text("#hpLabel", tostring(self.health))
+	
+	enemyModule.manageStates(self, dt)
+	enemyModule.handleDeath(self, dt)
 
-	handleDeath(self, dt)
-
-	if not setTarget(self) then
+	if not enemyModule.setTarget(self) then
 		-- all players are dead, so enemy will do nothing
 		return
 	end	
@@ -203,34 +114,18 @@ function update(self, dt)
 	end
 	-- END OF RANDOM ACTIONS
 
-	-- MOVEMENT
+	enemyModule.move(self, dt)
 
-	if self.stunDuration <= 0 and self.targetPosition  then
-		if self.attackTimer < 0.5 then
-			setDirection(self, self.lastHitVector)
-		else
-			local movement = self.targetPosition - go.get_position()
-			self.targetPosition = vmath.normalize(movement)
-			setDirection(self, vmath.normalize(movement))
-			if self.rootDuration <= 0 then
-				msg.post("#co", "apply_force", {force = vmath.normalize(movement) * (100 - self.slowAmount) * go.get("#co", "mass"), position = go.get_world_position()})
-			end
-		end
-		
-	end
-	-- END OF ENEMY MOVEMENT
-
+	
+	self.actionTimer = self.actionTimer + dt
+	self.chargeTimer = self.chargeTimer + dt
+	self.attackTimer = self.attackTimer + dt
+	
 	-- DRAW ORDER
 	g_applyDrawOrder(go.get_id(), 2)
-	
 end
 
 function on_message(self, message_id, message, sender)
-
-	if message_id == hash("knockback") then
-		knockBack(self, message)
-	end
-	
 	-- Handle collision
 	if message_id == hash("collision_response") then
 		if message.own_group == hash("chargeRange") then
@@ -258,7 +153,7 @@ function on_message(self, message_id, message, sender)
 				end
 			end
 		elseif message.own_group == hash("enemy") and message.other_group ~= hash("attack") then
-			knockBack(self, message)
+			enemyModule.collisionWithEntity(self, message_id, message, sender)
 		elseif message.own_group == hash("attackRange") then
 			local playerURL = msg.url(nil, message.other_id, "player")
 			if go.get(playerURL, "isTargetable") then
@@ -267,28 +162,5 @@ function on_message(self, message_id, message, sender)
 		end
 	end
 
-	--Stun
-	if message_id == hash("stun") then
-		self.stunDuration = message.duration
-	end
-	--Taunt
-	if message_id == hash("taunt") then
-		self.tauntTarget = message.other_id
-		self.tauntDuration = message.duration
-	end
-	--Slow
-	if message_id == hash("slow") then
-		shaderManager.freezeEffect("#sprite")
-		self.slowAmount = message.amount
-		self.slowDuration = message.duration
-	end
-	--Root
-	if message_id == hash("root") then
-		self.rootDuration = message.duration
-	end
-
-	--Deleting object	
-	if message_id == hash("kill") then
-		go.delete()
-	end
+	enemyModule.handleMessage(self, message_id, message, sender)
 end

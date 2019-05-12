@@ -16,6 +16,11 @@ function init(self)
 	self.closestPlayerID = playersManager.getClosestPlayerID(go.get_position())
 end
 
+local function rotate(self)
+	local l_angle = math.atan2(self.movingDir.y, self.movingDir.x)
+	go.set_rotation(vmath.quat_rotation_z(l_angle))
+end
+
 local function countDistanceAndDirection(self)
 	-- Count possition diffrence between closest player and enemy to designate enemy moving direction
 	self.closestPlayerID = playersManager.getClosestPlayerID(go.get_position())
@@ -53,15 +58,16 @@ function update(self, dt)
 		self.checkClosestPlayerPosTimer = self.checkClosestPlayerPosTimer - dt
 	end 
 
+	rotate(self)
+	
 	-- DRAW ORDER
 	g_applyDrawOrder(go.get_id(), 2)
 end
 
 local function playersCollision(self, message_id, message, sender)
 	local enemyPos = go.get_position()
-	local closestPlayerID = playersManager.getClosestPlayerID(enemyPos)
-	--local playerUrl = closestPlayerID.."#player"
-	local scriptUrl = msg.url(nil, closestPlayerID, "player")
+	local playerID = message.other_id
+	local scriptUrl = msg.url(nil, playerId, "player")
 	local playerHealth = go.get(scriptUrl, "health")
 	--Send message about dealt damage
 	msg.post(scriptUrl,"hit", {dmg = self.damage})

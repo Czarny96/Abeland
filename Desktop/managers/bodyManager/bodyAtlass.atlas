@@ -39,19 +39,9 @@ animations {
   flip_vertical: 0
 }
 animations {
-  id: "enemyMelee"
+  id: "skeletonMage"
   images {
-    image: "/assets/prototypes/enemy_killed.png"
-  }
-  playback: PLAYBACK_LOOP_FORWARD
-  fps: 60
-  flip_horizontal: 0
-  flip_vertical: 0
-}
-animations {
-  id: "enemyMage"
-  images {
-    image: "/assets/prototypes/enemyMage_killed.png"
+    image: "/assets/images/skeleton-mage/player_prot_dead.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 60

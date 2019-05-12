@@ -98,6 +98,7 @@ end
 
 
 function M.initializeWave(gateAmount)
+	math.randomseed(15478517)
 	local enemyTypesAmount = 5
 	--Teleports enemies to arena (behind gates / to gate_[direction]_out
 	--rangePercent == what is a ratio of ranged attack enemies to malee attacking enemies 
@@ -120,7 +121,7 @@ function M.initializeWave(gateAmount)
 		do
 			rand = math.floor(math.random(1,100))
 			if rand % enemyTypesAmount == 0 then
-				table.insert(enemyIDs, factory.create("/enemyFactory#mageFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
+				table.insert(enemyIDs, factory.create("/enemyFactory#skeletonMageFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 			elseif rand % enemyTypesAmount == 1 then
 				table.insert( enemyIDs, factory.create("/enemyFactory#zombieFactory", globals.getSpawnPoints()[1] + vmath.vector3(math.random(-100,100),math.random(-100,100),0)))
 			elseif rand % enemyTypesAmount == 2 then

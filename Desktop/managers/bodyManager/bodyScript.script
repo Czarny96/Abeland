@@ -5,10 +5,8 @@ go.property("dissapearTimer", 5)
 go.property("type", hash("archer"))
 
 local function setProperSprite(self)
-	if self.type == hash("enemyMelee") then
-		msg.post("#sprite", "play_animation", {id = hash("enemyMelee")})
-	elseif self.type == hash("enemyMage") then
-		msg.post("#sprite", "play_animation", {id = hash("enemyMage")})
+	if self.type == hash("skeletonMage") then
+		msg.post("#sprite", "play_animation", {id = hash("skeletonMage")})
 	elseif self.type == hash("archer") then
 		msg.post("#sprite", "play_animation", {id = hash("archer")})
 	elseif self.type == hash("mage") then

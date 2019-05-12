@@ -4,11 +4,12 @@ go.property("damage", 5)
 local globals = require "main.globals"
 
 local arrowSpeed = 500
+local arrowRange = 750
 
 function init(self)
 	-- Add initialization code here
 	-- Remove this function if not needed
-	self.lifeTime = 0
+	self.lifeTime = arrowRange / arrowSpeed
 	--pprint(go.get_rotation())
 end
 
@@ -30,8 +31,8 @@ function update(self, dt)
 
 	go.set_position(pos)
 	
-	self.lifeTime= self.lifeTime + dt
-	if self.lifeTime > 0.8 then
+	self.lifeTime = self.lifeTime - dt
+	if self.lifeTime <= 0 then
 		go.delete()
 	end
 	-- Add update code here

@@ -28,6 +28,30 @@ images {
 images {
   image: "/assets/images/ghost/player_prot_up_right.png"
 }
+images {
+  image: "/assets/images/ghost/attack/player_prot_down_attack.png"
+}
+images {
+  image: "/assets/images/ghost/attack/player_prot_down_left_attack.png"
+}
+images {
+  image: "/assets/images/ghost/attack/player_prot_down_right_attack.png"
+}
+images {
+  image: "/assets/images/ghost/attack/player_prot_left_attack.png"
+}
+images {
+  image: "/assets/images/ghost/attack/player_prot_right_attack.png"
+}
+images {
+  image: "/assets/images/ghost/attack/player_prot_up_attack.png"
+}
+images {
+  image: "/assets/images/ghost/attack/player_prot_up_left_attack.png"
+}
+images {
+  image: "/assets/images/ghost/attack/player_prot_up_right_attack.png"
+}
 margin: 10
 extrude_borders: 0
 inner_padding: 0

@@ -1,2 +1,2 @@
-prototype: "/enemies/enemyMage/enemyMage.go"
+prototype: "/enemies/skeletonMage/enemy.go"
 load_dynamically: false
