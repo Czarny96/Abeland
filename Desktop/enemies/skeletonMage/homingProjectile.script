@@ -65,12 +65,10 @@ function update(self, dt)
 end
 
 local function playersCollision(self, message_id, message, sender)
-	local enemyPos = go.get_position()
-	local playerID = message.other_id
-	local scriptUrl = msg.url(nil, playerId, "player")
-	local playerHealth = go.get(scriptUrl, "health")
+	local playerUrl = msg.url(nil, message.other_id, "player")
 	--Send message about dealt damage
-	msg.post(scriptUrl,"hit", {dmg = self.damage})
+	msg.post(playerUrl, "hit", {dmg = self.damage})
+	go.delete()
 end
 
 function on_message(self, message_id, message, sender)
@@ -81,7 +79,6 @@ function on_message(self, message_id, message, sender)
 		if message.group == hash("player") then
 			playersCollision(self, message_id, message, sender)
 		end
-		go.delete()
 	end
 	if message_id == hash("contact_point_response") then
 		go.delete()
