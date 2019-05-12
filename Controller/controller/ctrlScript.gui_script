@@ -133,16 +133,12 @@ function final(self)
 end
 
 function update(self, dt)
-	
+	g_controllerFrame = createFrame(self)
 end
 
 function on_message(self, message_id, message, sender)
 
-	if message_id == hash("dataRequest") then
-		local _frame = createFrame(self)
-		msg.post("/go#client", "setControllerData", {frame = _frame})
-
-	elseif message_id == hash("death") then
+	if message_id == hash("death") then
 		
 		-- hide pop-up window
 		g_hideConfirmationWindow()
@@ -179,12 +175,14 @@ local function setJoystickPosition(x, y, joystick)
 		gui.set_position(button, vmath.vector3(x, y, 0))
 		joystick.value.x = diff.x / joystick.maxDist
 		joystick.value.y = diff.y / joystick.maxDist
+		
 	else 
 		-- joystick is on the edge of circle
 		local normalized = vmath.normalize(diff)
 		gui.set_position(button, joystick.touchPos + normalized * joystick.maxDist)
 		joystick.value.x = normalized.x
 		joystick.value.y = normalized.y
+		
 	end
 
 end

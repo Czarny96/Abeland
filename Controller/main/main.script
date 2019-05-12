@@ -33,6 +33,8 @@ g_dcWindowIsOn = false
 g_confirmationWindowIsOn = false
 g_usernameFailureWindowIsOn = false
 
+g_controllerFrame = "M;0;0;0;0;0"
+
 function g_goToSplashScreen()
 	print("Entering splash screen")
 	g_gameState = g_gameStateEnum.splashScreen
