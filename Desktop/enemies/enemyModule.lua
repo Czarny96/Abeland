@@ -150,7 +150,6 @@ function M.handleMessage(self, message_id, message, sender)
 	if message_id == hash("hit") then
 		--Here manage types of damage
 		if message.type == hash("plain") then
-			print("HERE")
 			shaderManager.plainHitEffect("#sprite")
 		elseif message.type == hash("ice") then
 			shaderManager.freezeHitEffect("#sprite", self.slowDuration)

@@ -54,7 +54,6 @@ function update(self, dt)
 	else
 		--Movement
 		if self.isMoving then
-			print(self.isMoving,self.movingDir)
 			playerModule.move(self, dt)
 		end
 	end
