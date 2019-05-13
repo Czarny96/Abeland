@@ -58,17 +58,17 @@ function M.isWaveOver()
 end
 
 function M.resetAllEnemyPushers()
-	msg.post("main:/enemyPusher#enemyPusherScript", "reset")
-	msg.post("main:/enemyPusher1#enemyPusherScript", "reset")
-	msg.post("main:/enemyPusher2#enemyPusherScript", "reset")
-	msg.post("main:/enemyPusher3#enemyPusherScript", "reset")
+	msg.post("main:/enemyPusher_top#enemyPusherScript", "reset")
+	msg.post("main:/enemyPusher_bottom#enemyPusherScript", "reset")
+	msg.post("main:/enemyPusher_left#enemyPusherScript", "reset")
+	msg.post("main:/enemyPusher_right#enemyPusherScript", "reset")
 end
 
 function M.enableEnemyPushers()
-	msg.post("main:/enemyPusher#enemyPusherScript", "waveStart")
-	msg.post("main:/enemyPusher1#enemyPusherScript", "waveStart")
-	msg.post("main:/enemyPusher2#enemyPusherScript", "waveStart")
-	msg.post("main:/enemyPusher3#enemyPusherScript", "waveStart")
+	msg.post("main:/enemyPusher_top#enemyPusherScript", "waveStart")
+	msg.post("main:/enemyPusher_bottom#enemyPusherScript", "waveStart")
+	msg.post("main:/enemyPusher_left#enemyPusherScript", "waveStart")
+	msg.post("main:/enemyPusher_right#enemyPusherScript", "waveStart")
 end
 
 function M.startNextWave()
