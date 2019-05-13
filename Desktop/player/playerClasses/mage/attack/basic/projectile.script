@@ -33,7 +33,12 @@ function update(self, dt)
 	end 
 
 	-- DRAW ORDER
-	g_applyDrawOrder(go.get_id(), 3)
+	if self.isExploded then 
+		g_applyDrawOrder(go.get_id(), 5) 
+	else
+		g_applyDrawOrder(go.get_id(), 2)
+	end
+
 end
 
 function on_message(self, message_id, message, sender)

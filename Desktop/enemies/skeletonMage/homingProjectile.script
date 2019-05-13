@@ -61,7 +61,13 @@ function update(self, dt)
 	rotate(self)
 	
 	-- DRAW ORDER
-	g_applyDrawOrder(go.get_id(), 2)
+	if self.projectileLife > 4.6 then
+		-- for 0.4s, fireball will be in 2nd group, so it can be drawn under caster
+		g_applyDrawOrder(go.get_id(), 2)
+	else
+		-- after 0.4s, fireball will always be in front of players/enemies
+		g_applyDrawOrder(go.get_id(), 3)
+	end
 end
 
 local function playersCollision(self, message_id, message, sender)
