@@ -52,6 +52,8 @@ function M.manageFlagsAndTimers(self, dt)
 	self.nonVulnerableTimer = self.nonVulnerableTimer - dt
 	self.nonOperativeTimer = self.nonOperativeTimer - dt
 	self.absorbTimer = self.absorbTimer - dt
+
+	self.isMoving = false
 end
 
 function M.messages(self, message_id, message, sender)
@@ -260,6 +262,10 @@ function M.updateAnimation(self, dt)
 		end
 	end
 
+	if not self.isMoving and self.animTimer <= 0 then
+		return
+	end
+	
 	msg.post("#sprite", "play_animation", {id = animations[idx]})
 	self.animTimer = self.animTimer - dt
 end
