@@ -262,12 +262,10 @@ function M.updateAnimation(self, dt)
 		end
 	end
 
-	if not self.isMoving and self.animTimer <= 0 then
-		return
+	if self.isMoving or self.animTimer > 0 then
+		msg.post("#sprite", "play_animation", {id = animations[idx]})
+		self.animTimer = self.animTimer - dt
 	end
-	
-	msg.post("#sprite", "play_animation", {id = animations[idx]})
-	self.animTimer = self.animTimer - dt
 end
 
 function M.move(self, dt)
