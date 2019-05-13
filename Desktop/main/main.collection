@@ -120,7 +120,7 @@ instances {
   }
 }
 instances {
-  id: "enemyPusher"
+  id: "enemyPusher_right"
   prototype: "/arena/enemyPushers/enemyPusher.go"
   position {
     x: 2580.0
@@ -133,6 +133,14 @@ instances {
     z: 0.70710677
     w: 0.70710677
   }
+  component_properties {
+    id: "enemyPusherScript"
+    properties {
+      id: "gate"
+      value: "hash(\"right\")"
+      type: PROPERTY_TYPE_HASH
+    }
+  }
   scale3 {
     x: 1.0
     y: 1.0
@@ -140,7 +148,7 @@ instances {
   }
 }
 instances {
-  id: "enemyPusher1"
+  id: "enemyPusher_left"
   prototype: "/arena/enemyPushers/enemyPusher.go"
   position {
     x: -660.0
@@ -153,6 +161,14 @@ instances {
     z: 0.70710677
     w: 0.70710677
   }
+  component_properties {
+    id: "enemyPusherScript"
+    properties {
+      id: "gate"
+      value: "hash(\"left\")"
+      type: PROPERTY_TYPE_HASH
+    }
+  }
   scale3 {
     x: 1.0
     y: 1.0
@@ -160,7 +176,7 @@ instances {
   }
 }
 instances {
-  id: "enemyPusher2"
+  id: "enemyPusher_top"
   prototype: "/arena/enemyPushers/enemyPusher.go"
   position {
     x: 930.0
@@ -173,6 +189,14 @@ instances {
     z: 0.0
     w: 1.0
   }
+  component_properties {
+    id: "enemyPusherScript"
+    properties {
+      id: "gate"
+      value: "hash(\"top\")"
+      type: PROPERTY_TYPE_HASH
+    }
+  }
   scale3 {
     x: 1.0
     y: 1.0
@@ -180,7 +204,7 @@ instances {
   }
 }
 instances {
-  id: "enemyPusher3"
+  id: "enemyPusher_bottom"
   prototype: "/arena/enemyPushers/enemyPusher.go"
   position {
     x: 930.0
@@ -192,6 +216,14 @@ instances {
     y: 0.0
     z: 0.0
     w: 1.0
+  }
+  component_properties {
+    id: "enemyPusherScript"
+    properties {
+      id: "gate"
+      value: "hash(\"bottom\")"
+      type: PROPERTY_TYPE_HASH
+    }
   }
   scale3 {
     x: 1.0

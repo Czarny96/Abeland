@@ -12,18 +12,18 @@ void main()
     lowp vec4 tint_pm = vec4(tint.xyz * tint.w, tint.w);
     vec4 color = texture2D(texture_sampler, var_texcoord0.xy) * tint_pm;
     
-    lowp vec3 output = vec3(color);
+    lowp vec3 retval = vec3(color);
 
     // apply color
-    output.r *= colorize.r;
-    output.g *= colorize.g;
-    output.b *= colorize.b;
+    retval.r *= colorize.r;
+    retval.g *= colorize.g;
+    retval.b *= colorize.b;
 
     // apply brightness
-    output.r *= brightness.r;
-    output.g *= brightness.r;
-    output.b *= brightness.r;
+    retval.r *= brightness.r;
+    retval.g *= brightness.r;
+    retval.b *= brightness.r;
 
     
-    gl_FragColor = vec4(output.rgb, color.a);
+    gl_FragColor = vec4(retval.rgb, color.a);
 }
