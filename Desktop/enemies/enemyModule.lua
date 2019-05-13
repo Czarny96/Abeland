@@ -71,7 +71,7 @@ function M.setDirection(self, moveVector)
 		idx = idx + 9
 	end
 
-	msg.post("#sprite", "play_animation", {id = anims[idx]})
+	--msg.post("#sprite", "play_animation", {id = anims[idx]})
 end
 
 function M.manageStates(self, dt)
@@ -89,7 +89,6 @@ function M.manageStates(self, dt)
 	if self.slowDuration > 0 then
 		self.slowDuration = self.slowDuration - dt
 	else
-		shaderManager.resetColorizeFilter("#sprite")
 		self.slowAmount = 0
 	end
 
@@ -114,9 +113,9 @@ end
 
 function M.move(self, dt)
 	if self.stunDuration <= 0 and self.targetPosition  then
-		if self.moveAfterAttCD > 0 then
+		if self.moveAfterAttCD > 0 and self.lastHitVector ~= nil then
 			M.setDirection(self, self.lastHitVector)
-		else
+		elseif self.targetPosition ~= nil then
 			local movement = self.targetPosition - go.get_position()
 			self.targetPosition = vmath.normalize(movement)
 			M.setDirection(self, vmath.normalize(movement))
@@ -142,9 +141,24 @@ function M.collisionWithEntity(self, message_id, message, sender)
 end
 
 function M.handleMessage(self, message_id, message, sender)
+	
 	--Knockback
 	if message_id == hash("knockback") then
 		M.knockBack(self, message)
+	end
+	--Hit
+	if message_id == hash("hit") then
+		--Here manage types of damage
+		if message.type == hash("plain") then
+			print("HERE")
+			shaderManager.plainHitEffect("#sprite")
+		elseif message.type == hash("ice") then
+			shaderManager.freezeHitEffect("#sprite", self.slowDuration)
+		elseif message.type == hash("poison") then
+			shaderManager.poisonHitEffect("#sprite")
+		end
+
+		self.health = self.health - message.damage
 	end
 	--Stun
 	if message_id == hash("stun") then
@@ -157,9 +171,10 @@ function M.handleMessage(self, message_id, message, sender)
 	end
 	--Slow
 	if message_id == hash("slow") then
-		shaderManager.freezeEffect("#sprite")
 		self.slowAmount = message.amount
 		self.slowDuration = message.duration
+
+		shaderManager.freezeEffect("#sprite", message.duration)
 	end
 	--Root
 	if message_id == hash("root") then

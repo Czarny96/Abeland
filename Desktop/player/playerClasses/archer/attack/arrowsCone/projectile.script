@@ -42,7 +42,7 @@ function on_message(self, message_id, message, sender)
 				end
 			end
 			
-			go.set(url, "health", go.get(url, "health") - self.damage)
+			msg.post(url, "hit",{type = hash("plain"), damage = self.damage})
 			
 			table.insert(self.enemiesHit, message.other_id)
 			if #self.enemiesHit >= 2 then

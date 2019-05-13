@@ -82,7 +82,7 @@ embedded_components {
   type: "sprite"
   data: "tile_set: \"/player/playerClasses/archer/archer.atlas\"\n"
   "default_animation: \"player_up\"\n"
-  "material: \"/builtins/materials/sprite.material\"\n"
+  "material: \"/shaders/colorize/colorize.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
   ""
   position {

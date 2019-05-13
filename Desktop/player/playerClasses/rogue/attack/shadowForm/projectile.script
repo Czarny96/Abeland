@@ -1,4 +1,4 @@
---KNIGHT
+--ROGUE -- SHADOW FORM
 go.property("projectileDir", vmath.vector3())
 go.property("range", 60)
 go.property("speed", 30)
@@ -42,8 +42,8 @@ function on_message(self, message_id, message, sender)
 				end
 			end
 
-			go.set(url, "health", go.get(url, "health") - self.damage)
-
+			msg.post(url, "hit",{type = hash("plain"), damage = self.damage})
+			
 			table.insert(self.enemiesHit, message.other_id)
 		else
 			go.delete()

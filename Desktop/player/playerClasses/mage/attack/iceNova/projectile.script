@@ -35,7 +35,7 @@ function on_message(self, message_id, message, sender)
 				end
 			end
 
-			go.set(url, "health", go.get(url, "health") - self.damage)
+			msg.post(url, "hit",{type = hash("other"), damage = self.damage})
 			msg.post(url, "slow", {amount = 50, duration = 3})
 			table.insert(self.enemiesHit, message.other_id)
 		else

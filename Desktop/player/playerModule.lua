@@ -1,6 +1,7 @@
 local globals = require "main.globals"
 local playersManager = require "managers.playersManager"
 local bodyManager = require "managers/bodyManager.bodyManager"
+local shaderManager = require "managers/shaderManager"
 
 local M = {}
 
@@ -143,6 +144,7 @@ function M.messages(self, message_id, message, sender)
 			label.set_text("#label_hp", self.health)
 			self.nonVulnerableTimer =  0.5
 			self.isVulnerable = false
+			shaderManager.plainHitEffect("#sprite")
 		end
 	end
 
