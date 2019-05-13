@@ -16,7 +16,7 @@ function update(self, dt)
 	end 
 
 	-- DRAW ORDER
-	g_applyDrawOrder(go.get_id(), 1)
+	g_applyDrawOrder(go.get_id(), -6)
 end
 
 function on_message(self, message_id, message, sender)
