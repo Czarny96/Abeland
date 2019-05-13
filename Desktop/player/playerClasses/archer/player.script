@@ -4,9 +4,9 @@ go.property("position", vmath.vector3(864, 476, 0.99))
 go.property("movingDir", vmath.vector3(0, 0, 0))
 
 --Class Properties
-go.property("health", 100)
-go.property("maxHealth", 100)
-go.property("movingSpeed", 150)
+go.property("health", 130)
+go.property("maxHealth", 130)
+go.property("movingSpeed", 160)
 
 --Absord Properties
 go.property("absorb", 0)

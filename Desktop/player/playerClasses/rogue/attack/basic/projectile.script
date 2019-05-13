@@ -4,7 +4,7 @@ go.property("range", 230)
 go.property("speed", 400)
 go.property("poisonDamage", 5)			--HP
 go.property("directDamage", 10)
-go.property("poisonDuration", 3.5)	--s
+go.property("poisonDuration", 4.5)	--s
 
 local globals = require "main.globals"
 

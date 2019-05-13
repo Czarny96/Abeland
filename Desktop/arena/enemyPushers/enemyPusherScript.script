@@ -21,7 +21,7 @@ end
 
 local function reset(self)
 	self.pushingFlag = false
-	enemyManager.closeGate(self.gate)
+	enemyManager.closeAllGates()
 	go.set_position(self.initPos)
 end
 

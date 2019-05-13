@@ -120,7 +120,7 @@ function M.move(self, dt)
 			self.targetPosition = vmath.normalize(movement)
 			M.setDirection(self, vmath.normalize(movement))
 			if self.rootDuration <= 0 then
-				msg.post("#co", "apply_force", {force = vmath.normalize(movement) * (100 - self.slowAmount) * go.get("#co", "mass"), position = go.get_world_position()})
+				msg.post("#co", "apply_force", {force = vmath.normalize(movement) * (100 - self.slowAmount) * self.movementSpeed * go.get("#co", "mass"), position = go.get_world_position()})
 			end
 		end
 	end

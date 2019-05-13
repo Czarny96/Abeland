@@ -1,5 +1,5 @@
 go.property("direction", vmath.vector3())
-go.property("damage", 5)
+go.property("damage", 15)
 
 local globals = require "main.globals"
 

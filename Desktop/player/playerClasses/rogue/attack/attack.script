@@ -1,6 +1,6 @@
 --ROGUE
-go.property("basicCD", 0.7)
-go.property("basicShadowFormCD", 0.25)
+go.property("basicCD", 0.6)
+go.property("basicShadowFormCD", 0.35)
 
 --Skills CoolDowns
 go.property("yellowCD", 14)

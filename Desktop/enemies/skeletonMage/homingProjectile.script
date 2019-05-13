@@ -3,13 +3,13 @@ local playersManager = require "managers.playersManager"
 local globals = require "main.globals"
 
 -- Global properties
-go.property("damage", 15)
+go.property("damage", 25)
 
 function init(self)
 	-- Local Settings
-	self.projectileSpeed = 70
-	self.projectileSpeedByDistanceMultiplier = 0.0012
-	self.projectileLife = 5
+	self.projectileSpeed = 80
+	self.projectileSpeedByDistanceMultiplier = 0.0013
+	self.projectileLife = 7
 	-- Local Timers
 	self.checkClosestPlayerPosTimer = 0
 	-- ClosestPlayerID to follow

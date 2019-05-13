@@ -4,18 +4,18 @@ go.property("position", vmath.vector3(992, 604, 0.99))
 go.property("movingDir", vmath.vector3(0, 0, 0))
 
 --Class Properties
-go.property("health", 80)
-go.property("maxHealth", 80)
-go.property("movingSpeed", 120)
+go.property("health", 120)
+go.property("maxHealth", 120)
+go.property("movingSpeed", 150)
+
+--Absord Properties
+go.property("absorb", 0)
+go.property("absorbTimer", 0)
 
 --Flags
 go.property("isKilled", false)
 go.property("isVulnerable", true)
 go.property("isTargetable", true)
-
---Absord Properties
-go.property("absorb", 0)
-go.property("absorbTimer", 0)
 
 --Timers
 go.property("nonVulnerableTimer", 0)

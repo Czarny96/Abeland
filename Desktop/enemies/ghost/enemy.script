@@ -11,7 +11,7 @@ local enemyModule = require "enemies.enemyModule"
 -- Global properties
 go.property("type", hash("ghost"))
 go.property("health", 100)
-go.property("damage", 5)
+go.property("damage", 15)
 go.property("isRanged", false)
 
 --States
@@ -30,9 +30,11 @@ function init(self)
 	-- every enemy has different behavior
 	self.random = math.random(4, 10)
 
+	self.movementSpeed = 1
+	
 	self.actionTimer = 0
 	self.chargeTimer = 5
-	self.attackCD = 5
+	self.attackCD = 2
 	self.moveAfterAttCD = 0
 	self.attackTimer = self.attackCD
 
@@ -62,7 +64,7 @@ end
 -- END OF HIDE SPRITE
 
 local function attack(self, message_id, message, sender)
-	if self.attackTimer >= self.attackCD and self.chargeTimer > 2 then
+	if self.stunDuration <= 0 and self.attackTimer >= self.attackCD and self.chargeTimer > 2 then
 		self.attackTimer = 0
 
 		--msg.post(message.other_id, "hit", {enemy_position = go.get_position()})

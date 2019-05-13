@@ -2,8 +2,8 @@
 local globals = require "main.globals"
 
 function init(self)
-	self.shieldKnight = 40
-	self.shieldAll = 20
+	self.shieldKnight = 100
+	self.shieldAll = 50
 	self.absordTimer = 10
 	self.life = 0.1
 	self.playersHit = {}

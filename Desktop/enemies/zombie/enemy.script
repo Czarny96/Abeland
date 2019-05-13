@@ -11,8 +11,8 @@ local enemyModule = require "enemies.enemyModule"
 
 -- Global properties
 go.property("type", hash("zombie"))
-go.property("health", 100)
-go.property("damage", 5)
+go.property("health", 250)
+go.property("damage", 25)
 go.property("isRanged", false)
 
 --States
@@ -31,8 +31,10 @@ function init(self)
 	-- every enemy has different behavior
 	self.random = math.random(0, 2)
 
+	self.movementSpeed = 0.8
+	
 	self.actionTimer = 0
-	self.attackCD = 1
+	self.attackCD = 2.5
 	self.moveAfterAttCD = 0
 	self.attackTimer = self.attackCD
 

@@ -1,5 +1,5 @@
 --MAGE
-go.property("damage", 5)
+go.property("damage", 30)
 
 local globals = require "main.globals"
 

@@ -34,8 +34,11 @@ function M.shadowForm(self, dt)
 		local url = msg.url(nil,go.get_id(),"shadowForm")
 		shaderManager.invisibilityEffect("#sprite", go.get(url, "buffDuration"))
 		msg.post("#shadowForm", "activate")
-		self.isYellowHit = false
+		self.yellowCD_Timer = self.yellowCD
+	else
+		self.yellowCD_Timer = self.yellowCD_Timer - dt
 	end
+	self.isYellowHit = false
 end
 
 function M.venomVial(self, dt)

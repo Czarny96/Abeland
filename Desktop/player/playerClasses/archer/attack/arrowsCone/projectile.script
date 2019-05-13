@@ -1,8 +1,8 @@
 --ARCHER
 go.property("projectileDir", vmath.vector3())
-go.property("range", 500)
+go.property("range", 600)
 go.property("speed", 500)
-go.property("damage", 10)
+go.property("damage", 25)
 
 local globals = require "main.globals"
 

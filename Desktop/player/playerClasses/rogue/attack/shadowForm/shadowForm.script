@@ -17,7 +17,6 @@ function update(self, dt)
 		self.rogueBuffedMovementSpeed = self.rogueStandardMovementSpeed * self.rogueBuffMovementSpeedMultiplier
 		self.doOnceFlag = false
 	end
-
 	
 	if self.timer > 0 then
 		if not self.buffAppliedFlag then

@@ -10,8 +10,8 @@ local enemyModule = require "enemies.enemyModule"
 
 -- Global properties
 go.property("type", hash("skeletonMelee"))
-go.property("health", 100)
-go.property("damage", 5)
+go.property("health", 180)
+go.property("damage", 15)
 go.property("isRanged", false)
 
 --States
@@ -30,8 +30,11 @@ function init(self)
 	-- every enemy has different behavior
 	self.random = math.random(0, 2)
 
+	self.movementSpeed = 1.2
+	
 	self.actionTimer = 0
 	self.attackTimer = 2
+	self.attackCD = 1.5
 	self.moveAfterAttCD = 0
 	self.lastHitVector = nil
 
@@ -42,7 +45,7 @@ function init(self)
 end
 
 local function attack(self, message_id, message, sender)
-	if self.attackTimer > 1 then
+	if self.stunDuration <= 0 and self.attackTimer >= self.attackCD then
 
 		self.attackTimer = 0
 

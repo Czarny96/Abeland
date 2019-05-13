@@ -1,7 +1,7 @@
 --ARCHER
-go.property("basicCD", 0.5)
+go.property("basicCD", 0.6)
 --Skills CoolDowns
-go.property("yellowCD", 1)
+go.property("yellowCD", 7)
 go.property("redCD", 1)
 go.property("greenCD", 1)
 go.property("blueCD", 1)
