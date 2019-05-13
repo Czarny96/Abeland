@@ -61,6 +61,7 @@ function g_goToChampionSelect()
 	g_gameState = g_gameStateEnum.championSelect
 	msg.post("/menu", "disable")
 	msg.post("/menu#championSelect", "enable")
+	g_hideConfirmationWindow()
 end
 
 function g_goToController()

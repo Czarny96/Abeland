@@ -19,7 +19,7 @@ local rightJoystick = {
 	value = {x=0, y=0},
 	maxDist = 150,
 	touchId = -1,
-	--area = {left=1300,right=1920,top=500,bottom=0}
+	area = {left=1320,right=1920,top=540,bottom=0} --1520 340
 }
 
 local blackBoxNode = nil
@@ -211,16 +211,6 @@ function on_input(self, action_id, action)
 	-- screen_x = 1422
 	if action_id == hash("multitouch") then
 		for i, touchData in ipairs(action.touch) do -- iterate over every element in action.touch 
-			-- gui buttons
-			for k, button in pairs(self.guiButtons) do
-				button.multitouchUpdate(touchData)
-			end
-			
-			-- update buttons
-			for k, button in pairs(self.gameButtons) do
-				button.multitouchUpdate(touchData)
-			end
-
 
 			-- LEFT JOYSTICK
 			if touchData.pressed and leftJoystick.touchId == -1 and isTouchedInJoystickArea(touchData.x, touchData.y, leftJoystick) then
@@ -256,13 +246,32 @@ function on_input(self, action_id, action)
 
 			if touchData.id == leftJoystick.touchId then
 				setJoystickPosition(touchData.x, touchData.y, leftJoystick)
+				goto continue
 			end
 			-- END OF LEFT JOYSTICK
 
 			-- RIGHT JOYSTICK
-			local joystick = gui.get_node("right_joystick_back")
-			if touchData.pressed and rightJoystick.touchId == -1 and gui.pick_node(joystick, touchData.x, touchData.y) then
+			if touchData.pressed and rightJoystick.touchId == -1 and isTouchedInJoystickArea(touchData.x, touchData.y, rightJoystick) then
+
 				rightJoystick.touchId = touchData.id
+
+				local newPos = vmath.vector3(touchData.x, touchData.y, 0)
+
+				if newPos.x < rightJoystick.area.left + 200 then
+					newPos.x = rightJoystick.area.left + 200
+				elseif newPos.x > rightJoystick.area.right - 200 then
+					newPos.x = rightJoystick.area.right - 200
+				end
+
+				if newPos.y < rightJoystick.area.bottom + 200 then
+					newPos.y = rightJoystick.area.bottom + 200
+				elseif newPos.y > rightJoystick.area.top - 200 then
+					newPos.y = rightJoystick.area.top - 200
+				end
+
+				rightJoystick.touchPos = newPos
+
+				gui.set_position(gui.get_node("right_joystick_back"), rightJoystick.touchPos)
 			elseif touchData.released and rightJoystick.touchId == touchData.id then
 				if rightJoystick.touchId == touchData.id then
 					rightJoystick.touchId = -1
@@ -275,9 +284,21 @@ function on_input(self, action_id, action)
 
 			if touchData.id == rightJoystick.touchId then
 				setJoystickPosition(touchData.x, touchData.y, rightJoystick)
+				goto continue
 			end
 			-- END OF RIGHT JOYSTICK
 
+			-- gui buttons
+			for k, button in pairs(self.guiButtons) do
+				button.multitouchUpdate(touchData)
+			end
+
+			-- update buttons
+			for k, button in pairs(self.gameButtons) do
+				button.multitouchUpdate(touchData)
+			end
+
+			::continue::
 		end
 	elseif action_id == hash("mouse_left") then
 
