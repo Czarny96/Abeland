@@ -32,7 +32,7 @@ end
 function M.shadowForm(self, dt)
 	if self.isYellowHit and self.yellowCD_Timer <= 0 then
 		local url = msg.url(nil,go.get_id(),"shadowForm")
-		shaderManager.invisibilityEffect("#sprite", go.get(url, "buffDuration"))
+		
 		msg.post("#shadowForm", "activate")
 		self.yellowCD_Timer = self.yellowCD
 	else

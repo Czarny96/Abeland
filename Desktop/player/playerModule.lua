@@ -38,11 +38,19 @@ end
 function M.manageFlagsAndTimers(self, dt)
 	--Vulnerability flag
 	if self.nonVulnerableTimer <= 0 then
-		self.isVulnerable = true
+		if not self.isVulnerable then
+			shaderManager.resetShader("#sprite")
+			self.isVulnerable = true
+		end
 	end
+	
 	if self.absorbTimer <= 0 and self.absord ~= 0 then
 		self.absorb = 0
 		label.set_text("#label_absorb", "")
+	end
+
+	if self.isTargetableTimer <= 0 then
+		self.isTargetable = true
 	end
 	
 	--Collider correction
@@ -52,6 +60,7 @@ function M.manageFlagsAndTimers(self, dt)
 	self.nonVulnerableTimer = self.nonVulnerableTimer - dt
 	self.nonOperativeTimer = self.nonOperativeTimer - dt
 	self.absorbTimer = self.absorbTimer - dt
+	self.isTargetableTimer = self.isTargetableTimer - dt
 
 	--self.isMoving = false
 end
@@ -128,7 +137,7 @@ function M.messages(self, message_id, message, sender)
 	--Invulnerability (all enemy interactions put here)
 	if self.isVulnerable then
 		--Got Hit
-		if message_id == hash("hit") then
+		if message_id == hash("hit") and self.isVulnerable then
 			if self.absorb >= message.dmg then
 				self.absorb = self.absorb - message.dmg
 			elseif self.absorb > 0 and self.absorb < message.dmg then
@@ -171,11 +180,14 @@ function M.messages(self, message_id, message, sender)
 		playersManager.setActivePlayersIDs()
 	--Activate if player came back
 	elseif message_id == hash("activate") then
-		sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 1))
+		shaderManager.backToActivity("#sprite")
 		msg.post("#sprite", "play_animation", {id = hash("player_afk")})
 		self.nonVulnerableTimer = 3
 		self.isVulnerable = false
-		self.nonOperativeTimer = 2
+		self.nonOperativeTimer = 1
+		
+		self.isTargetableTimer = 3
+		self.isTargetable = false
 		playersManager.setActivePlayersIDs()
 	end
 

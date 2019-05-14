@@ -14,13 +14,16 @@ end
 function update(self, dt)
 	if self.doOnceFlag then
 		self.rogueStandardMovementSpeed = go.get("#player", "movingSpeed")
+		
 		self.rogueBuffedMovementSpeed = self.rogueStandardMovementSpeed * self.rogueBuffMovementSpeedMultiplier
 		self.doOnceFlag = false
 	end
 	
 	if self.timer > 0 then
 		if not self.buffAppliedFlag then
+			shaderManager.invisibilityEffect("#sprite", self.buffDuration)
 			go.set("#player", "movingSpeed", self.rogueBuffedMovementSpeed)
+			go.set("#player", "isTargetableTimer", self.buffDuration)
 			go.set("#player", "isTargetable", false)
 			go.set("#attack", "shadowFormFlag", true)
 			self.buffAppliedFlag = true

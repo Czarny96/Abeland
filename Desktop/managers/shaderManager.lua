@@ -8,6 +8,13 @@ local M = {}
 -- 2. in game object designer set 'colorize' as sprite material
 -- 3. set blue color: "shaderManager.freezeEffect("#sprite")"
 -- 4. reset color: "shaderManager.resetColorizeFilter("#sprite")"
+function M.backToActivity(spriteId)
+	sprite.set_constant(spriteId, "tint", vmath.vector4(1, 1, 1, 0))
+
+	local url = msg.url(nil,go.get_id(),"sprite")
+	go.animate(url, "tint", go.PLAYBACK_LOOP_PINGPONG, vmath.vector4(1, 1, 1, 1) , go.EASING_OUTSINE, 0.5)
+end
+
 
 function M.plainHitEffect(spriteId)
 	sprite.set_constant(spriteId, "colorize", vmath.vector4(1.5, 0.3, 0.3, 1))
@@ -46,9 +53,11 @@ end
 function M.resetShader(spriteId)
 	sprite.set_constant(spriteId, "colorize", vmath.vector4(1, 1, 1, 1))
 	sprite.set_constant(spriteId, "brightness", vmath.vector4(1, 1, 1, 1))
+	sprite.set_constant(spriteId, "tint", vmath.vector4(1, 1, 1, 1))
 	local url = msg.url(nil,go.get_id(),"sprite")
 	go.cancel_animations(url, "colorize")
 	go.cancel_animations(url, "brightness")
+	go.cancel_animations(url, "tint")
 end
 
 function M.invisibilityEffect(spriteId, time)
