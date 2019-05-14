@@ -500,6 +500,171 @@ convex_hulls {
   count: 0
   collision_group: ""
 }
+convex_hulls {
+  index: 412
+  count: 4
+  collision_group: ""
+}
+convex_hulls {
+  index: 416
+  count: 4
+  collision_group: ""
+}
+convex_hulls {
+  index: 420
+  count: 4
+  collision_group: ""
+}
+convex_hulls {
+  index: 424
+  count: 4
+  collision_group: ""
+}
+convex_hulls {
+  index: 428
+  count: 4
+  collision_group: ""
+}
+convex_hulls {
+  index: 432
+  count: 4
+  collision_group: ""
+}
+convex_hulls {
+  index: 436
+  count: 4
+  collision_group: ""
+}
+convex_hulls {
+  index: 440
+  count: 4
+  collision_group: ""
+}
+convex_hulls {
+  index: 444
+  count: 4
+  collision_group: ""
+}
+convex_hulls {
+  index: 448
+  count: 16
+  collision_group: ""
+}
+convex_hulls {
+  index: 464
+  count: 6
+  collision_group: ""
+}
+convex_hulls {
+  index: 470
+  count: 12
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 482
+  count: 0
+  collision_group: ""
+}
 collision_groups: "openGate"
 collision_groups: "wall"
 extrude_borders: 1
