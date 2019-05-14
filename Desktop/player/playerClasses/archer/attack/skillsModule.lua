@@ -33,20 +33,20 @@ function M.arrowsCone(self, dt)
 		local l_angle = math.atan2(l_vec.y, l_vec.x)
 		factory.create("#arrowsConeFactory", go.get_position() + dir, vmath.quat_rotation_z(l_angle), { projectileDir = l_vec })
 
-		local l_vec = countAngle(math.pi/12)
-		local l_angle = math.atan2(l_vec.y, l_vec.x)
+		l_vec = countAngle(math.pi/12)
+		l_angle = math.atan2(l_vec.y, l_vec.x)
 		factory.create("#arrowsConeFactory", go.get_position() + dir, vmath.quat_rotation_z(l_angle), { projectileDir = l_vec })
 
-		local l_vec = countAngle(0)
-		local l_angle = math.atan2(l_vec.y, l_vec.x)
+		l_vec = countAngle(0)
+		l_angle = math.atan2(l_vec.y, l_vec.x)
 		factory.create("#arrowsConeFactory", go.get_position() + dir, vmath.quat_rotation_z(l_angle), { projectileDir = l_vec })
 
-		local l_vec = countAngle(math.pi/-12)
-		local l_angle = math.atan2(l_vec.y, l_vec.x)
+		l_vec = countAngle(math.pi/-12)
+		l_angle = math.atan2(l_vec.y, l_vec.x)
 		factory.create("#arrowsConeFactory", go.get_position() + dir, vmath.quat_rotation_z(l_angle), { projectileDir = l_vec })
 
-		local l_vec = countAngle(math.pi/-24)
-		local l_angle = math.atan2(l_vec.y, l_vec.x)
+		l_vec = countAngle(math.pi/-24)
+		l_angle = math.atan2(l_vec.y, l_vec.x)
 		factory.create("#arrowsConeFactory", go.get_position() + dir, vmath.quat_rotation_z(l_angle), { projectileDir = l_vec })
 
 		self.yellowCD_Timer = self.yellowCD
