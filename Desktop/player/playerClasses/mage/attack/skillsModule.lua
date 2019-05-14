@@ -6,7 +6,7 @@ function M.basic(self, dt)
 	if self.isShooting and self.basicCD_Timer <= 0 then
 		self.shootingDir = vmath.normalize(self.shootingDir)
 		local l_angle = math.atan2(self.shootingDir.y, self.shootingDir.x)
-		factory.create("#attack-basicFactory", nil, vmath.quat_rotation_z(l_angle), { projectileDir = self.shootingDir })
+		factory.create("#attack-basicFactory", go.get_position() + 25 * self.shootingDir, vmath.quat_rotation_z(l_angle), { projectileDir = self.shootingDir })
 		self.basicCD_Timer = self.basicCD
 	else
 		self.basicCD_Timer = self.basicCD_Timer - dt
@@ -42,7 +42,7 @@ function M.fireBreath(self, dt)
 end
 
 function M.chainLightning(self, dt)
-	if self.isBlueHit and self.BlueCD_Timer <= 0 then
+	if self.isBlueHit and self.blueCD_Timer <= 0 then
 		--Handle all of this attack in this function
 		--It is already called in attack.script coresponding to this class
 	end
