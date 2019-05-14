@@ -35,7 +35,7 @@ function M.freezeHitEffect(spriteId, time)
 end
 
 function M.poisonHitEffect(spriteId)
-	sprite.set_constant(spriteId, "colorize", vmath.vector4(0, 0.5, 0, 1))
+	sprite.set_constant(spriteId, "colorize", vmath.vector4(0.5, 0, 0.5, 1))
 	sprite.set_constant(spriteId, "brightness", vmath.vector4(1, 1, 1, 1))
 
 	local url = msg.url(nil,go.get_id(),"sprite")
