@@ -1,5 +1,6 @@
 --ARCHER
 local M = {}
+local lastMovingDir = vmath.vector3(0,1,0)
 
 function M.basic(self, dt)
 	--Shooting
@@ -19,16 +20,23 @@ end
 function M.arrowsCone(self, dt)
 	local function countAngle(rad)
 		local l_vec = vmath.vector3()
-		local dir = vmath.normalize(go.get("#player", "movingDir"))
+		local dir = lastMovingDir
 
 		l_vec.x = dir.x * math.cos(rad) - dir.y * math.sin(rad)
 		l_vec.y = dir.x * math.sin(rad) + dir.y * math.cos(rad)
 
 		return vmath.normalize(l_vec)
 	end
-	
+
 	local dir = go.get("#player", "movingDir") * 20
-	if self.isYellowHit and self.yellowCD_Timer <= 0 and (dir.x ~= 0 or dir.y ~= 0) then
+	
+	if dir.x ~= 0 or dir.y ~= 0 then
+		lastMovingDir = dir
+	else
+		dir = lastMovingDir
+	end
+		
+	if self.isYellowHit and self.yellowCD_Timer <= 0 then
 		local l_vec = countAngle(math.pi/24)
 		local l_angle = math.atan2(l_vec.y, l_vec.x)
 		factory.create("#arrowsConeFactory", go.get_position() + dir, vmath.quat_rotation_z(l_angle), { projectileDir = l_vec })
