@@ -53,7 +53,7 @@ function M.manageFlagsAndTimers(self, dt)
 	self.nonOperativeTimer = self.nonOperativeTimer - dt
 	self.absorbTimer = self.absorbTimer - dt
 
-	self.isMoving = false
+	--self.isMoving = false
 end
 
 function M.messages(self, message_id, message, sender)
