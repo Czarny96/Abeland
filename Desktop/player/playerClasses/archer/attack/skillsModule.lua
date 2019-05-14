@@ -17,32 +17,37 @@ function M.basic(self, dt)
 end
 
 function M.arrowsCone(self, dt)
-	local dir = go.get("#player", "movingDir")
-	if self.isYellowHit and self.yellowCD_Timer <= 0 and (dir.x ~= 0 or dir.y ~= 0) then
+	local function countAngle(rad)
+		local l_vec = vmath.vector3()
 		local dir = vmath.normalize(go.get("#player", "movingDir"))
-		
-		local l_x = dir.x * math.cos(math.pi/24) - dir.y * math.sin(math.pi/24)
-		local l_y = dir.x * math.sin(math.pi/24) + dir.y * math.cos(math.pi/24)
-		local l_angle = math.atan2(l_y, l_x)
-		factory.create("#arrowsConeFactory", nil, vmath.quat_rotation_z(l_angle), { projectileDir = vmath.vector3(l_x,l_y,0) })
 
-		l_x = dir.x * math.cos(math.pi/12) - dir.y * math.sin(math.pi/12)
-		l_y = dir.x * math.sin(math.pi/12) + dir.y * math.cos(math.pi/12)
-		l_angle = math.atan2(l_y, l_x)
-		factory.create("#arrowsConeFactory", nil, vmath.quat_rotation_z(l_angle), { projectileDir = vmath.vector3(l_x,l_y,0) })
+		l_vec.x = dir.x * math.cos(rad) - dir.y * math.sin(rad)
+		l_vec.y = dir.x * math.sin(rad) + dir.y * math.cos(rad)
 
-		l_angle = math.atan2(dir.y, dir.x)
-		factory.create("#arrowsConeFactory", nil, vmath.quat_rotation_z(l_angle), { projectileDir = dir } )
+		return vmath.normalize(l_vec)
+	end
+	
+	local dir = go.get("#player", "movingDir") * 20
+	if self.isYellowHit and self.yellowCD_Timer <= 0 and (dir.x ~= 0 or dir.y ~= 0) then
+		local l_vec = countAngle(math.pi/24)
+		local l_angle = math.atan2(l_vec.y, l_vec.x)
+		factory.create("#arrowsConeFactory", go.get_position() + dir, vmath.quat_rotation_z(l_angle), { projectileDir = l_vec })
 
-		l_x = dir.x * math.cos(-math.pi/12) - dir.y * math.sin(-math.pi/12)
-		l_y = dir.x * math.sin(-math.pi/12) + dir.y * math.cos(-math.pi/12)
-		l_angle = math.atan2(l_y, l_x)
-		factory.create("#arrowsConeFactory", nil, vmath.quat_rotation_z(l_angle), { projectileDir = vmath.vector3(l_x,l_y,0) })
+		local l_vec = countAngle(math.pi/12)
+		local l_angle = math.atan2(l_vec.y, l_vec.x)
+		factory.create("#arrowsConeFactory", go.get_position() + dir, vmath.quat_rotation_z(l_angle), { projectileDir = l_vec })
 
-		l_x = dir.x * math.cos(-math.pi/24) - dir.y * math.sin(-math.pi/24)
-		l_y = dir.x * math.sin(-math.pi/24) + dir.y * math.cos(-math.pi/24)
-		l_angle = math.atan2(l_y, l_x)
-		factory.create("#arrowsConeFactory", nil, vmath.quat_rotation_z(l_angle), { projectileDir = vmath.vector3(l_x,l_y,0) })
+		local l_vec = countAngle(0)
+		local l_angle = math.atan2(l_vec.y, l_vec.x)
+		factory.create("#arrowsConeFactory", go.get_position() + dir, vmath.quat_rotation_z(l_angle), { projectileDir = l_vec })
+
+		local l_vec = countAngle(math.pi/-12)
+		local l_angle = math.atan2(l_vec.y, l_vec.x)
+		factory.create("#arrowsConeFactory", go.get_position() + dir, vmath.quat_rotation_z(l_angle), { projectileDir = l_vec })
+
+		local l_vec = countAngle(math.pi/-24)
+		local l_angle = math.atan2(l_vec.y, l_vec.x)
+		factory.create("#arrowsConeFactory", go.get_position() + dir, vmath.quat_rotation_z(l_angle), { projectileDir = l_vec })
 
 		self.yellowCD_Timer = self.yellowCD
 	else
