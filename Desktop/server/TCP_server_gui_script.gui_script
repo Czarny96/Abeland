@@ -2,6 +2,7 @@ local tcpServer = require "defnet.tcp_server"
 local p2pDiscovery = require "defnet.p2p_discovery"
 local playersManager = require "managers.playersManager"
 local clientsManager = require "managers.clientsManager"
+local globals = require "main.globals"
 
 local sessionGenerator = require "server.sessionGenerator"
 
@@ -129,27 +130,28 @@ function update(self, dt)
 		self.p2p.update(dt)
 	end
 	
+	if not globals.getPause() then
+		if  dtPassed > 0.016  then
+			clientsManager.setALLControllerSendFrameFlag(false)
+			for ip,client in pairs(clientsManager.returnAllClients()) do
 
-	if  dtPassed > 0.016 then
-		clientsManager.setALLControllerSendFrameFlag(false)
-		for ip,client in pairs(clientsManager.returnAllClients()) do
+				self.server.send("btn_data\n\r", client)
+				clientsManager.incrementPlayerInactivityTimeCounterByDT(ip,dtPassed)
 
-			self.server.send("btn_data\n\r", client)
-			clientsManager.incrementPlayerInactivityTimeCounterByDT(ip,dtPassed)
+				if not clientsManager.getControllerSendFrameFlag(ip) and currentSession~=nil then
+					routeFrameToRespFunc(clientsManager.getClientLastFrame(ip), ip, client)
+				end
 
-			if not clientsManager.getControllerSendFrameFlag(ip) and currentSession~=nil then
-				routeFrameToRespFunc(clientsManager.getClientLastFrame(ip), ip, client)
+				if clientsManager.getPlayerInactivityTimeCounter(ip) > 5 and clientsManager.isPlayerActive(ip) then
+					clientsManager.desactivatePlayer(ip)
+				elseif clientsManager.getPlayerInactivityTimeCounter(ip) > 8 and not clientsManager.isPlayerActive(ip) then
+					self.server.remove_client(client)
+				end
 			end
-
-			if clientsManager.getPlayerInactivityTimeCounter(ip) > 5 and clientsManager.isPlayerActive(ip) then
-				clientsManager.desactivatePlayer(ip)
-			elseif clientsManager.getPlayerInactivityTimeCounter(ip) > 8 and not clientsManager.isPlayerActive(ip) then
-				self.server.remove_client(client)
-			end
+			dtPassed = 0
+		elseif currentSession~=nil then
+			dtPassed = dtPassed + dt
 		end
-		dtPassed = 0
-	elseif currentSession~=nil then
-		dtPassed = dtPassed + dt
 	end
 	
 	if self.server then
