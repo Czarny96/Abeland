@@ -1,6 +1,6 @@
 --ARCHER
 go.property("class", hash("archer"))
-go.property("position", vmath.vector3(864, 476, 0.99))
+go.property("position", vmath.vector3(925, 540, 0.99))
 go.property("movingDir", vmath.vector3(0, 0, 0))
 
 --Class Properties

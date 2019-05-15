@@ -11,6 +11,12 @@ local gate_bottom_out = vmath.vector3(928,-320,0)
 local gate_left_out = vmath.vector3(-320,540,0)
 local gate_right_out = vmath.vector3(2240,540,0)
 
+--player spell cooldowns
+local archerCD = {yellow = 7, red = 1, green = 1, blue = 1}
+local knightCD = {yellow = 10, red = 1, green = 1, blue = 1}
+local mageCD = {yellow = 10, red = 1, green = 1, blue = 1}
+local rogueCD = {yellow = 14, red = 1, green = 1, blue = 1}
+
 --Wave counter for gameplay
 local waveNumber = 1
 
@@ -18,6 +24,20 @@ local waveNumber = 1
 local pause = false
 
 local isWaveOver = false
+
+function M.getCD(class) 
+	if class == "archer" then
+		return archerCD
+	elseif class == "knight" then
+		return knightCD
+	elseif class == "mage" then
+		return mageCD
+	elseif class == "rogue" then
+		return rogueCD
+	end
+
+	return nil
+end
 
 function M.getPlayersURL()
 	return playersURL
