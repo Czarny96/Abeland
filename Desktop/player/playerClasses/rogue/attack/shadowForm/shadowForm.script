@@ -27,9 +27,12 @@ function update(self, dt)
 			go.set("#player", "isTargetable", false)
 			go.set("#attack", "shadowFormFlag", true)
 			self.buffAppliedFlag = true
-		elseif self.timer <= self.buffDuration *3/10 and not self.indicateEndFlag  then
+		end
+		
+		if self.timer <= self.buffDuration *3/10 and not self.indicateEndFlag  then
 			self.indicateEndFlag = true
 			shaderManager.endOfInvisibilityEffect("#sprite")
+			print("ENDOFBUFF")
 		end
 		self.timer = self.timer - dt
 	elseif self.buffAppliedFlag then
@@ -37,6 +40,7 @@ function update(self, dt)
 		go.set("#player", "isTargetable", true)
 		go.set("#attack", "shadowFormFlag", false)
 		self.buffAppliedFlag = false
+		self.indicateEndFlag = false
 		shaderManager.resetShader("#sprite")
 	end
 end

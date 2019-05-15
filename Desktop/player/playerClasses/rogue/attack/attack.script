@@ -3,10 +3,10 @@ go.property("basicCD", 0.6)
 go.property("basicShadowFormCD", 0.35)
 
 --Skills CoolDowns
-go.property("yellowCD", 14)
-go.property("redCD", 1)
-go.property("greenCD", 1)
-go.property("blueCD", 1)
+go.property("yellowCD", 0)
+go.property("redCD", 0)
+go.property("greenCD", 0)
+go.property("blueCD", 0)
 
 go.property("shootingDir", vmath.vector3(0,0,0))
 
@@ -35,6 +35,12 @@ local playerModule = require "player.playerModule"
 local globals = require "main.globals"
 
 function init(self)
+	local CD = globals.getCD("rogue")
+	self.yellowCD = CD.yellow
+	self.redCD = CD.red
+	self.greenCD = CD.green
+	self.blueCD = CD.blue
+	
 	self.basicCD_Timer = 0
 	self.isShooting = false
 	self.shootingDir = vmath.vector3(0, 0, 0)
