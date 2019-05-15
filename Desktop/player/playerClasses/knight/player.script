@@ -1,6 +1,6 @@
 --KNIGHT
 go.property("class", hash("knight"))
-go.property("position", vmath.vector3(992, 476, 0.99))
+go.property("position", vmath.vector3(995, 465, 0.99))
 go.property("movingDir", vmath.vector3(0, 0, 0))
 
 --Class Properties

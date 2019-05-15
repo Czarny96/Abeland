@@ -1,6 +1,6 @@
 --MAGE
 go.property("class", hash("mage"))
-go.property("position", vmath.vector3(992, 604, 0.99))
+go.property("position", vmath.vector3(995, 540, 0.99))
 go.property("movingDir", vmath.vector3(0, 0, 0))
 
 --Class Properties
