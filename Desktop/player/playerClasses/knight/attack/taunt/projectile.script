@@ -1,8 +1,9 @@
 --KNIGHT
 local globals = require "main.globals"
+go.property("playerId", hash(""))
 
 function init(self)
-	self.life = .5
+	self.life = 0.5
 	self.enemiesHit = {}
 	sprite.set_constant("#sprite", "tint", vmath.vector4(1,1,1,0.3))
 end
@@ -29,8 +30,7 @@ function on_message(self, message_id, message, sender)
 					return
 				end
 			end
-
-			msg.post(url, "taunt", {duration = 5})
+			msg.post(url, "taunt", {targetId = self.playerId, duration = 5})
 
 			table.insert(self.enemiesHit, message.other_id)
 		end
