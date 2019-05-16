@@ -1,0 +1,12 @@
+images {
+  image: "/lights/textures/light_mask_450.png"
+}
+images {
+  image: "/lights/textures/light_mask_900.png"
+}
+images {
+  image: "/lights/textures/light_mask_256.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

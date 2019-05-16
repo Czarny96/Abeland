@@ -1,0 +1,13 @@
+script: "/lights/render/postprocess.render_script"
+materials {
+  name: "quad"
+  material: "/lights/materials/quad.material"
+}
+materials {
+  name: "mix_quad"
+  material: "/lights/materials/mix_quad.material"
+}
+materials {
+  name: "multiply_quad"
+  material: "/lights/materials/multiply_quad.material"
+}
