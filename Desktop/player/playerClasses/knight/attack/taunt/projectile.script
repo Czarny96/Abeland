@@ -1,0 +1,38 @@
+--KNIGHT
+local globals = require "main.globals"
+
+function init(self)
+	self.life = .5
+	self.enemiesHit = {}
+	sprite.set_constant("#sprite", "tint", vmath.vector4(1,1,1,0.3))
+end
+
+function update(self, dt)
+	if self.life > 0 then
+		go.set_position(go.get_position())
+		self.life = self.life - dt
+	else
+		go.delete()
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if globals.getPause() then
+		return
+	end
+
+	if message_id == hash("collision_response") then
+		if message.group == hash("enemy") then
+			local url = msg.url(nil, message.other_id, "enemy")
+			for i, enemy in pairs(self.enemiesHit) do
+				if enemy == message.other_id then
+					return
+				end
+			end
+
+			msg.post(url, "taunt", {duration = 5})
+
+			table.insert(self.enemiesHit, message.other_id)
+		end
+	end
+end

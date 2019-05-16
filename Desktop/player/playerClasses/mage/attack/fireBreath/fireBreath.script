@@ -1,0 +1,33 @@
+
+go.property("isActive", false)
+go.property("attDuration", 5)
+go.property("attTimer", 0)
+
+function init(self)
+	self.particleStarted = false
+	self.prevDir = vmath.vector3(1,0,0)
+end
+
+function update(self, dt)
+	if self.prevDir ~= go.get("#attack", "shootingDir") and go.get("#attack", "shootingDir") ~= vmath.vector3() then
+		self.prevDir = go.get("#attack", "shootingDir")
+	end
+	if self.isActive and self.attTimer > 0 and not self.particleStarted then
+		self.particleStarted = true
+		factory.create("#attack-fireBreathFactory",nil,nil,{parentId = go.get_id()})
+	elseif self.attTimer <= 0 then
+		self.particleStarted = false
+		self.isActive = false
+		self.attTimer = 0
+	end
+
+	self.attTimer = self.attTimer - dt
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("activate") then
+		self.isActive = true;
+		self.particleStarted = false
+		self.attTimer = self.attDuration
+	end
+end

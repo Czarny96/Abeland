@@ -43,23 +43,32 @@ end
 
 function M.venomVial(self, dt)
 	if self.isRedHit and self.redCD_Timer <= 0 then
-		--Handle all of this attack in this function
-		--It is already called in attack.script coresponding to this class
+
+	else
+		self.redCD_Timer = self.redCD_Timer - dt
 	end
+
+	self.isRedHit = false
 end
 
 function M.dashAttack(self, dt)
 	if self.isGreenHit and self.greenCD_Timer <= 0 then
-		--Handle all of this attack in this function
-		--It is already called in attack.script coresponding to this class
+
+	else
+		self.greenCD_Timer = self.greenCD_Timer - dt
 	end
+
+	self.isGreenHit = false
 end
 
 function M.explodingTrap(self, dt)
 	if self.isBlueHit and self.blueCD_Timer <= 0 then
-		--Handle all of this attack in this function
-		--It is already called in attack.script coresponding to this class
+
+	else
+		self.blueCD_Timer = self.blueCD_Timer - dt
 	end
+
+	self.isBlueHit = false
 end
 
 return M

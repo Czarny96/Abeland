@@ -28,6 +28,21 @@ components {
     w: 1.0
   }
 }
+components {
+  id: "fireBreath"
+  component: "/player/playerClasses/mage/attack/fireBreath/fireBreath.script"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
 embedded_components {
   id: "sprite"
   type: "sprite"
@@ -304,6 +319,24 @@ embedded_components {
   position {
     x: 0.0
     y: 53.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "attack-fireBreathFactory"
+  type: "factory"
+  data: "prototype: \"/player/playerClasses/mage/attack/fireBreath/fire.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
     z: 0.0
   }
   rotation {

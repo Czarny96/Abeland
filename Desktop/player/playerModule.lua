@@ -224,7 +224,7 @@ function M.updateAnimation(self, dt)
 	local idx = 8
 	local url = msg.url("main", go.get_id(), "attack")
 	local vector = go.get(url, "shootingDir")
-	if go.get(url, "isShooting") and go.get(url, "basicCD_Timer") > 8 / 10 * go.get(url, "basicCD") then
+	if go.get(url, "isShooting") and go.get(url, "basicCD_Timer") <= 0.1 then
 		self.animTimer = 2 / 10 * go.get(url, "basicCD")
 	end
 
@@ -251,6 +251,7 @@ function M.updateAnimation(self, dt)
 			idx = 8 + 8
 		end
 	else
+		
 		if self.movingDir.x < -0.3 then
 			if self.movingDir.y > 0.3 then
 				idx = 1

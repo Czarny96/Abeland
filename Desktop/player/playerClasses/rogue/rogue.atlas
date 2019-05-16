@@ -210,6 +210,95 @@ animations {
   flip_horizontal: 1
   flip_vertical: 0
 }
+animations {
+  id: "venomVialFull"
+  images {
+    image: "/assets/prototypes/rogue/venomVial/filled_fiolk.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 1
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "venomStain"
+  images {
+    image: "/assets/prototypes/rogue/venomVial/stain/stain1.png"
+  }
+  images {
+    image: "/assets/prototypes/rogue/venomVial/stain/stain2.png"
+  }
+  images {
+    image: "/assets/prototypes/rogue/venomVial/stain/stain3.png"
+  }
+  images {
+    image: "/assets/prototypes/rogue/venomVial/stain/stain4.png"
+  }
+  images {
+    image: "/assets/prototypes/rogue/venomVial/stain/stain6.png"
+  }
+  images {
+    image: "/assets/prototypes/rogue/venomVial/stain/stain7.png"
+  }
+  images {
+    image: "/assets/prototypes/rogue/venomVial/stain/stain8.png"
+  }
+  images {
+    image: "/assets/prototypes/rogue/venomVial/stain/stain9.png"
+  }
+  images {
+    image: "/assets/prototypes/rogue/venomVial/stain/stain91.png"
+  }
+  images {
+    image: "/assets/prototypes/rogue/venomVial/stain/stain92.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 22
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "venomVialBroken"
+  images {
+    image: "/assets/prototypes/rogue/venomVial/broken_fiolk.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 1
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "explodingTrap"
+  images {
+    image: "/assets/prototypes/rogue/explodingTrap/trap1.png"
+  }
+  images {
+    image: "/assets/prototypes/rogue/explodingTrap/trap2.png"
+  }
+  images {
+    image: "/assets/prototypes/rogue/explodingTrap/trap3.png"
+  }
+  images {
+    image: "/assets/prototypes/rogue/explodingTrap/trap4.png"
+  }
+  images {
+    image: "/assets/prototypes/rogue/explodingTrap/trap5.png"
+  }
+  playback: PLAYBACK_LOOP_PINGPONG
+  fps: 10
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "explodingTrapClosed"
+  images {
+    image: "/assets/prototypes/rogue/explodingTrap/closed_trap.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 1
+  flip_horizontal: 0
+  flip_vertical: 0
+}
 margin: 5
 extrude_borders: 1
 inner_padding: 0

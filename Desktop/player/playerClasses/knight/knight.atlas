@@ -258,6 +258,22 @@ animations {
   flip_horizontal: 0
   flip_vertical: 0
 }
+animations {
+  id: "taunt"
+  images {
+    image: "/assets/prototypes/knight/taunt/taunt1.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/taunt/taunt2.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/taunt/taunt3.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 18
+  flip_horizontal: 0
+  flip_vertical: 0
+}
 margin: 5
 extrude_borders: 0
 inner_padding: 0
