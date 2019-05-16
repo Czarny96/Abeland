@@ -1,5 +1,5 @@
 
-require "managers/shaderManager"
+local shaderManager = require "managers/shaderManager"
 go.property("buffDuration", 7)
 function init(self)
 	self.timer = 0

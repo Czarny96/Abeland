@@ -30,12 +30,10 @@ local anims = {
 }
 
 function M.setTarget(self)
-	print("SET TARGET",self.tauntDuration,self.tauntTarget)
 	if self.tauntTarget == nil and self.tauntDuration <= 0 then
 		self.targetId = playerManager.getClosestPlayerID(go.get_position())
 	else
 		self.targetId = self.tauntTarget
-		print("TAUNT TARGET",self.targetId)
 	end
 
 	if self.targetId == 0 then
@@ -167,7 +165,6 @@ function M.handleMessage(self, message_id, message, sender)
 	end
 	--Taunt
 	if message_id == hash("taunt") then
-		print("MSG ID",message_other_id)
 		self.tauntTarget = message.targetId
 		self.tauntDuration = message.duration
 	end

@@ -52,8 +52,15 @@ function M.venomVial(self, dt)
 end
 
 function M.dashAttack(self, dt)
+	local url = msg.url(nil,go.get_id(),"player")
+	if self.dashDir ~= go.get(url, "movingDir") and go.get(url, "movingDir") ~= vmath.vector3() then
+		self.dashDir = vmath.normalize(go.get(url, "movingDir"))
+	end
+	
 	if self.isGreenHit and self.greenCD_Timer <= 0 then
-
+		--Perform dash attack
+		
+		msg.post("#dashAttack", "dash", {dir = self.dashDir})
 	else
 		self.greenCD_Timer = self.greenCD_Timer - dt
 	end
