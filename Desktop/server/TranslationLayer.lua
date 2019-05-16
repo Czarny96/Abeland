@@ -96,5 +96,13 @@ end
 function M.clearPlayerNicks()
 	msg.post("/menu#championSelect", "clearAllNicks")
 end
+function M.buildCDFrame(CDarray)
+	local frame = "S;"
+	for skill, cd in pairs(CDarray) do
+		frame=frame..cd..";"
+	end
+	frame = frame .."\n\r"
+	return frame
+end
 
 return M
