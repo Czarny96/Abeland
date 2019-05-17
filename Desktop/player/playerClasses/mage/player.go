@@ -171,6 +171,7 @@ embedded_components {
   "mask: \"attackRange\"\n"
   "mask: \"chargeRange\"\n"
   "mask: \"buff\"\n"
+  "mask: \"enemyBullet\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"
