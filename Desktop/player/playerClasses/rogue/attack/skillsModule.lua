@@ -59,8 +59,8 @@ function M.dashAttack(self, dt)
 	
 	if self.isGreenHit and self.greenCD_Timer <= 0 then
 		--Perform dash attack
-		
 		msg.post("#dashAttack", "dash", {dir = self.dashDir})
+		self.greenCD_Timer = self.greenCD
 	else
 		self.greenCD_Timer = self.greenCD_Timer - dt
 	end

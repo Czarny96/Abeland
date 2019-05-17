@@ -326,7 +326,25 @@ embedded_components {
 embedded_components {
   id: "attack-shadowFormFactory"
   type: "factory"
-  data: "prototype: \"/player/playerClasses/rogue/attack/shadowForm/projectile.go\"\n"
+  data: "prototype: \"/player/playerClasses/rogue/attack/dashAttack/projectile.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "attack-dashAttackFactory"
+  type: "factory"
+  data: "prototype: \"/player/playerClasses/rogue/attack/dashAttack/projectile.go\"\n"
   "load_dynamically: false\n"
   ""
   position {

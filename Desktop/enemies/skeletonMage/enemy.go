@@ -85,6 +85,7 @@ embedded_components {
   "mask: \"enemy\"\n"
   "mask: \"attack\"\n"
   "mask: \"enemyPusher\"\n"
+  "mask: \"skillRange\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_SPHERE\n"

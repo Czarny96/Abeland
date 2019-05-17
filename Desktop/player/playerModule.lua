@@ -282,10 +282,8 @@ function M.updateAnimation(self, dt)
 end
 
 function M.move(self, dt)
-	local playerPos = go.get_position()
-	playerPos = playerPos + self.movingDir * self.movingSpeed * dt
-	go.set_position(playerPos)
-	self.position = go.get_position()
+	self.position = go.get_position() + self.movingDir * self.movingSpeed * dt
+	go.set_position(self.position)
 	
 	-- DRAW ORDER
 	g_applyDrawOrder(go.get_id(), 2)

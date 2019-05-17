@@ -2,13 +2,14 @@ local shaderManager = require "managers/shaderManager"
 
 function init(self)
 	self.doOnce = false
-	self.playerUrl = msg.url(nil,go.get_id(),"player")
+	self.playerUrl = msg.url(nil, go.get_id(), "player")
 	self.dashDir = vmath.vector3()
 	self.isDashing = false
 	self.dashRange = 200
 	self.dashSpeed = 700
+	self.dashDamage = 60
+	self.contactDamage = 30
 	self.dashTimer = self.dashRange / self.dashSpeed
-	-- Remove this function if not needed
 end
 
 function update(self, dt)
@@ -18,14 +19,16 @@ function update(self, dt)
 			shaderManager.invisibilityEffect("#sprite", self.dashTimer)
 		end
 
-		go.set(self.playerUrl, "nonVulnerableTimer", 2*self.dashRange/self.dashSpeed)
-
+		go.set(self.playerUrl, "nonVulnerableTimer", 2 * self.dashRange / self.dashSpeed)
 		go.set(self.playerUrl, "isVulnerable", false)
-		print( go.get(self.playerUrl, "position"))
-		go.set(self.playerUrl,"position", go.get(self.playerUrl, "position") + self.dashSpeed * self.dashDir * dt)
-		print( go.get(self.playerUrl, "position"))
+		go.set(self.playerUrl, "position", go.get(self.playerUrl, "position") + self.dashSpeed * self.dashDir * dt)
 		go.set_position(go.get(self.playerUrl, "position"))
+		
 		self.dashTimer = self.dashTimer - dt
+	elseif self.isDashing then
+		self.isDashing = false
+		local l_angle = math.atan2(self.dashDir.y, self.dashDir.x)
+		factory.create("#attack-dashAttackFactory",go.get_position(),vmath.quat_rotation_z(l_angle),{projectileDir = self.dashDir})
 	else
 		self.doOnce = false
 		self.isDashing = false
@@ -37,5 +40,10 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("dash") then
 		self.isDashing = true
 		self.dashDir = message.dir
+		self.hadAttacked = false
 	end
+
+	if message_id == hash("collision_response") and message.other_group == hash("enemy") and self.isDashing  then
+		self.dashTimer = -1
+	end	
 end
