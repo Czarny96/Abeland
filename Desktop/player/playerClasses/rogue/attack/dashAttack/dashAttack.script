@@ -15,7 +15,7 @@ function update(self, dt)
 	if self.dashTimer > 0 and self.isDashing then
 		if not self.doOnce then
 			self.doOnce = true
-			--shaderManager.invisibilityEffect("#sprite", self.dashTimer)
+			shaderManager.invisibilityEffect("#sprite", self.dashTimer)
 		end
 
 		go.set(self.playerUrl, "nonVulnerableTimer", 2*self.dashRange/self.dashSpeed)
