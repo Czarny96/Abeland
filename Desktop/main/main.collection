@@ -493,7 +493,7 @@ instances {
 }
 instances {
   id: "torchLightMedium"
-  prototype: "/lights/torchLightMedium.go"
+  prototype: "/lights/torchLightMediumPulsing.go"
   position {
     x: 389.0
     y: 204.0
@@ -513,7 +513,7 @@ instances {
 }
 instances {
   id: "torchLightMedium1"
-  prototype: "/lights/torchLightMedium.go"
+  prototype: "/lights/torchLightMediumPulsing.go"
   position {
     x: 1539.0
     y: 719.0
@@ -533,7 +533,7 @@ instances {
 }
 instances {
   id: "torchLightMedium2"
-  prototype: "/lights/torchLightMedium.go"
+  prototype: "/lights/torchLightMediumPulsing.go"
   position {
     x: 1539.0
     y: 208.0
@@ -553,7 +553,7 @@ instances {
 }
 instances {
   id: "torchLightMedium3"
-  prototype: "/lights/torchLightMedium.go"
+  prototype: "/lights/torchLightMediumPulsing.go"
   position {
     x: 387.0
     y: 657.0
@@ -575,8 +575,8 @@ instances {
   id: "torchLightBig8"
   prototype: "/lights/torchLightBig.go"
   position {
-    x: 957.0
-    y: 503.0
+    x: 949.0
+    y: 504.0
     z: 0.0
   }
   rotation {

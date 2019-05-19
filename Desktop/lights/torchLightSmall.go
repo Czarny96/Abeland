@@ -1,5 +1,5 @@
 embedded_components {
-  id: "sprite"
+  id: "light"
   type: "sprite"
   data: "tile_set: \"/lights/lightAtlas.atlas\"\n"
   "default_animation: \"light_mask_256\"\n"
