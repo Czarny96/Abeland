@@ -2,6 +2,8 @@
 local scalingButton = require "util/scalingButton"
 
 local deadZone = 0.25
+local skillsCooldownTime = {}
+
 
 local leftJoystick = {
 	defaultPos = vmath.vector3(),
@@ -136,6 +138,12 @@ function update(self, dt)
 	g_controllerFrame = createFrame(self)
 end
 
+
+local function readFrame(frame)
+	
+end
+
+
 function on_message(self, message_id, message, sender)
 
 	if message_id == hash("death") then
@@ -153,6 +161,8 @@ function on_message(self, message_id, message, sender)
 		start(self)
 	elseif message_id == hash("disable") then	
 		resetPositon(self) -- player was holding joystick and then server DC'ed
+	elseif message_id == hash("cooldownFrame") then
+		readFrame(message.cooldownFrame)
 	end
 
 end

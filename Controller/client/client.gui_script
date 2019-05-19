@@ -93,7 +93,9 @@ local function onData(data)
 	elseif data == "AllDead" then
 		
 		msg.post("/menu#gameOverScreen", "setResurrectionFlag", { flag = false })
-		
+
+	elseif string.sub(data, 1, 1) == "S" then
+		msg.post("/menu#ctrlGui", "cooldownFrame", {cooldownFrame = data })
 	end
 end
 
