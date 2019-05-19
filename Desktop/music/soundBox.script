@@ -1,14 +1,12 @@
 
 local currentSong = nil
-local songs = {}
+local previousSong = nil
+local makeSongTransition = false
+local cummulativeDT = 0
+local musicGain = 0.8
 
 function init(self)
 	-- Add initialization code here
-	songs.mainTheme = "#mainTheme"
-	songs.fightTheme = "#fightTheme"
-	songs.gameOverTheme = "#gameOverTheme"
-	
-
 end
 
 function final(self)
@@ -18,6 +16,18 @@ end
 
 function update(self, dt)
 	-- Add update code here
+	if makeSongTransition == true then
+		if musicGain - cummulativeDT > 0 then
+			cummulativeDT=cummulativeDT+dt/3
+			sound.set_gain(previousSong,musicGain-cummulativeDT)
+			sound.set_gain(currentSong,cummulativeDT)
+		else
+			sound.stop(previousSong)
+			cummulativeDT = 0
+			makeSongTransition =false
+		end
+		
+	end
 	-- Remove this function if not needed
 end
 
@@ -25,19 +35,12 @@ function on_message(self, message_id, message, sender)
 	-- Add message-handling code here
 
 	if message_id == hash("play") and currentSong~= message.songName then
-		sound.stop(currentSong)
+		previousSong = currentSong
+		makeSongTransition = true
 		currentSong =  message.songName
-		sound.play(currentSong, {delay = 1})
+		sound.play(currentSong, {gain = musicGain})
 	end
-	--[[
-	elseif message_id == hash("playFight") and currentSong~=songs.fightTheme then
-		sound.stop(currentSong)
-		currentSong = songs.fightTheme 
-	elseif message_id == hash("playGameOver") and currentSong~=songs.gameOverTheme then
-		sound.stop(currentSong)
-		currentSong = songs.gameOverTheme
-	end
-	--]]
+	
 	
 
 end
