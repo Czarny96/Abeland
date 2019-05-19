@@ -1,12 +1,12 @@
 emitters {
-  id: "emitter"
+  id: "emitter1"
   mode: PLAY_MODE_LOOP
   duration: 5.0
   space: EMISSION_SPACE_WORLD
   position {
     x: 0.0
     y: 0.0
-    z: 0.0
+    z: 0.01
   }
   rotation {
     x: 0.0
@@ -15,10 +15,10 @@ emitters {
     w: 0.70710677
   }
   tile_source: "/player/playerClasses/mage/mage.atlas"
-  animation: "player_attack_basic_area"
+  animation: "fireBreath"
   material: "/shaders/colorize/colorize.material"
-  blend_mode: BLEND_MODE_ALPHA
-  particle_orientation: PARTICLE_ORIENTATION_DEFAULT
+  blend_mode: BLEND_MODE_MULT
+  particle_orientation: PARTICLE_ORIENTATION_MOVEMENT_DIRECTION
   inherit_velocity: 0.0
   max_particle_count: 256
   type: EMITTER_TYPE_2DCONE
@@ -71,7 +71,7 @@ emitters {
       t_x: 1.0
       t_y: 0.0
     }
-    spread: 0.2
+    spread: 0.1
   }
   properties {
     key: EMITTER_KEY_PARTICLE_SPEED
@@ -127,7 +127,7 @@ emitters {
     key: EMITTER_KEY_PARTICLE_ALPHA
     points {
       x: 0.0
-      y: 1.0
+      y: 0.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -177,7 +177,25 @@ emitters {
     key: PARTICLE_KEY_SCALE
     points {
       x: 0.0
-      y: 1.0
+      y: 0.0
+      t_x: 1.0
+      t_y: 0.0
+    }
+    points {
+      x: 0.5947988
+      y: 0.2725075
+      t_x: 0.56810486
+      t_y: 0.82295614
+    }
+    points {
+      x: 0.9374877
+      y: 1.1953515
+      t_x: 0.9788198
+      t_y: -0.2047238
+    }
+    points {
+      x: 1.0
+      y: 0.35734755
       t_x: 1.0
       t_y: 0.0
     }
@@ -213,13 +231,7 @@ emitters {
     key: PARTICLE_KEY_ALPHA
     points {
       x: 0.0
-      y: 0.5
-      t_x: 1.0
-      t_y: 0.0
-    }
-    points {
-      x: 1.0
-      y: 0.5
+      y: 0.0
       t_x: 1.0
       t_y: 0.0
     }
@@ -267,7 +279,7 @@ emitters {
   start_offset: 0.0
 }
 emitters {
-  id: "emitter1"
+  id: "emitter"
   mode: PLAY_MODE_LOOP
   duration: 5.0
   space: EMISSION_SPACE_WORLD
@@ -283,10 +295,10 @@ emitters {
     w: 0.70710677
   }
   tile_source: "/player/playerClasses/mage/mage.atlas"
-  animation: "player_attack_basic_area"
+  animation: "fireBreath"
   material: "/shaders/colorize/colorize.material"
-  blend_mode: BLEND_MODE_ADD
-  particle_orientation: PARTICLE_ORIENTATION_DEFAULT
+  blend_mode: BLEND_MODE_ALPHA
+  particle_orientation: PARTICLE_ORIENTATION_MOVEMENT_DIRECTION
   inherit_velocity: 0.0
   max_particle_count: 256
   type: EMITTER_TYPE_2DCONE
@@ -339,7 +351,7 @@ emitters {
       t_x: 1.0
       t_y: 0.0
     }
-    spread: 0.2
+    spread: 0.1
   }
   properties {
     key: EMITTER_KEY_PARTICLE_SPEED
@@ -445,7 +457,19 @@ emitters {
     key: PARTICLE_KEY_SCALE
     points {
       x: 0.0
-      y: 1.0
+      y: 0.3771943
+      t_x: 1.0
+      t_y: 0.0
+    }
+    points {
+      x: 0.9504416
+      y: 0.99556273
+      t_x: 0.9848605
+      t_y: 0.17334893
+    }
+    points {
+      x: 1.0
+      y: 0.46908367
       t_x: 1.0
       t_y: 0.0
     }
@@ -481,13 +505,7 @@ emitters {
     key: PARTICLE_KEY_ALPHA
     points {
       x: 0.0
-      y: 0.5
-      t_x: 1.0
-      t_y: 0.0
-    }
-    points {
-      x: 1.0
-      y: 0.5
+      y: 1.0
       t_x: 1.0
       t_y: 0.0
     }

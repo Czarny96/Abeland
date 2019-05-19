@@ -12,10 +12,10 @@ local gate_left_out = vmath.vector3(-320,540,0)
 local gate_right_out = vmath.vector3(2240,540,0)
 
 --player spell cooldowns
-local archerCD = {yellow = 7, red = 1, green = 1, blue = 1}
-local knightCD = {yellow = 10, red = 1, green = 1, blue = 1}
-local mageCD = {yellow = 10, red = 1, green = 1, blue = 1}
-local rogueCD = {yellow = 14, red = 1, green = 3, blue = 1}
+local archerCD = {yellow = 7, red = 1, green = 20, blue = 1}
+local knightCD = {yellow = 10, red = 1, green = 20, blue = 1}
+local mageCD = {yellow = 10, red = 1, green = 20, blue = 1}
+local rogueCD = {yellow = 14, red = 1, green = 15, blue = 1}
 
 --Wave counter for gameplay
 local waveNumber = 1
