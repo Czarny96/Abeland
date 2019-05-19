@@ -51,6 +51,7 @@ end
 
 local function start(self)
 	lockActions = false
+	msg.post("/soundBox","play",{songName = "#mainTheme"})
 	msg.post("/TCP_server/go#TCP_server_gui", "mainMenu")
 	-- screen is going from black to white
 	gui.set_color(blackBoxNode, vmath.vector4(0,0,0,1))

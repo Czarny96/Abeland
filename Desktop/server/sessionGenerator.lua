@@ -72,6 +72,7 @@ function M.create()
 		enemyManger.startNextWave()
 
 		msg.post("/menu#championSelect", "startGame", {})
+		msg.post("/soundBox","play",{songName = "#fightTheme"})
 		
 		return true
 	end

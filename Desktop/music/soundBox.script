@@ -1,0 +1,53 @@
+
+local currentSong = nil
+local songs = {}
+
+function init(self)
+	-- Add initialization code here
+	songs.mainTheme = "#mainTheme"
+	songs.fightTheme = "#fightTheme"
+	songs.gameOverTheme = "#gameOverTheme"
+	
+
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	-- Add update code here
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+
+	if message_id == hash("play") and currentSong~= message.songName then
+		sound.stop(currentSong)
+		currentSong =  message.songName
+		sound.play(currentSong, {delay = 1})
+	end
+	--[[
+	elseif message_id == hash("playFight") and currentSong~=songs.fightTheme then
+		sound.stop(currentSong)
+		currentSong = songs.fightTheme 
+	elseif message_id == hash("playGameOver") and currentSong~=songs.gameOverTheme then
+		sound.stop(currentSong)
+		currentSong = songs.gameOverTheme
+	end
+	--]]
+	
+
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end
