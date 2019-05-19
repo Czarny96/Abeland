@@ -149,7 +149,10 @@ end
 
 function M.powerArrow(self, dt)
 	if self.isBlueHit and self.blueCD_Timer <= 0 then
-		
+		local dir = vmath.normalize(lastMovingDir)
+		local l_angle = math.atan2(dir.y, dir.x)
+		factory.create("#attack-powerArrowFactory",nil,vmath.quat_rotation_z(l_angle), { projectileDir = dir })
+		self.blueCD_Timer = self.blueCD
 	else
 		self.blueCD_Timer = self.blueCD_Timer - dt
 	end
