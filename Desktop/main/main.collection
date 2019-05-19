@@ -123,7 +123,7 @@ instances {
   id: "enemyPusher_right"
   prototype: "/arena/enemyPushers/enemyPusher.go"
   position {
-    x: 2580.0
+    x: 2880.0
     y: 550.0
     z: 0.0
   }
@@ -151,7 +151,7 @@ instances {
   id: "enemyPusher_left"
   prototype: "/arena/enemyPushers/enemyPusher.go"
   position {
-    x: -660.0
+    x: -960.0
     y: 550.0
     z: 0.0
   }
@@ -179,8 +179,8 @@ instances {
   id: "enemyPusher_top"
   prototype: "/arena/enemyPushers/enemyPusher.go"
   position {
-    x: 930.0
-    y: 1680.0
+    x: 960.0
+    y: 1980.0
     z: 0.0
   }
   rotation {
@@ -207,8 +207,8 @@ instances {
   id: "enemyPusher_bottom"
   prototype: "/arena/enemyPushers/enemyPusher.go"
   position {
-    x: 930.0
-    y: -610.0
+    x: 960.0
+    y: -910.0
     z: 0.0
   }
   rotation {

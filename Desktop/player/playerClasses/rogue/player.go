@@ -360,3 +360,39 @@ embedded_components {
     w: 1.0
   }
 }
+embedded_components {
+  id: "attack-dashAttackWallFactory"
+  type: "factory"
+  data: "prototype: \"/player/playerClasses/rogue/attack/dashAttack/wall.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "attack-venomVial"
+  type: "factory"
+  data: "prototype: \"/player/playerClasses/rogue/attack/venomVial/projectile.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}

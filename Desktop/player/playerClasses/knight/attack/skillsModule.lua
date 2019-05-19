@@ -28,8 +28,15 @@ function M.shieldUp(self, dt)
 end
 
 function M.shieldCharge(self, dt)
-	if self.isRedHit and self.redCD_Timer <= 0 then
+	local url = msg.url(nil,go.get_id(),"player")
+	if self.chargeDir ~= go.get(url, "movingDir") and go.get(url, "movingDir") ~= vmath.vector3() then
+		self.chargeDir = vmath.normalize(go.get(url, "movingDir"))
+	end
 
+	if self.isRedHit and self.redCD_Timer <= 0 then
+		--Perform shield charge
+		msg.post("#shieldCharge", "charge", {dir = self.chargeDir})
+		self.redCD_Timer = self.redCD
 	else
 		self.redCD_Timer = self.redCD_Timer - dt
 	end

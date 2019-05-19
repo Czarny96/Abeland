@@ -1,0 +1,31 @@
+--KNIGHT -- SHIELDCHARGEWALL
+go.property("projectileDir", vmath.vector3())
+go.property("chargeTimer", 0)
+go.property("knightID", hash(""))
+
+local globals = require "main.globals"
+
+function init(self)
+	go.set_position(go.get_position(self.knightID))
+end
+
+function update(self, dt)
+	if globals.getPause() then
+		return
+	end
+	if self.chargeTimer > 0 then
+		go.set_position(go.get_position(self.knightID))
+		self.chargeTimer = self.chargeTimer - dt
+	else
+		go.delete()
+	end
+end
+
+function on_message(self, message_id, message)
+	if message_id == hash("collision_response") then
+		if message.group == hash("wall") or message.group == hash("openGate") then
+			msg.post(msg.url(nil, self.knightID, "shieldCharge"), "wallCollision")
+			go.delete()
+		end
+	end
+end

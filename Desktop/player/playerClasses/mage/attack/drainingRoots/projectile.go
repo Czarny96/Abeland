@@ -1,6 +1,6 @@
 components {
-  id: "enemyPusherScript"
-  component: "/arena/enemyPushers/enemyPusherScript.script"
+  id: "attack"
+  component: "/player/playerClasses/mage/attack/drainingRoots/projectile.script"
   position {
     x: 0.0
     y: 0.0
@@ -14,21 +14,20 @@ components {
   }
 }
 embedded_components {
-  id: "collider"
+  id: "triggerCollider"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
-  "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
+  "type: COLLISION_OBJECT_TYPE_TRIGGER\n"
   "mass: 0.0\n"
-  "friction: 0.0\n"
-  "restitution: 0.0\n"
-  "group: \"enemyPusher\"\n"
+  "friction: 0.1\n"
+  "restitution: 0.5\n"
+  "group: \"attack\"\n"
   "mask: \"enemy\"\n"
-  "mask: \"enemyPusherStop\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"
   "    position {\n"
-  "      x: 0.0\n"
+  "      x: 40.0\n"
   "      y: 0.0\n"
   "      z: 0.0\n"
   "    }\n"
@@ -41,13 +40,31 @@ embedded_components {
   "    index: 0\n"
   "    count: 3\n"
   "  }\n"
-  "  data: 400.0\n"
-  "  data: 300.0\n"
+  "  data: 35.0\n"
+  "  data: 45.0\n"
   "  data: 10.0\n"
   "}\n"
   "linear_damping: 0.0\n"
   "angular_damping: 0.0\n"
-  "locked_rotation: true\n"
+  "locked_rotation: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "rootedFactory"
+  type: "factory"
+  data: "prototype: \"/player/playerClasses/mage/attack/drainingRoots/rooted.go\"\n"
+  "load_dynamically: false\n"
   ""
   position {
     x: 0.0

@@ -1,0 +1,46 @@
+function init(self)
+	self.doOnce = false
+	self.waitFrame = false
+	self.playerUrl = msg.url(nil, go.get_id(), "player")
+	self.chargeDir = vmath.vector3()
+	self.isCharging = false
+	self.chargeRange = 180
+	self.chargeSpeed = 450
+	self.chargeTimer = self.chargeRange / self.chargeSpeed
+end
+
+function update(self, dt)
+	if not self.doOnce and self.chargeTimer > 0 and self.isCharging then
+		local l_angle = math.atan2(self.chargeDir.y, self.chargeDir.x)
+		factory.create("#attack-shieldChargeWallFactory",go.get_position(),vmath.quat_rotation_z(l_angle),{projectileDir = self.chargeDir, chargeTimer = self.chargeTimer, knightID = go.get_id()})
+		self.doOnce = true
+	elseif not self.waitFrame and self.chargeTimer > 0 and self.isCharging then
+		self.waitFrame = true
+	elseif self.chargeTimer > 0 and self.isCharging then
+		go.set(self.playerUrl, "nonVulnerableTimer", 2 * self.chargeRange / self.chargeSpeed)
+		go.set(self.playerUrl, "isVulnerable", false)
+		go.set(self.playerUrl, "position", go.get(self.playerUrl, "position") + self.chargeSpeed * self.chargeDir * dt)
+		go.set_position(go.get(self.playerUrl, "position"))
+		
+		self.chargeTimer = self.chargeTimer - dt
+	elseif self.isCharging then
+		self.isCharging = false
+		local l_angle = math.atan2(self.chargeDir.y, self.chargeDir.x)
+		factory.create("#attack-shieldChargeFactory",go.get_position(),vmath.quat_rotation_z(l_angle),{projectileDir = self.chargeDir})
+	else
+		self.waitFrame = false
+		self.doOnce = false
+		self.isCharging = false
+		self.chargeTimer = self.chargeRange / self.chargeSpeed
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("charge") then
+		self.isCharging = true
+		self.chargeDir = message.dir
+	end
+	if message_id == hash("wallCollision") then
+		self.chargeTimer = 0
+	end
+end

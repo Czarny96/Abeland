@@ -1,0 +1,53 @@
+--KNIGHT -- SHIELDCHARGE
+go.property("projectileDir", vmath.vector3())
+go.property("range", 5)
+go.property("speed", 20)
+go.property("damage", 60)
+
+local globals = require "main.globals"
+
+function init(self)
+	self.enemiesHit = {}
+	self.projectilelife = self.range / self.speed
+	go.set_position(go.get_position() + self.projectileDir * 60)
+end
+
+function update(self, dt)
+	if globals.getPause() then
+		return
+	end
+	go.set_position(go.get_position() + self.projectileDir * self.speed * dt)
+
+	self.projectilelife = self.projectilelife - dt
+	if self.projectilelife <= 0 then
+		go.delete()
+	end 
+
+	-- DRAW ORDER
+	g_applyDrawOrder(go.get_id(), 3)
+end
+
+function on_message(self, message_id, message, sender)
+	if globals.getPause() then
+		return
+	end
+	--Destroy on hit
+	if message_id == hash("collision_response") then
+		if message.group == hash("enemy") then
+			local url = msg.url(nil, message.other_id, "enemy")
+			msg.post(url, "knockback", {pos = go.get_position()})
+			for i, enemy in pairs(self.enemiesHit) do
+				if enemy == message.other_id then
+					return
+				end
+			end
+
+			msg.post(url, "hit",{type = hash("plain"), damage = self.damage})
+			
+			table.insert(self.enemiesHit, message.other_id)
+		else
+			go.delete()
+		end
+	end
+	
+end

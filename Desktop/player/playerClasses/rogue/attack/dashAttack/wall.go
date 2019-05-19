@@ -1,6 +1,6 @@
 components {
-  id: "enemyPusherScript"
-  component: "/arena/enemyPushers/enemyPusherScript.script"
+  id: "wall"
+  component: "/player/playerClasses/rogue/attack/dashAttack/wall.script"
   position {
     x: 0.0
     y: 0.0
@@ -14,19 +14,19 @@ components {
   }
 }
 embedded_components {
-  id: "collider"
+  id: "wallCollider"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
-  "type: COLLISION_OBJECT_TYPE_KINEMATIC\n"
+  "type: COLLISION_OBJECT_TYPE_TRIGGER\n"
   "mass: 0.0\n"
-  "friction: 0.0\n"
+  "friction: 1.0\n"
   "restitution: 0.0\n"
-  "group: \"enemyPusher\"\n"
-  "mask: \"enemy\"\n"
-  "mask: \"enemyPusherStop\"\n"
+  "group: \"player\"\n"
+  "mask: \"wall\"\n"
+  "mask: \"openGate\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
-  "    shape_type: TYPE_BOX\n"
+  "    shape_type: TYPE_SPHERE\n"
   "    position {\n"
   "      x: 0.0\n"
   "      y: 0.0\n"
@@ -39,15 +39,13 @@ embedded_components {
   "      w: 1.0\n"
   "    }\n"
   "    index: 0\n"
-  "    count: 3\n"
+  "    count: 1\n"
   "  }\n"
-  "  data: 400.0\n"
-  "  data: 300.0\n"
-  "  data: 10.0\n"
+  "  data: 24.0\n"
   "}\n"
-  "linear_damping: 0.0\n"
+  "linear_damping: 1.0\n"
   "angular_damping: 0.0\n"
-  "locked_rotation: true\n"
+  "locked_rotation: false\n"
   ""
   position {
     x: 0.0

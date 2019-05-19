@@ -2,22 +2,23 @@ local shaderManager = require "managers/shaderManager"
 
 function init(self)
 	self.doOnce = false
+	self.waitFrame = false
 	self.playerUrl = msg.url(nil, go.get_id(), "player")
 	self.dashDir = vmath.vector3()
 	self.isDashing = false
-	self.dashRange = 200
-	self.dashSpeed = 700
-	self.dashDamage = 60
-	self.contactDamage = 30
+	self.dashRange = 180
+	self.dashSpeed = 600
 	self.dashTimer = self.dashRange / self.dashSpeed
 end
 
 function update(self, dt)
-	if self.dashTimer > 0 and self.isDashing then
-		if not self.doOnce then
-			self.doOnce = true
-		end
-
+	if not self.doOnce and self.dashTimer > 0 and self.isDashing then
+		local l_angle = math.atan2(self.dashDir.y, self.dashDir.x)
+		factory.create("#attack-dashAttackWallFactory",go.get_position(),vmath.quat_rotation_z(l_angle),{projectileDir = self.dashDir, dashTimer = self.dashTimer, rogueID = go.get_id()})
+		self.doOnce = true
+	elseif not self.waitFrame and self.dashTimer > 0 and self.isDashing then
+		self.waitFrame = true
+	elseif self.dashTimer > 0 and self.isDashing then
 		go.set(self.playerUrl, "nonVulnerableTimer", 2 * self.dashRange / self.dashSpeed)
 		go.set(self.playerUrl, "isVulnerable", false)
 		go.set(self.playerUrl, "position", go.get(self.playerUrl, "position") + self.dashSpeed * self.dashDir * dt)
@@ -29,6 +30,7 @@ function update(self, dt)
 		local l_angle = math.atan2(self.dashDir.y, self.dashDir.x)
 		factory.create("#attack-dashAttackFactory",go.get_position(),vmath.quat_rotation_z(l_angle),{projectileDir = self.dashDir})
 	else
+		self.waitFrame = false
 		self.doOnce = false
 		self.isDashing = false
 		self.dashTimer = self.dashRange / self.dashSpeed
@@ -39,10 +41,12 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("dash") then
 		self.isDashing = true
 		self.dashDir = message.dir
-		self.hadAttacked = false
 	end
 
 	if message_id == hash("collision_response") and message.other_group == hash("enemy") and self.isDashing  then
-		self.dashTimer = -1
+		self.dashTimer = 0
 	end	
+	if message_id == hash("wallCollision") then
+		self.dashTimer = 0
+	end
 end

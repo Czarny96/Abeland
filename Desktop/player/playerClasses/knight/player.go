@@ -28,6 +28,21 @@ components {
     w: 1.0
   }
 }
+components {
+  id: "shieldCharge"
+  component: "/player/playerClasses/knight/attack/shieldCharge/shieldCharge.script"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
 embedded_components {
   id: "sprite"
   type: "sprite"
@@ -178,7 +193,7 @@ embedded_components {
   "}\n"
   "linear_damping: 0.0\n"
   "angular_damping: 0.0\n"
-  "locked_rotation: false\n"
+  "locked_rotation: true\n"
   ""
   position {
     x: 0.0
@@ -316,6 +331,42 @@ embedded_components {
   id: "attack-tauntFactory"
   type: "factory"
   data: "prototype: \"/player/playerClasses/knight/attack/taunt/projectile.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "attack-shieldChargeFactory"
+  type: "factory"
+  data: "prototype: \"/player/playerClasses/knight/attack/shieldCharge/projectile.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "attack-shieldChargeWallFactory"
+  type: "factory"
+  data: "prototype: \"/player/playerClasses/knight/attack/shieldCharge/wall.go\"\n"
   "load_dynamically: false\n"
   ""
   position {

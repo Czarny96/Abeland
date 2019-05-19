@@ -170,6 +170,14 @@ function M.messages(self, message_id, message, sender)
 			label.set_text("#label_absorb", self.absorb)
 		end
 	end
+	if message_id == hash("heal") then
+		if self.health + message.amount < self.maxHealth then
+			self.health = self.health + message.amount
+		else
+			self.health = self.maxHealth
+		end
+		label.set_text("#label_hp", self.health)
+	end
 	
 	--AFK
 	if message_id == hash("desactivate") then

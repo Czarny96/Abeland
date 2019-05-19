@@ -1,0 +1,54 @@
+--MAGE Rooted
+go.property("rootDuration", 0)
+go.property("enemyID", hash(""))
+go.property("mageID", hash(""))
+go.property("damage", 10)
+go.property("heal", 4) -- must be divisible by 2
+
+local globals = require "main.globals"
+local enemyManager = require "managers.enemyManager"
+
+function init(self)
+	self.drainingTickTimer = 0.5
+	self.drainingTickFrequency = 0.5
+	self.mageURL = msg.url(nil, self.mageID, "player")
+	self.enemyURL = msg.url(nil, self.enemyID, "enemy")
+end
+
+function update(self, dt)
+	if globals.getPause() then
+		return
+	end
+	if enemyManager.isEnemyAlive(self.enemyID) then
+		if self.drainingTickTimer <= 0 then
+			self.drainingTickTimer = self.drainingTickFrequency
+			local enemyHealth = go.get(self.enemyURL, "health")
+			if enemyHealth > self.damage then
+				msg.post(self.enemyURL, "hit", {type = hash("plain"), damage = self.damage})
+				msg.post(self.mageURL, "heal", {amount = self.heal})
+			else
+				msg.post(self.enemyURL, "hit", {type = hash("plain"), damage = enemyHealth})
+				if enemyHealth <= self.damage / 2 then
+					msg.post(self.mageURL, "heal", {amount = self.heal})
+				else
+					msg.post(self.mageURL, "heal", {amount = self.heal / 2})
+				end
+				go.delete()
+			end
+		else
+			self.drainingTickTimer = self.drainingTickTimer - dt
+		end
+	else
+		go.delete()
+	end
+
+	if self.rootDuration <= 0 then
+		go.delete()
+	else
+		go.set_position(go.get_position(self.enemyID))
+		self.rootDuration = self.rootDuration - dt
+	end
+	
+	-- DRAW ORDER
+	g_applyDrawOrder(go.get_id(), 2)
+end

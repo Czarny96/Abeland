@@ -1,5 +1,6 @@
 --ROGUE
 local M = {}
+local lastMovingDir = vmath.vector3(0,1,0)
 
 shaderManager = require "managers/shaderManager"
 
@@ -42,8 +43,17 @@ function M.shadowForm(self, dt)
 end
 
 function M.venomVial(self, dt)
+	local l_projectileDir = go.get("#player", "movingDir")
+	if l_projectileDir.x ~= 0 or l_projectileDir.y ~= 0 then
+		lastMovingDir = l_projectileDir
+	else
+		l_projectileDir = lastMovingDir
+	end
 	if self.isRedHit and self.redCD_Timer <= 0 then
-
+		l_projectileDir = vmath.normalize(l_projectileDir)
+		local l_angle = math.atan2(l_projectileDir.y, l_projectileDir.x)
+		factory.create("#attack-venomVial", nil, vmath.quat_rotation_z(l_angle), { projectileDir = l_projectileDir })
+		self.redCD_Timer = self.redCD
 	else
 		self.redCD_Timer = self.redCD_Timer - dt
 	end

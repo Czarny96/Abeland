@@ -1,5 +1,4 @@
 --GHOST
-
 local shaderManager = require "managers/shaderManager"
 local enemyManager = require "managers.enemyManager"
 local bodyManager = require "managers/bodyManager.bodyManager"

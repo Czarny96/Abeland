@@ -1,4 +1,6 @@
 --ARCHER
+local enemyManager = require "managers.enemyManager"
+
 local M = {}
 local lastMovingDir = vmath.vector3(0,1,0)
 
@@ -87,7 +89,44 @@ end
 
 function M.sniperShots(self, dt)
 	if self.isRedHit and self.redCD_Timer <= 0 then
-		
+		local targetAmount = 5
+		local enemyPositions = enemyManager.getAllEnemyPos()
+		if #enemyPositions > 0 then
+			local archerPos = go.get_position()
+			local enemiesToHit = {}
+			for i, enemyPos in pairs(enemyPositions) do
+				local l_newDist = math.pow((enemyPos.x - archerPos.x), 2) + math.pow((enemyPos.y - archerPos.y), 2)
+				if #enemiesToHit < targetAmount then
+					table.insert(enemiesToHit, enemyPos)
+				else
+					for k = 1, targetAmount, 1 do
+						local isInTable = false
+						for m, pos in pairs(enemiesToHit) do
+							if pos == enemiesToHit[k] then
+								isInTable = true
+							end
+						end
+						if not isInTable then
+							local l_dist =  math.pow((enemiesToHit[k].x - archerPos.x), 2) + math.pow((enemiesToHit[k].y - archerPos.y), 2)
+							local l_newDist =  math.pow((enemyPos.x - archerPos.x), 2) + math.pow((enemyPos.y - archerPos.y), 2)
+							if l_dist < l_newDist then
+								enemiesToHit[k] = enemyPos
+							end
+						end
+					end
+				end
+			end
+
+			for i, enemyPos in pairs(enemiesToHit) do
+				local pos = vmath.normalize(enemyPos - archerPos)
+				local l_angle = math.atan2(pos.y, pos.x)
+				factory.create("#sniperShotFactory", nil, vmath.quat_rotation_z(l_angle), { projectileDir = pos })
+			end
+			
+			self.redCD_Timer = self.redCD
+		else
+			self.redCD_Timer = 0
+		end
 	else
 		self.redCD_Timer = self.redCD_Timer - dt
 	end

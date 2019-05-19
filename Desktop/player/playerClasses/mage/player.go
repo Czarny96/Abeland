@@ -347,3 +347,39 @@ embedded_components {
     w: 1.0
   }
 }
+embedded_components {
+  id: "attack-drainingRootsFactory"
+  type: "factory"
+  data: "prototype: \"/player/playerClasses/mage/attack/drainingRoots/rootsSprite.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "attack-drainingRootsProjectileFactory"
+  type: "factory"
+  data: "prototype: \"/player/playerClasses/mage/attack/drainingRoots/projectile.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
