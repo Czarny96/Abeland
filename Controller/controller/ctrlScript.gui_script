@@ -4,6 +4,10 @@ local scalingButton = require "util/scalingButton"
 local deadZone = 0.25
 local skillsCooldownTime = {}
 
+local blueButtonTextValue = nil
+local greenButtonTextValue = nil
+local redButtonTextValue = nil
+local yellowButtonTextValue = nil
 
 local leftJoystick = {
 	defaultPos = vmath.vector3(),
@@ -125,6 +129,11 @@ function init(self)
 	self.guiButtons = {
 		--reconnect = scalingButton.create("reconnectButton", nil, buttonReleased, buttonPressed)
 	}
+
+	blueButtonTextValue = gui.get_node("blueButtonText")
+	greenButtonTextValue = gui.get_node("greenButtonText")
+	redButtonTextValue = gui.get_node("redButtonText")
+	yellowButtonTextValue = gui.get_node("yellowButtonText")
 
 	blackBoxNode = gui.get_node("blackBox")
 
