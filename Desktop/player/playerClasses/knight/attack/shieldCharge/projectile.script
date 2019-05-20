@@ -1,8 +1,9 @@
 --KNIGHT -- SHIELDCHARGE
 go.property("projectileDir", vmath.vector3())
-go.property("range", 5)
-go.property("speed", 20)
+go.property("range", 2)
+go.property("speed", 4)
 go.property("damage", 60)
+go.property("knightID", hash(""))
 
 local globals = require "main.globals"
 
@@ -35,7 +36,7 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("collision_response") then
 		if message.group == hash("enemy") then
 			local url = msg.url(nil, message.other_id, "enemy")
-			msg.post(url, "knockback", {pos = go.get_position()})
+			msg.post(url, "knockback", {pos = go.get_position(self.knightID)})
 			for i, enemy in pairs(self.enemiesHit) do
 				if enemy == message.other_id then
 					return
@@ -45,8 +46,6 @@ function on_message(self, message_id, message, sender)
 			msg.post(url, "hit",{type = hash("plain"), damage = self.damage})
 			
 			table.insert(self.enemiesHit, message.other_id)
-		else
-			go.delete()
 		end
 	end
 	

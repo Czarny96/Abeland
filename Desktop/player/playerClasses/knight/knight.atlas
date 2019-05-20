@@ -274,6 +274,49 @@ animations {
   flip_horizontal: 0
   flip_vertical: 0
 }
+animations {
+  id: "shieldCharge"
+  images {
+    image: "/assets/prototypes/knight/shieldCharge/shield-charge01.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldCharge/shield-charge02.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldCharge/shield-charge03.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldCharge/shield-charge04.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldCharge/shield-charge05.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldCharge/shield-charge06.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldCharge/shield-charge07.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldCharge/shield-charge08.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldCharge/shield-charge09.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldCharge/shield-charge10.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldCharge/shield-charge11.png"
+  }
+  images {
+    image: "/assets/prototypes/knight/shieldCharge/shield-charge12.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 40
+  flip_horizontal: 0
+  flip_vertical: 0
+}
 margin: 5
 extrude_borders: 0
 inner_padding: 0

@@ -7,6 +7,7 @@ function init(self)
 	self.chargeRange = 180
 	self.chargeSpeed = 450
 	self.chargeTimer = self.chargeRange / self.chargeSpeed
+	self.knightID = hash("")
 end
 
 function update(self, dt)
@@ -26,7 +27,7 @@ function update(self, dt)
 	elseif self.isCharging then
 		self.isCharging = false
 		local l_angle = math.atan2(self.chargeDir.y, self.chargeDir.x)
-		factory.create("#attack-shieldChargeFactory",go.get_position(),vmath.quat_rotation_z(l_angle),{projectileDir = self.chargeDir})
+		factory.create("#attack-shieldChargeFactory",go.get_position(),vmath.quat_rotation_z(l_angle),{projectileDir = self.chargeDir, knightID = self.knightID})
 	else
 		self.waitFrame = false
 		self.doOnce = false
@@ -39,6 +40,7 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("charge") then
 		self.isCharging = true
 		self.chargeDir = message.dir
+		self.knightID = message.knightID
 	end
 	if message_id == hash("wallCollision") then
 		self.chargeTimer = 0

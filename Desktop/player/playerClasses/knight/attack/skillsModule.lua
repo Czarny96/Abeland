@@ -35,7 +35,7 @@ function M.shieldCharge(self, dt)
 
 	if self.isRedHit and self.redCD_Timer <= 0 then
 		--Perform shield charge
-		msg.post("#shieldCharge", "charge", {dir = self.chargeDir})
+		msg.post("#shieldCharge", "charge", {dir = self.chargeDir, knightID = go.get_id()})
 		self.redCD_Timer = self.redCD
 	else
 		self.redCD_Timer = self.redCD_Timer - dt
