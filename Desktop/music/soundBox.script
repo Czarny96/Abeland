@@ -4,6 +4,7 @@ local previousSong = nil
 local makeSongTransition = false
 local cummulativeDT = 0
 local musicGain = 0.8
+local musicReduction = 0
 
 function init(self)
 	-- Add initialization code here
@@ -19,9 +20,11 @@ function update(self, dt)
 	if makeSongTransition == true then
 		if musicGain - cummulativeDT > 0 then
 			cummulativeDT=cummulativeDT+dt/3
-			sound.set_gain(previousSong,musicGain-cummulativeDT)
+			musicReduction = musicGain-cummulativeDT
+			sound.set_gain(previousSong, musicReduction)
 			sound.set_gain(currentSong,cummulativeDT)
 		else
+			musicReduction = 0
 			sound.stop(previousSong)
 			cummulativeDT = 0
 			makeSongTransition =false
@@ -35,6 +38,12 @@ function on_message(self, message_id, message, sender)
 	-- Add message-handling code here
 
 	if message_id == hash("play") and currentSong~= message.songName then
+		if musicReduction~=0 then
+			musicReduction = 0
+			sound.stop(previousSong)
+			cummulativeDT = 0
+			makeSongTransition =false
+		end
 		previousSong = currentSong
 		makeSongTransition = true
 		currentSong =  message.songName
