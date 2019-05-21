@@ -3,7 +3,6 @@ local scalingButton = require "util/scalingButton"
 
 local deadZone = 0.25
 
-
 local blueButtonTextValue = nil
 local greenButtonTextValue = nil
 local redButtonTextValue = nil
@@ -93,14 +92,19 @@ end
 
 local function updateCooldownTime(selectButton, buttonNumber, startTimeValue, cancleTimerName)
 	cooldownTimeElapsed[buttonNumber] = startTimeValue - cooldownCounter[buttonNumber]
+	
 	if cooldownTimeElapsed[buttonNumber] > 0.1 then
-		gui.set_text(selectButton, tostring(cooldownTimeElapsed[buttonNumber]))
+		
+		gui.set_text(selectButton, string.format("%.1f", tostring(cooldownTimeElapsed[buttonNumber])))
 		cooldownCounter[buttonNumber] = cooldownCounter[buttonNumber] + 0.1
+		
 	elseif cooldownTimeElapsed[buttonNumber] <= 0.1 then
+		
 		cooldownTimeElapsed[buttonNumber] = 0
 		cooldownCounter[buttonNumber] = 0
 		gui.set_text(selectButton, "")
 		timer.cancel(cancleTimerName)
+		
 	end
 end
 
