@@ -123,12 +123,12 @@ local function buttonPressed(hashedNodeId)
 			updateCooldownTime(redButtonTextValue, 2, skillsCooldownTime[2], updateCooldownButtonValue[2])
 		end)
 
-	elseif hashedNodeId == hash("yellowButton")and cooldownTimeElapsed[1] <= 0 then
+	elseif hashedNodeId == hash("yellowButton") and cooldownTimeElapsed[1] <= 0 then
 
 		updateCooldownButtonValue[1] = timer.delay(0.1, true, function(self, handle, time_elapsed)
 			updateCooldownTime(yellowButtonTextValue, 1, skillsCooldownTime[1], updateCooldownButtonValue[1])
 		end)
-
+		
 	end
 end
 
@@ -219,7 +219,6 @@ function on_message(self, message_id, message, sender)
 		for i = 1, table.getn(skillsCooldownTime) do
 			skillsCooldownTime[i] = tonumber(skillsCooldownTime[i])
 		end
-
 		--pprint(skillsCooldownTime)
 	end
 
