@@ -10,7 +10,7 @@ local yellowButtonTextValue = nil
 
 -- yellow; red; green; blue;
 local updateCooldownButtonValue = { }
-local skillsCooldownTime = {}
+local skillsCooldownTime = { }
 local cooldownTimeElapsed = { 0, 0, 0, 0}
 local cooldownCounter = { 0, 0, 0, 0}
 
@@ -64,7 +64,6 @@ local function applyDeadZone(joystick)
 	end
 end
 
-
 local function createFrame(self)
 	applyDeadZone(leftJoystick)
 	applyDeadZone(rightJoystick)
@@ -90,6 +89,23 @@ local function createFrame(self)
 	return frame
 end
 
+
+local function clearCooldown()
+
+	for i = 1, table.getn(cooldownTimeElapsed) do
+		cooldownTimeElapsed[i] = 0
+		cooldownCounter[i] = 0
+		if updateCooldownButtonValue[i] ~= nil then
+			timer.cancel(updateCooldownButtonValue[i])
+		end
+	end
+
+	gui.set_text(blueButtonTextValue, "")
+	gui.set_text(greenButtonTextValue, "")
+	gui.set_text(redButtonTextValue, "")
+	gui.set_text(yellowButtonTextValue, "")
+	
+end
 
 local function updateCooldownTime(selectButton, buttonNumber, startTimeValue, cancleTimerName)
 	cooldownTimeElapsed[buttonNumber] = startTimeValue - cooldownCounter[buttonNumber]
@@ -217,6 +233,8 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("disable") then	
 		resetPositon(self) -- player was holding joystick and then server DC'ed
 	elseif message_id == hash("cooldownFrame") then
+		clearCooldown()
+		
 		-- yellow; red; green; blue;
 		skillsCooldownTime = message.cooldownFrame:split(";")
 
