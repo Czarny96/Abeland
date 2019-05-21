@@ -1,0 +1,41 @@
+go.property("parentId", hash(""))
+
+function init(self)
+	self.timer = 5
+	self.colliderPerSec = 50
+	self.colliderTimer = 0
+	self.playerUrl = msg.url(nil,self.parentId,"player")
+	self.attackUrl = msg.url(nil,self.parentId,"attack")
+	particlefx.play("#fire")
+end
+
+function update(self, dt)
+	local l_angle = 0
+	go.set_position(go.get_position(self.parentId))
+	
+	if self.attDir ~= go.get(self.attackUrl, "shootingDir") then	
+		self.attDir = go.get(self.attackUrl, "shootingDir")
+		l_angle = math.atan2(self.attDir.y,self.attDir.x)
+		go.set_rotation(vmath.quat_rotation_z(l_angle))
+	end
+	if self.colliderTimer <=0 then
+		factory.create("#colliderFactory",nil,nil,{projectileDir = self.attDir})
+		self.colliderTimer = 1/self.colliderPerSec
+	else
+		self.colliderTimer = self.colliderTimer - dt
+	end
+	if self.timer <= 0 then
+		particlefx.stop("#fire")
+		go.delete()
+	end
+	
+	self.timer = self.timer-dt
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("start") then
+		
+	elseif message_id == hash("stop") then
+		
+	end
+end

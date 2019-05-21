@@ -8,7 +8,7 @@ uniform lowp vec4 tint1;
 
 void main()
 {
-    // Pre-multiply alpha since all runtime textures already are
+    
     vec4 tint0_pm = vec4(tint0.xyz * tint0.w, tint0.w);
     vec4 tint1_pm = vec4(tint1.xyz * tint1.w, tint1.w);
 

@@ -9,7 +9,7 @@ go.property("greenCD", 0)
 go.property("blueCD", 0)
 
 go.property("shootingDir", vmath.vector3(0,0,0))
-
+go.property("dashDir", vmath.vector3(0,1,0))
 --Flags
 go.property("isShooting", false)
 

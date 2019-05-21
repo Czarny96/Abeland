@@ -1,0 +1,46 @@
+--MAGE
+go.property("projectileDir", vmath.vector3())
+go.property("range", 170) -- Matched to drainingRootsAnimation DO NOT CHANGE without changing animation!
+go.property("speed", 220) -- Matched to drainingRootsAnimation DO NOT CHANGE without changing animation!
+go.property("mageID", hash(""))
+
+local globals = require "main.globals"
+
+function init(self)
+	self.rootDuration = 3
+	self.enemiesHit = {}
+	self.projectilelife = self.range / self.speed
+end
+
+function update(self, dt)
+	if globals.getPause() then
+		return
+	end
+	go.set_position(go.get_position() + self.projectileDir * self.speed * dt)
+	
+	self.projectilelife = self.projectilelife - dt
+	if self.projectilelife <= 0 then
+		go.delete()
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if globals.getPause() then
+		return
+	end
+	--Destroy on hit
+	if message_id == hash("collision_response") then
+		if message.group == hash("enemy") then
+			local url = msg.url(nil, message.other_id, "enemy")
+			for i, enemy in pairs(self.enemiesHit) do
+				if enemy == message.other_id then
+					return
+				end
+			end
+			local enemyPos = go.get_position(message.other_id)
+			factory.create("#rootedFactory", enemyPos, vmath.quat_rotation_z(math.atan2(0, 0)), { rootDuration = self.rootDuration, enemyID = message.other_id, mageID = self.mageID })
+			go.set(url, "rootDuration", self.rootDuration)
+			table.insert(self.enemiesHit, message.other_id)
+		end
+	end
+end

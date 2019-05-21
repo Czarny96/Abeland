@@ -43,6 +43,21 @@ components {
     w: 1.0
   }
 }
+components {
+  id: "dashAttack"
+  component: "/player/playerClasses/rogue/attack/dashAttack/dashAttack.script"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
 embedded_components {
   id: "sprite"
   type: "sprite"
@@ -169,6 +184,7 @@ embedded_components {
   "mask: \"attackRange\"\n"
   "mask: \"chargeRange\"\n"
   "mask: \"buff\"\n"
+  "mask: \"enemyBullet\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"
@@ -311,7 +327,61 @@ embedded_components {
 embedded_components {
   id: "attack-shadowFormFactory"
   type: "factory"
-  data: "prototype: \"/player/playerClasses/rogue/attack/shadowForm/projectile.go\"\n"
+  data: "prototype: \"/player/playerClasses/rogue/attack/dashAttack/projectile.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "attack-dashAttackFactory"
+  type: "factory"
+  data: "prototype: \"/player/playerClasses/rogue/attack/dashAttack/projectile.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "attack-dashAttackWallFactory"
+  type: "factory"
+  data: "prototype: \"/player/playerClasses/rogue/attack/dashAttack/wall.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "attack-venomVial"
+  type: "factory"
+  data: "prototype: \"/player/playerClasses/rogue/attack/venomVial/projectile.go\"\n"
   "load_dynamically: false\n"
   ""
   position {

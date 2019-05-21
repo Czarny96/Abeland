@@ -14,6 +14,17 @@ function init(self)
 	self.checkClosestPlayerPosTimer = 0
 	-- ClosestPlayerID to follow
 	self.closestPlayerID = playersManager.getClosestPlayerID(go.get_position())
+
+	self.enemyPos = go.get_position()
+	
+	if self.closestPlayerID ~= 0 then
+		local closestPlayerPos = playersManager.getPlayerPos(self.closestPlayerID)
+		self.distanceToClosestPlayer = math.pow((closestPlayerPos.x - self.enemyPos.x), 2) +  math.pow((closestPlayerPos.y - self.enemyPos.y), 2)
+		local positionDiffrence = closestPlayerPos - self.enemyPos
+		self.movingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
+	else
+		self.movingDir = vmath.vector3()
+	end
 end
 
 local function rotate(self)
@@ -21,20 +32,23 @@ local function rotate(self)
 	go.set_rotation(vmath.quat_rotation_z(l_angle))
 end
 
-local function countDistanceAndDirection(self)
+local function countDistanceAndDirection(self,dt)
 	-- Count possition diffrence between closest player and enemy to designate enemy moving direction
 	self.closestPlayerID = playersManager.getClosestPlayerID(go.get_position())
 	if self.closestPlayerID ~= 0 then
 		local closestPlayerPos = playersManager.getPlayerPos(self.closestPlayerID)
 		self.distanceToClosestPlayer = math.pow((closestPlayerPos.x - self.enemyPos.x), 2) +  math.pow((closestPlayerPos.y - self.enemyPos.y), 2)
 		local positionDiffrence = closestPlayerPos - self.enemyPos
-		self.movingDir = vmath.vector3(positionDiffrence.x, positionDiffrence.y, 0)
+
+		positionDiffrence = vmath.normalize(positionDiffrence)
+		self.movingDir = vmath.lerp(dt * 2, self.movingDir, positionDiffrence)
 		self.movingDir = vmath.normalize(self.movingDir)
 	end
 end
 
 local function moveEnemy(self, dt)
-	self.enemyPos = self.enemyPos + self.movingDir * (self.projectileSpeed + self.distanceToClosestPlayer * self.projectileSpeedByDistanceMultiplier) * dt
+	--self.enemyPos = self.enemyPos + self.movingDir * (self.projectileSpeed + self.distanceToClosestPlayer * self.projectileSpeedByDistanceMultiplier) * dt
+	self.enemyPos = self.enemyPos + self.movingDir * self.projectileSpeed*2 * dt
 	go.set_position(self.enemyPos)
 end
 
@@ -46,10 +60,10 @@ function update(self, dt)
 	-- Save go position once to limit number of "go.get_position" uses 		
 	self.enemyPos = go.get_position()
 	-- Count distance and direction four times per second only to prevent huge resource consuming
-	if self.checkClosestPlayerPosTimer <= 0 then 
-		countDistanceAndDirection(self)
+	--if self.checkClosestPlayerPosTimer <= 0 then 
+		countDistanceAndDirection(self,dt)
 		self.checkClosestPlayerPosTimer = 0.25
-	end	
+	--end	
 	if self.projectileLife <= 0 then
 		go.delete()
 	else

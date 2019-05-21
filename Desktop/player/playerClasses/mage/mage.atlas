@@ -241,6 +241,96 @@ animations {
   flip_horizontal: 0
   flip_vertical: 0
 }
+animations {
+  id: "drainingRoots"
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/roots01.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/roots02.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/roots03.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/roots04.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/roots05.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/roots06.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/roots07.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/roots08.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/roots09.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/roots10.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/roots11.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/roots12.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/roots13.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 15
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "rooted"
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/rooted1.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/rooted2.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/rooted3.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/rooted4.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/rooted5.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/rooted6.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/rooted7.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/drainingRoots/rooted8.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 18
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "fireBreath"
+  images {
+    image: "/assets/prototypes/mage/fire.png"
+  }
+  images {
+    image: "/assets/prototypes/mage/fire1.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 8
+  flip_horizontal: 0
+  flip_vertical: 1
+}
 margin: 5
 extrude_borders: 0
 inner_padding: 0

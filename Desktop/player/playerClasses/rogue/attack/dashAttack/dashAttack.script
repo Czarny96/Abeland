@@ -1,0 +1,52 @@
+local shaderManager = require "managers/shaderManager"
+
+function init(self)
+	self.doOnce = false
+	self.waitFrame = false
+	self.playerUrl = msg.url(nil, go.get_id(), "player")
+	self.dashDir = vmath.vector3()
+	self.isDashing = false
+	self.dashRange = 180
+	self.dashSpeed = 600
+	self.dashTimer = self.dashRange / self.dashSpeed
+end
+
+function update(self, dt)
+	if not self.doOnce and self.dashTimer > 0 and self.isDashing then
+		local l_angle = math.atan2(self.dashDir.y, self.dashDir.x)
+		factory.create("#attack-dashAttackWallFactory",go.get_position(),vmath.quat_rotation_z(l_angle),{projectileDir = self.dashDir, dashTimer = self.dashTimer, rogueID = go.get_id()})
+		self.doOnce = true
+	elseif not self.waitFrame and self.dashTimer > 0 and self.isDashing then
+		self.waitFrame = true
+	elseif self.dashTimer > 0 and self.isDashing then
+		go.set(self.playerUrl, "nonVulnerableTimer", 2 * self.dashRange / self.dashSpeed)
+		go.set(self.playerUrl, "isVulnerable", false)
+		go.set(self.playerUrl, "position", go.get(self.playerUrl, "position") + self.dashSpeed * self.dashDir * dt)
+		go.set_position(go.get(self.playerUrl, "position"))
+		
+		self.dashTimer = self.dashTimer - dt
+	elseif self.isDashing then
+		self.isDashing = false
+		local l_angle = math.atan2(self.dashDir.y, self.dashDir.x)
+		factory.create("#attack-dashAttackFactory",go.get_position(),vmath.quat_rotation_z(l_angle),{projectileDir = self.dashDir})
+	else
+		self.waitFrame = false
+		self.doOnce = false
+		self.isDashing = false
+		self.dashTimer = self.dashRange / self.dashSpeed
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("dash") then
+		self.isDashing = true
+		self.dashDir = message.dir
+	end
+
+	if message_id == hash("collision_response") and message.other_group == hash("enemy") and self.isDashing  then
+		self.dashTimer = 0
+	end	
+	if message_id == hash("wallCollision") then
+		self.dashTimer = 0
+	end
+end

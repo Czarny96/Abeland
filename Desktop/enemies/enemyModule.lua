@@ -165,7 +165,7 @@ function M.handleMessage(self, message_id, message, sender)
 	end
 	--Taunt
 	if message_id == hash("taunt") then
-		self.tauntTarget = message.other_id
+		self.tauntTarget = message.targetId
 		self.tauntDuration = message.duration
 	end
 	--Slow

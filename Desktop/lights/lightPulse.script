@@ -1,0 +1,33 @@
+
+local MIN_SCALE = 90 -- in percents (%)
+
+function init(self)
+	
+	self.lightScale = math.random(MIN_SCALE, 100) / 100.0
+	self.lightScaleTimer = 0
+end
+
+function update(self, dt)
+	self.lightScaleTimer = self.lightScaleTimer + dt
+	go.set_scale(vmath.vector3(self.lightScale), "#light")
+	if self.lightScaleTimer > 0.1 then
+		self.lightScaleTimer = 0
+		self.lightScale = math.random(MIN_SCALE, 100) / 100.0
+	end
+	
+end
+
+function on_message(self, message_id, message, sender)
+	-- Add message-handling code here
+	-- Remove this function if not needed
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Remove this function if not needed
+end

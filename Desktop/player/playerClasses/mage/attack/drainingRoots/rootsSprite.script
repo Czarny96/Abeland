@@ -1,0 +1,22 @@
+local globals = require "main.globals"
+
+function init(self)
+	local rotation = go.get_rotation()
+	sprite.set_vflip("#sprite", rotation.w < 0.75)
+	sprite.set_vflip("#sprite1", rotation.w < 0.75)
+	self.spriteLife = 3
+end
+
+function update(self, dt)
+	if globals.getPause() then
+		return
+	end
+	
+	self.spriteLife = self.spriteLife - dt
+	if self.spriteLife <= 0 then
+		go.delete()
+	end
+
+	-- DRAW ORDER
+	g_applyDrawOrder(go.get_id(), -5)
+end

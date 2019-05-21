@@ -8,7 +8,6 @@ go.property("poisonDuration", 4.5)	--s
 
 local globals = require "main.globals"
 
-
 function init(self)
 	self.enemyHit = nil
 	self.url = nil

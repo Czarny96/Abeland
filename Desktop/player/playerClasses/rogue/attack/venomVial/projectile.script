@@ -1,0 +1,93 @@
+--ROGUE VenomVial Throw
+go.property("projectileDir", vmath.vector3())
+go.property("range", 220)
+go.property("speed", 280)
+go.property("damage", 25)
+go.property("stainDmg", 20)
+
+local globals = require "main.globals"
+
+function init(self)
+	self.rotationAngle = 0
+	self.rotationSpeed = 6
+	self.enemiesHit = {}
+	self.venomStainLife = 5
+	self.dmgTicksTimer = 0
+	self.dmgTicksFrequency = 1
+	self.slowDuration = 1
+	self.isExploded = false
+	self.projectileLife = self.range / self.speed
+	msg.post("#area_triggerCollider", "disable")
+end
+
+function update(self, dt)
+	if not self.isExploded then
+		self.rotationAngle = self.rotationAngle + dt * self.rotationSpeed
+		go.set_position(go.get_position() + self.projectileDir * self.speed * dt)
+		go.set_rotation(vmath.quat_rotation_z(self.rotationAngle))
+	end
+
+	if self.projectileLife <= 0 then
+		if self.isExploded then
+			go.delete()
+		else
+			self.isExploded = true
+			self.projectileLife = self.venomStainLife
+			msg.post("#triggerCollider", "disable")
+			msg.post("#area_triggerCollider", "enable")
+			msg.post("#sprite", "play_animation", {id = hash("venomStain")})
+		end	
+	else
+		if self.dmgTicksTimer <= 0 then
+			self.enemiesHit = {}
+			self.dmgTicksTimer = self.dmgTicksFrequency
+		end
+		self.dmgTicksTimer = self.dmgTicksTimer - dt
+		self.projectileLife = self.projectileLife - dt
+	end 
+
+	-- DRAW ORDER
+	if self.isExploded then 
+		g_applyDrawOrder(go.get_id(), -6) 
+	else
+		g_applyDrawOrder(go.get_id(), 2)
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if globals.getPause() then
+		return
+	end
+	--Destroy on hit
+	if message_id == hash("collision_response") then
+		if message.group == hash("enemy")  then
+			if not self.isExploded then
+				self.isExploded = true
+				self.projectileLife = 5
+				msg.post("#triggerCollider", "disable")
+				msg.post("#area_triggerCollider", "enable")
+				msg.post("#sprite", "play_animation", {id = hash("venomStain")})
+			else
+				local url = msg.url(nil, message.other_id, "enemy")
+				for i, enemy in pairs(self.enemiesHit) do
+					if enemy == message.other_id then
+						return
+					end
+				end
+				
+				msg.post(url, "slow", {amount = 55, duration = self.slowDuration})
+				msg.post(url, "hit",{type = hash("poison"), damage = self.stainDmg})
+				table.insert(self.enemiesHit, message.other_id)
+			end
+		end
+		if message.group == hash("wall") then
+			if not self.isExploded then
+				self.isExploded = true
+				self.projectileLife = 5
+				msg.post("#triggerCollider", "disable")
+				msg.post("#area_triggerCollider", "enable")
+				msg.post("#sprite", "play_animation", {id = hash("venomStain")})
+			end
+		end
+	end
+end

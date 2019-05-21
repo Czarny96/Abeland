@@ -1,5 +1,6 @@
 --ROGUE
 local M = {}
+local lastMovingDir = vmath.vector3(0,1,0)
 
 shaderManager = require "managers/shaderManager"
 
@@ -42,24 +43,49 @@ function M.shadowForm(self, dt)
 end
 
 function M.venomVial(self, dt)
-	if self.isRedHit and self.redCD_Timer <= 0 then
-		--Handle all of this attack in this function
-		--It is already called in attack.script coresponding to this class
+	local l_projectileDir = go.get("#player", "movingDir")
+	if l_projectileDir.x ~= 0 or l_projectileDir.y ~= 0 then
+		lastMovingDir = l_projectileDir
+	else
+		l_projectileDir = lastMovingDir
 	end
+	if self.isRedHit and self.redCD_Timer <= 0 then
+		l_projectileDir = vmath.normalize(l_projectileDir)
+		local l_angle = math.atan2(l_projectileDir.y, l_projectileDir.x)
+		factory.create("#attack-venomVial", nil, vmath.quat_rotation_z(l_angle), { projectileDir = l_projectileDir })
+		self.redCD_Timer = self.redCD
+	else
+		self.redCD_Timer = self.redCD_Timer - dt
+	end
+
+	self.isRedHit = false
 end
 
 function M.dashAttack(self, dt)
-	if self.isGreenHit and self.greenCD_Timer <= 0 then
-		--Handle all of this attack in this function
-		--It is already called in attack.script coresponding to this class
+	local url = msg.url(nil,go.get_id(),"player")
+	if self.dashDir ~= go.get(url, "movingDir") and go.get(url, "movingDir") ~= vmath.vector3() then
+		self.dashDir = vmath.normalize(go.get(url, "movingDir"))
 	end
+	
+	if self.isGreenHit and self.greenCD_Timer <= 0 then
+		--Perform dash attack
+		msg.post("#dashAttack", "dash", {dir = self.dashDir})
+		self.greenCD_Timer = self.greenCD
+	else
+		self.greenCD_Timer = self.greenCD_Timer - dt
+	end
+
+	self.isGreenHit = false
 end
 
 function M.explodingTrap(self, dt)
 	if self.isBlueHit and self.blueCD_Timer <= 0 then
-		--Handle all of this attack in this function
-		--It is already called in attack.script coresponding to this class
+
+	else
+		self.blueCD_Timer = self.blueCD_Timer - dt
 	end
+
+	self.isBlueHit = false
 end
 
 return M

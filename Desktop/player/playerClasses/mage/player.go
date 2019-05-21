@@ -28,6 +28,21 @@ components {
     w: 1.0
   }
 }
+components {
+  id: "fireBreath"
+  component: "/player/playerClasses/mage/attack/fireBreath/fireBreath.script"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
 embedded_components {
   id: "sprite"
   type: "sprite"
@@ -156,6 +171,7 @@ embedded_components {
   "mask: \"attackRange\"\n"
   "mask: \"chargeRange\"\n"
   "mask: \"buff\"\n"
+  "mask: \"enemyBullet\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"
@@ -304,6 +320,60 @@ embedded_components {
   position {
     x: 0.0
     y: 53.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "attack-fireBreathFactory"
+  type: "factory"
+  data: "prototype: \"/player/playerClasses/mage/attack/fireBreath/fire.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "attack-drainingRootsFactory"
+  type: "factory"
+  data: "prototype: \"/player/playerClasses/mage/attack/drainingRoots/rootsSprite.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "attack-drainingRootsProjectileFactory"
+  type: "factory"
+  data: "prototype: \"/player/playerClasses/mage/attack/drainingRoots/projectile.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
     z: 0.0
   }
   rotation {

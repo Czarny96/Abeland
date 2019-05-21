@@ -123,7 +123,7 @@ instances {
   id: "enemyPusher_right"
   prototype: "/arena/enemyPushers/enemyPusher.go"
   position {
-    x: 2580.0
+    x: 2880.0
     y: 550.0
     z: 0.0
   }
@@ -151,7 +151,7 @@ instances {
   id: "enemyPusher_left"
   prototype: "/arena/enemyPushers/enemyPusher.go"
   position {
-    x: -660.0
+    x: -960.0
     y: 550.0
     z: 0.0
   }
@@ -179,8 +179,8 @@ instances {
   id: "enemyPusher_top"
   prototype: "/arena/enemyPushers/enemyPusher.go"
   position {
-    x: 930.0
-    y: 1680.0
+    x: 960.0
+    y: 1980.0
     z: 0.0
   }
   rotation {
@@ -207,8 +207,8 @@ instances {
   id: "enemyPusher_bottom"
   prototype: "/arena/enemyPushers/enemyPusher.go"
   position {
-    x: 930.0
-    y: -610.0
+    x: 960.0
+    y: -910.0
     z: 0.0
   }
   rotation {
@@ -493,7 +493,7 @@ instances {
 }
 instances {
   id: "torchLightMedium"
-  prototype: "/lights/torchLightMedium.go"
+  prototype: "/lights/torchLightMediumPulsing.go"
   position {
     x: 389.0
     y: 204.0
@@ -513,7 +513,7 @@ instances {
 }
 instances {
   id: "torchLightMedium1"
-  prototype: "/lights/torchLightMedium.go"
+  prototype: "/lights/torchLightMediumPulsing.go"
   position {
     x: 1539.0
     y: 719.0
@@ -533,7 +533,7 @@ instances {
 }
 instances {
   id: "torchLightMedium2"
-  prototype: "/lights/torchLightMedium.go"
+  prototype: "/lights/torchLightMediumPulsing.go"
   position {
     x: 1539.0
     y: 208.0
@@ -553,7 +553,7 @@ instances {
 }
 instances {
   id: "torchLightMedium3"
-  prototype: "/lights/torchLightMedium.go"
+  prototype: "/lights/torchLightMediumPulsing.go"
   position {
     x: 387.0
     y: 657.0
@@ -575,8 +575,28 @@ instances {
   id: "torchLightBig8"
   prototype: "/lights/torchLightBig.go"
   position {
-    x: 957.0
-    y: 503.0
+    x: 949.0
+    y: 504.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "soundBox"
+  prototype: "/music/soundBox.go"
+  position {
+    x: 0.0
+    y: 0.0
     z: 0.0
   }
   rotation {

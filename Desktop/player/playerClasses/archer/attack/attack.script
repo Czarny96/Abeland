@@ -15,13 +15,20 @@ go.property("isRedHit", false)
 go.property("isGreenHit", false)
 go.property("isBlueHit", false)
 
+go.property("isQuickHands", false)
+go.property("quickHandsDuration", 7)
+
 --Timers
+go.property("quickHands_Timer", 0)
 go.property("basicCD_Timer", 0)
+
 --Button Timers
 go.property("yellowCD_Timer", 0)
 go.property("redCD_Timer", 0)
 go.property("greenCD_Timer", 0)
 go.property("blueCD_Timer", 0)
+
+go.property("isMovementBase", true)
 
 local attack = require "player/playerClasses/archer/attack.skillsModule"
 local playerModule = require "player.playerModule"
@@ -29,6 +36,8 @@ local globals = require "main.globals"
 
 function init(self)
 	local CD = globals.getCD("archer")
+	local url = msg.url(nil,go.get_id(),"player")
+	self.baseMovingSpeed = go.get(url, "movingSpeed")
 	self.yellowCD = CD.yellow
 	self.redCD = CD.red
 	self.greenCD = CD.green

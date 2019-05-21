@@ -51,7 +51,6 @@ local function start()
 
 	gui.set_color(blackBoxNode, vmath.vector4(0,0,0,1))
 	gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,0), gui.EASING_LINEAR, 1)
-
 	msg.post("/TCP_server/go#TCP_server_gui", "championSelect")
 end
 

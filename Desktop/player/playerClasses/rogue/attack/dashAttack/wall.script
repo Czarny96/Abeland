@@ -1,0 +1,31 @@
+--ROGUE -- DASHATTACKWALL
+go.property("projectileDir", vmath.vector3())
+go.property("dashTimer", 0)
+go.property("rogueID", hash(""))
+
+local globals = require "main.globals"
+
+function init(self)
+	go.set_position(go.get_position(self.rogueID))
+end
+
+function update(self, dt)
+	if globals.getPause() then
+		return
+	end
+	if self.dashTimer > 0 then
+		go.set_position(go.get_position(self.rogueID))
+		self.dashTimer = self.dashTimer - dt
+	else
+		go.delete()
+	end
+end
+
+function on_message(self, message_id, message)
+	if message_id == hash("collision_response") then
+		if message.group == hash("wall") or message.group == hash("openGate") then
+			msg.post(msg.url(nil, self.rogueID, "dashAttack"), "wallCollision")
+			go.delete()
+		end
+	end
+end

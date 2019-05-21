@@ -170,6 +170,14 @@ function M.messages(self, message_id, message, sender)
 			label.set_text("#label_absorb", self.absorb)
 		end
 	end
+	if message_id == hash("heal") then
+		if self.health + message.amount < self.maxHealth then
+			self.health = self.health + message.amount
+		else
+			self.health = self.maxHealth
+		end
+		label.set_text("#label_hp", self.health)
+	end
 	
 	--AFK
 	if message_id == hash("desactivate") then
@@ -224,7 +232,7 @@ function M.updateAnimation(self, dt)
 	local idx = 8
 	local url = msg.url("main", go.get_id(), "attack")
 	local vector = go.get(url, "shootingDir")
-	if go.get(url, "isShooting") and go.get(url, "basicCD_Timer") > 8 / 10 * go.get(url, "basicCD") then
+	if go.get(url, "isShooting") and go.get(url, "basicCD_Timer") <= 0.1 then
 		self.animTimer = 2 / 10 * go.get(url, "basicCD")
 	end
 
@@ -251,6 +259,7 @@ function M.updateAnimation(self, dt)
 			idx = 8 + 8
 		end
 	else
+		
 		if self.movingDir.x < -0.3 then
 			if self.movingDir.y > 0.3 then
 				idx = 1
@@ -281,10 +290,8 @@ function M.updateAnimation(self, dt)
 end
 
 function M.move(self, dt)
-	local playerPos = go.get_position()
-	playerPos = playerPos + self.movingDir * self.movingSpeed * dt
-	go.set_position(playerPos)
-	self.position = go.get_position()
+	self.position = go.get_position() + self.movingDir * self.movingSpeed * dt
+	go.set_position(self.position)
 	
 	-- DRAW ORDER
 	g_applyDrawOrder(go.get_id(), 2)

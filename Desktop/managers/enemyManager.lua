@@ -22,6 +22,31 @@ local gate_bottom_enemies = 0;
 local gate_left_enemies = 0;
 local gate_right_enemies = 0;
 
+function M.isEnemyAlive(id)
+	if #enemyIDs > 0 then
+		for i, enemyID in pairs(enemyIDs) do
+			if enemyID == id then
+				return true
+			end
+		end
+		return false
+	else
+		return false
+	end
+end
+
+function M.getAllEnemyPos()
+	local enemyPositions = {}
+	if #enemyIDs > 0 then
+		for i, enemyID in pairs(enemyIDs) do
+			local enemyPos = go.get_position(enemyID)
+			table.insert(enemyPositions, enemyPos)
+		end
+		return enemyPositions
+	else
+		return 0
+	end
+end
 
 function M.closeGate(gate)
 	if gate == hash("top") then
