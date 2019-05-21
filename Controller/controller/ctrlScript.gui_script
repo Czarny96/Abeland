@@ -115,29 +115,24 @@ local function buttonPressed(hashedNodeId)
 		updateCooldownButtonValue[4] = timer.delay(0.1, true, function(self, handle, time_elapsed)
 			updateCooldownTime(blueButtonTextValue, 4, skillsCooldownTime[4], updateCooldownButtonValue[4])
 		end)
-		self.gameButtons.blue.reset()
 		
 	elseif hashedNodeId == hash("greenButton") and cooldownTimeElapsed[3] <= 0 then
 
 		updateCooldownButtonValue[3] = timer.delay(0.1, true, function(self, handle, time_elapsed)
 			updateCooldownTime(greenButtonTextValue, 3, skillsCooldownTime[3], updateCooldownButtonValue[3])
 		end)
-		self.gameButtons.green.reset()
 		
 	elseif hashedNodeId == hash("redButton") and cooldownTimeElapsed[2] <= 0 then
 
 		updateCooldownButtonValue[2] = timer.delay(0.1, true, function(self, handle, time_elapsed)
 			updateCooldownTime(redButtonTextValue, 2, skillsCooldownTime[2], updateCooldownButtonValue[2])
 		end)
-		self.gameButtons.red.reset()
 		
 	elseif hashedNodeId == hash("yellowButton") and cooldownTimeElapsed[1] <= 0 then
 
 		updateCooldownButtonValue[1] = timer.delay(0.1, true, function(self, handle, time_elapsed)
 			updateCooldownTime(yellowButtonTextValue, 1, skillsCooldownTime[1], updateCooldownButtonValue[1])
-		end)
-		self.gameButtons.yellow.reset()
-		
+		end)		
 	end
 end
 
