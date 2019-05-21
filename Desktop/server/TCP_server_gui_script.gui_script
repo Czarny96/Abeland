@@ -3,6 +3,7 @@ local p2pDiscovery = require "defnet.p2p_discovery"
 local playersManager = require "managers.playersManager"
 local clientsManager = require "managers.clientsManager"
 local globals = require "main.globals"
+local translationLayer = require "server.TranslationLayer"
 
 local sessionGenerator = require "server.sessionGenerator"
 
@@ -25,16 +26,23 @@ end
 
 
 
+local function beginClientsGame(ip,client)
+	local playerClass = clientsManager.getPlayerClass(ip)
+	currentSession.insertPlayerToQue(ip, playerClass)
+	print(translationLayer.buildCDFrame(globals.getCD(playerClass)))
+	serverHandler.send(translationLayer.buildCDFrame(globals.getCD(playerClass)), client)
+	serverHandler.send("StartGame".."\n\r", client)
+end
+
+
 function createSession()
 	if currentSession == nil then
 		currentSession = sessionGenerator.create()
-		
-		for ip,value in pairs(clientsManager.getAllPlayers()) do
-			currentSession.insertPlayerToQue(ip, clientsManager.getPlayerClass(ip))
-		end
-		
 		currentSession.start()
-		sendMessageToAllActivePlayers("StartGame")
+		
+		for ip, client in pairs(clientsManager.returnAllClients()) do
+			beginClientsGame(ip, client)
+		end
 	end
 end
 
@@ -55,8 +63,7 @@ local function routeFrameToRespFunc(frame,ip, client)
 	elseif frameId == "G" then
 		clientsManager.setPlayerReadines(ip, true)
 		if currentSession~=nil then
-			currentSession.insertPlayerToQue(ip, clientsManager.getPlayerClass(ip))
-			serverHandler.send("StartGame".."\n\r", client)
+			beginClientsGame(ip, client)
 		elseif clientsManager.areAllPlayersReady() and currentSession==nil then
 			createSession()
 		end
@@ -135,17 +142,23 @@ function update(self, dt)
 			clientsManager.setALLControllerSendFrameFlag(false)
 			for ip,client in pairs(clientsManager.returnAllClients()) do
 
-				self.server.send("btn_data\n\r", client)
-				clientsManager.incrementPlayerInactivityTimeCounterByDT(ip,dtPassed)
+				if not currentSession.isPlayerInQue(ip) then
 
-				if not clientsManager.getControllerSendFrameFlag(ip) and currentSession~=nil then
-					routeFrameToRespFunc(clientsManager.getClientLastFrame(ip), ip, client)
-				end
+					self.server.send("btn_data\n\r", client)
+					clientsManager.incrementPlayerInactivityTimeCounterByDT(ip,dtPassed)
 
-				if clientsManager.getPlayerInactivityTimeCounter(ip) > 5 and clientsManager.isPlayerActive(ip) then
-					clientsManager.desactivatePlayer(ip)
-				elseif clientsManager.getPlayerInactivityTimeCounter(ip) > 8 and not clientsManager.isPlayerActive(ip) then
-					self.server.remove_client(client)
+					if not clientsManager.getControllerSendFrameFlag(ip) and currentSession~=nil then
+						routeFrameToRespFunc(clientsManager.getClientLastFrame(ip), ip, client)
+					end
+
+					if clientsManager.getPlayerInactivityTimeCounter(ip) > 5 and clientsManager.isPlayerActive(ip) then
+
+						clientsManager.desactivatePlayer(ip)
+						
+					elseif clientsManager.getPlayerInactivityTimeCounter(ip) > 8 and not clientsManager.isPlayerActive(ip) then
+
+						self.server.remove_client(client)
+					end
 				end
 			end
 			dtPassed = 0

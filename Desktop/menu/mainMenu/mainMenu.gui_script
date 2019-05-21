@@ -4,7 +4,6 @@ local backgroundNode = nil
 
 -- buttons
 local newGameNode = nil
-local settingsNode = nil
 local exitNode = nil
 
 local blackBoxNode = nil
@@ -44,7 +43,6 @@ function init(self)
 
 	self.buttonHolder = {
 		newGameButton = scalingButton.create("NewGame", buttonReleased, buttonPressed),
-		settingsButton = scalingButton.create("Settings", buttonReleased, buttonPressed),
 		exitButton = scalingButton.create("Exit", buttonReleased, buttonPressed)
 	}
 end

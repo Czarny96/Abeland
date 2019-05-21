@@ -96,5 +96,9 @@ end
 function M.clearPlayerNicks()
 	msg.post("/menu#championSelect", "clearAllNicks")
 end
+function M.buildCDFrame(CDarray)
+	local frame = "S;"..CDarray.yellow..";"..CDarray.red..";"..CDarray.green..";"..CDarray.blue..";".."\n\r"
+	return frame
+end
 
 return M
