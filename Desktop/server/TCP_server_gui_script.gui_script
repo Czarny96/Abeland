@@ -142,7 +142,7 @@ function update(self, dt)
 			clientsManager.setALLControllerSendFrameFlag(false)
 			for ip,client in pairs(clientsManager.returnAllClients()) do
 
-				if not currentSession.isPlayerInQue(ip) then
+				if not currentSession.isPlayerInQue(ip) and currentSession ~= nil then
 
 					self.server.send("btn_data\n\r", client)
 					clientsManager.incrementPlayerInactivityTimeCounterByDT(ip,dtPassed)
