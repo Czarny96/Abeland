@@ -45,6 +45,7 @@ end
 
 function M.setDirection(self, moveVector)
 	local idx = 1
+	
 	-- Look at anims table above
 	if moveVector.x < -0.3 and moveVector.y > 0.3 then
 		idx = 1
@@ -71,7 +72,7 @@ function M.setDirection(self, moveVector)
 		idx = idx + 9
 	end
 
-	--msg.post("#sprite", "play_animation", {id = anims[idx]})
+	msg.post("#sprite", "play_animation", {id = anims[idx]})
 end
 
 function M.manageStates(self, dt)
@@ -118,9 +119,9 @@ function M.move(self, dt)
 		elseif self.targetPosition ~= nil then
 			local movement = self.targetPosition - go.get_position()
 			self.targetPosition = vmath.normalize(movement)
-			M.setDirection(self, vmath.normalize(movement))
+			M.setDirection(self, self.targetPosition)
 			if self.rootDuration <= 0 then
-				msg.post("#co", "apply_force", {force = vmath.normalize(movement) * (100 - self.slowAmount) * self.movementSpeed * go.get("#co", "mass"), position = go.get_world_position()})
+				msg.post("#co", "apply_force", {force = self.targetPosition * (100 - self.slowAmount) * self.movementSpeed * go.get("#co", "mass"), position = go.get_world_position()})
 			end
 		end
 	end
