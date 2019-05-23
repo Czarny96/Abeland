@@ -32,7 +32,6 @@ function update(self, dt)
 		if self.timer <= self.buffDuration *3/10 and not self.indicateEndFlag  then
 			self.indicateEndFlag = true
 			shaderManager.endOfInvisibilityEffect("#sprite")
-			print("ENDOFBUFF")
 		end
 		self.timer = self.timer - dt
 	elseif self.buffAppliedFlag then

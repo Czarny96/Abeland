@@ -1,5 +1,3 @@
-local shaderManager = require "managers/shaderManager"
-
 function init(self)
 	self.doOnce = false
 	self.waitFrame = false

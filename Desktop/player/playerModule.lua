@@ -39,7 +39,6 @@ function M.manageFlagsAndTimers(self, dt)
 	--Vulnerability flag
 	if self.nonVulnerableTimer <= 0 then
 		if not self.isVulnerable then
-			shaderManager.resetShader("#sprite")
 			self.isVulnerable = true
 		end
 	end
