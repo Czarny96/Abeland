@@ -121,7 +121,7 @@ function M.move(self, dt)
 			self.targetPosition = vmath.normalize(movement)
 			M.setDirection(self, self.targetPosition)
 			if self.rootDuration <= 0 then
-				msg.post("#co", "apply_force", {force = self.targetPosition * (100 - self.slowAmount) * self.movementSpeed * go.get("#co", "mass"), position = go.get_world_position()})
+				msg.post("#co", "apply_force", {force = self.targetPosition * (100 - self.slowAmount) * self.movementSpeed * go.get("#co", "mass") * 2.5, position = go.get_world_position()})
 			end
 		end
 	end
@@ -132,7 +132,7 @@ function M.knockBack(self, message)
 	if message.pos ~= nil then
 		kickDir = vmath.normalize( go.get_position() - message.pos)
 	end
-	msg.post("#co", "apply_force", {force = kickDir * go.get("#co", "mass") * 1000, position = go.get_world_position()})
+	msg.post("#co", "apply_force", {force = kickDir * go.get("#co", "mass") * 2000, position = go.get_world_position()})
 end
 
 function M.collisionWithEntity(self, message_id, message, sender)

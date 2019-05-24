@@ -26,7 +26,6 @@ go.property("slowDuration", 0)	--duration of slow in s
 
 go.property("rootDuration", 0)			--duration of root in s
 
-
 function init(self)
 	-- every enemy has different behavior
 	self.random = math.random(0, 2)

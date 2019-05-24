@@ -24,7 +24,6 @@ go.property("slowDuration", 0)	--duration of slow in s
 
 go.property("rootDuration", 0)			--duration of root in s
 
-
 function init(self)
 	-- every enemy has different behavior
 	self.random = math.random(4, 10)
@@ -131,26 +130,25 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("collision_response") then
 		if message.own_group == hash("chargeRange") then
 			local playerURL = msg.url(nil, message.other_id, "player")
-			if go.get(playerURL, "isTargetable") then
+			if go.get(playerURL, "isTargetable") and self.rootDuration <= 0 then
 				if self.chargeTimer > 5 and self.targetPosition then
 					self.chargeTimer = 0
 					
 					go.animate("#sprite", "tint.y", go.PLAYBACK_ONCE_FORWARD, 0.1, go.EASING_INOUTQUART, 1, 0, 
-
 					function() 
-						msg.post("#co", "apply_force", 
-						{
-							force = self.targetPosition * 30000 * go.get("#co", "mass"), 
-							position = go.get_world_position()}
-						)
+						if self.rootDuration > 0 or self.stunDuration > 0 then
+							go.cancel_animations("#sprite", "tint.y")
+						else
+							msg.post("#co", "apply_force", { force = self.targetPosition * 30000 * go.get("#co", "mass"), position = go.get_world_position()})
+						end
 						go.animate("#sprite", "tint.y", go.PLAYBACK_ONCE_FORWARD, 1, go.EASING_INOUTQUART, 2)
 					end)
 					
 					go.animate("#sprite", "tint.z", go.PLAYBACK_ONCE_FORWARD, 0.1, go.EASING_INOUTQUART, 1, 0, 
-
 					function() 
 						go.animate("#sprite", "tint.z", go.PLAYBACK_ONCE_FORWARD, 1, go.EASING_INOUTQUART, 2)
 					end)
+					
 				end
 			end
 		elseif message.own_group == hash("enemy") and message.other_group ~= hash("attack") then
