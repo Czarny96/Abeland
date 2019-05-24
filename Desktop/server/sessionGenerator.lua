@@ -84,6 +84,7 @@ function M.create()
 		--playersManager.setAllPlayersToWaitingRoom()
 		enemyManger.resetArena()
 		enemyManger.resetAllEnemyPushers()
+		bodyManager.deleteAllEternalBodies()
 		
 		if session.isPlayerInQue() then
 			playersQueue = nil
