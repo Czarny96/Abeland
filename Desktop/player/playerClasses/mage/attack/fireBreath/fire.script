@@ -6,6 +6,9 @@ function init(self)
 	self.colliderTimer = 0
 	self.playerUrl = msg.url(nil,self.parentId,"player")
 	self.attackUrl = msg.url(nil,self.parentId,"attack")
+	self.attDir = go.get(self.playerUrl, "movingDir")
+	l_angle = math.atan2(self.attDir.y,self.attDir.x)
+	go.set_rotation(vmath.quat_rotation_z(l_angle))
 	particlefx.play("#fire")
 end
 
@@ -18,7 +21,10 @@ function update(self, dt)
 		l_angle = math.atan2(self.attDir.y,self.attDir.x)
 		go.set_rotation(vmath.quat_rotation_z(l_angle))
 	end
-	if self.colliderTimer <=0 then
+
+	
+	
+	if self.colliderTimer <= 0 then
 		factory.create("#colliderFactory",nil,nil,{projectileDir = self.attDir})
 		self.colliderTimer = 1/self.colliderPerSec
 	else
@@ -30,12 +36,4 @@ function update(self, dt)
 	end
 	
 	self.timer = self.timer-dt
-end
-
-function on_message(self, message_id, message, sender)
-	if message_id == hash("start") then
-		
-	elseif message_id == hash("stop") then
-		
-	end
 end

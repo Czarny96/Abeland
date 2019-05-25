@@ -23,7 +23,7 @@ function update(self, dt)
 			go.delete()
 		else
 			self.isExploded = true
-			self.projectilelife = 1
+			self.projectilelife = 0.5
 			msg.post("#triggerCollider", "disable")
 			msg.post("#area_triggerCollider", "enable")
 			msg.post("#sprite", "play_animation", {id = hash("player_attack_basic_area")})

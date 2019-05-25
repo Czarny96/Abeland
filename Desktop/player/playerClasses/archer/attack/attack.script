@@ -70,12 +70,16 @@ function on_message(self, message_id, message, sender)
 	end
 
 	if message_id == hash("btnYellow") then
+		go.set("#player", "isBackTimer", 0)
 		self.isYellowHit = true
 	elseif message_id == hash("btnRed") then
+		go.set("#player", "isBackTimer", 0)
 		self.isRedHit = true
 	elseif message_id == hash("btnGreen") then
+		go.set("#player", "isBackTimer", 0)
 		self.isGreenHit = true
 	elseif message_id == hash("btnBlue") then
+		go.set("#player", "isBackTimer", 0)
 		self.isBlueHit = true
 	end
 end

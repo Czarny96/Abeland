@@ -14,8 +14,12 @@ function update(self, dt)
 	end
 	if self.isActive and self.attTimer > 0 and not self.particleStarted then
 		self.particleStarted = true
+		go.set("#attack", "isShooting", true)
 		factory.create("#attack-fireBreathFactory",nil,nil,{parentId = go.get_id()})
 	elseif self.attTimer <= 0 then
+		if self.isActive then
+			go.set("#attack", "basicCD_Timer", go.get("#attack", "basicCD"))
+		end
 		self.particleStarted = false
 		self.isActive = false
 		self.attTimer = 0
@@ -25,7 +29,7 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("activate") then
+	if message_id == hash("fireBreath") then
 		self.isActive = true;
 		self.particleStarted = false
 		self.attTimer = self.attDuration
