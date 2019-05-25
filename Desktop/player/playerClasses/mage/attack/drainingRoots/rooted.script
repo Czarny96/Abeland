@@ -45,7 +45,9 @@ function update(self, dt)
 	if self.rootDuration <= 0 then
 		go.delete()
 	else
-		go.set_position(go.get_position(self.enemyID))
+		if enemyManager.isEnemyAlive(self.enemyID) then
+			go.set_position(go.get_position(self.enemyID))
+		end
 		self.rootDuration = self.rootDuration - dt
 	end
 	

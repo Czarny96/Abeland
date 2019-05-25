@@ -40,6 +40,7 @@ embedded_components {
   "mask: \"attack\"\n"
   "mask: \"enemy\"\n"
   "mask: \"player\"\n"
+  "mask: \"enemyBullet\"\n"
   "linear_damping: 0.0\n"
   "angular_damping: 0.0\n"
   "locked_rotation: true\n"

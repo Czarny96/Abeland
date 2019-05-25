@@ -1,6 +1,6 @@
 --MAGE
 go.property("projectileDir", vmath.vector3())
-go.property("range", 700)
+go.property("range", 400)
 go.property("speed", 250)
 go.property("damage", 25)
 
@@ -23,9 +23,10 @@ function update(self, dt)
 			go.delete()
 		else
 			self.isExploded = true
-			self.projectilelife = 0.5
+			self.projectilelife = 0.3
 			msg.post("#triggerCollider", "disable")
 			msg.post("#area_triggerCollider", "enable")
+			go.set_position(go.get_position() + self.projectileDir * 8)
 			msg.post("#sprite", "play_animation", {id = hash("player_attack_basic_area")})
 		end
 	else
@@ -47,14 +48,15 @@ function on_message(self, message_id, message, sender)
 	end
 	--Destroy on hit
 	if message_id == hash("collision_response") then
-		if message.group == hash("enemy") then
+		if message.group == hash("enemy") or message.group == hash("wall") then
 			if not self.isExploded then
 				self.isExploded = true
-				self.projectilelife = 1
+				self.projectilelife = 0.3
 				msg.post("#triggerCollider", "disable")
 				msg.post("#area_triggerCollider", "enable")
+				go.set_position(go.get_position() + self.projectileDir * 8)
 				msg.post("#sprite", "play_animation", {id = hash("player_attack_basic_area")})
-			else
+			elseif message.group ~= hash("wall") then
 				local url = msg.url(nil, message.other_id, "enemy")
 				msg.post(url, "knockback", {pos = go.get_position()})
 				for i, enemy in pairs(self.enemiesHit) do
@@ -62,9 +64,7 @@ function on_message(self, message_id, message, sender)
 						return
 					end
 				end
-				
 				msg.post(url, "hit",{type = hash("plain"), damage = self.damage})
-
 				table.insert(self.enemiesHit, message.other_id)
 			end
 		else

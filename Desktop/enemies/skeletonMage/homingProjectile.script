@@ -7,8 +7,7 @@ go.property("damage", 25)
 
 function init(self)
 	-- Local Settings
-	self.projectileSpeed = 80
-	self.projectileSpeedByDistanceMultiplier = 0.0013
+	self.projectileSpeed = 75
 	self.projectileLife = 7
 	-- Local Timers
 	self.checkClosestPlayerPosTimer = 0
@@ -48,7 +47,7 @@ end
 
 local function moveEnemy(self, dt)
 	--self.enemyPos = self.enemyPos + self.movingDir * (self.projectileSpeed + self.distanceToClosestPlayer * self.projectileSpeedByDistanceMultiplier) * dt
-	self.enemyPos = self.enemyPos + self.movingDir * self.projectileSpeed*2 * dt
+	self.enemyPos = self.enemyPos + self.movingDir * self.projectileSpeed * 2 * dt
 	go.set_position(self.enemyPos)
 end
 
@@ -99,8 +98,8 @@ function on_message(self, message_id, message, sender)
 		if message.group == hash("player") then
 			playersCollision(self, message_id, message, sender)
 		end
-	end
-	if message_id == hash("contact_point_response") then
-		go.delete()
+		if message.group == hash("wall") then
+			go.delete()
+		end
 	end
 end
