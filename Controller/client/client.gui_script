@@ -64,10 +64,12 @@ local function onData(data)
 		end
 		
 	elseif data == "StartGame" then
-		-- hide pop-up window
-		g_hideConfirmationWindow()
+		
+		if g_gameState == g_gameStateEnum.championSelect then
+			g_hideConfirmationWindow()
 
-		g_goToController()
+			g_goToController()
+		end
 		
 	elseif data == "EndGame" then
 		

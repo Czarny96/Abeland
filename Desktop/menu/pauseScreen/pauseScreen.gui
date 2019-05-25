@@ -213,7 +213,7 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "Restart Game"
+  text: "Resume"
   font: "menuFont"
   id: "NewGameText"
   xanchor: XANCHOR_NONE

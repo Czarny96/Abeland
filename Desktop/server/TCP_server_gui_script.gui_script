@@ -32,6 +32,12 @@ local function beginClientsGame(ip,client)
 	print(translationLayer.buildCDFrame(globals.getCD(playerClass)))
 	serverHandler.send(translationLayer.buildCDFrame(globals.getCD(playerClass)), client)
 	serverHandler.send("StartGame".."\n\r", client)
+
+	-- send another StartGame after 0.5s just in case someone wasn't connected
+	timer.delay(0.5, false, function(self, handle, time_elapsed)
+		print("Sending second StartGame frame")
+		serverHandler.send("StartGame".."\n\r", client)
+	end)
 end
 
 
