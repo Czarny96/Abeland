@@ -2,7 +2,6 @@
 local M = {}
 local lastMovingDir = vmath.vector3(0,1,0)
 
-shaderManager = require "managers/shaderManager"
 
 function M.basic(self, dt)
 	--Shooting
@@ -34,7 +33,7 @@ function M.shadowForm(self, dt)
 	if self.isYellowHit and self.yellowCD_Timer <= 0 then
 		local url = msg.url(nil,go.get_id(),"shadowForm")
 		
-		msg.post("#shadowForm", "activate")
+		msg.post("#shadowForm", "shadowForm")
 		self.yellowCD_Timer = self.yellowCD
 	else
 		self.yellowCD_Timer = self.yellowCD_Timer - dt

@@ -1,7 +1,7 @@
 --MAGE
 go.property("class", hash("mage"))
 go.property("position", vmath.vector3(995, 540, 0.99))
-go.property("movingDir", vmath.vector3(0, 0, 0))
+go.property("movingDir", vmath.vector3(0, 1, 0))
 
 --Class Properties
 go.property("health", 120)
@@ -16,12 +16,14 @@ go.property("absorbTimer", 0)
 go.property("isKilled", false)
 go.property("isVulnerable", true)
 go.property("isTargetable", true)
+go.property("isBack", false)
 
 --Timers
 go.property("nonVulnerableTimer", 0)
-go.property("nonOperativeTimer", 0)
 go.property("isTargetableTimer", 0)
+go.property("isBackTimer", 0)
 go.property("animTimer", 0)
+
 
 --Local Properties
 go.property("isMoving", false)

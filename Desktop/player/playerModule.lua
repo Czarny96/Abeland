@@ -36,32 +36,51 @@ function M.init(self)
 end
 
 function M.manageFlagsAndTimers(self, dt)
-	--Vulnerability flag
-	if self.nonVulnerableTimer <= 0 then
-		if not self.isVulnerable then
+	--Back from inactivity management
+	if self.isBack then
+		if self.isBackTimer > 0 then
+			self.isBackTimer = self.isBackTimer - dt
+		else
+			go.cancel_animations("#sprite", "tint")
+			sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 1))
+			self.isBack = false
+
+			self.isBackTimer = -1
+			self.isVulnerable = true
+			self.isTargetable = true
+		end
+	end
+	
+	--isVulnerable
+	if not self.isVulnerable then
+		if self.nonVulnerableTimer > 0 then
+			self.nonVulnerableTimer = self.nonVulnerableTimer - dt
+		else
 			self.isVulnerable = true
 		end
 	end
 	
-	if self.absorbTimer <= 0 and self.absord ~= 0 then
-		self.absorb = 0
-		label.set_text("#label_absorb", "")
+	--isTargetable
+	if not self.isTargetable then
+		if self.isTargetableTimer > 0 then
+			self.isTargetableTimer = self.isTargetableTimer - dt
+		else
+			self.isTargetable = true
+		end
 	end
 
-	if self.isTargetableTimer <= 0 then
-		self.isTargetable = true
+	--Knight absorb skill management
+	if self.absorb > 0 then
+		if self.absorbTimer > 0 then
+			self.absorbTimer = self.absorbTimer - dt
+		else
+			self.absorb = 0
+			label.set_text("#label_absorb", "")
+		end
 	end
 	
-	--Collider correction
+	--Collider correction reset
 	self.wallCollisionCorrector = vmath.vector3()
-
-	--Timers
-	self.nonVulnerableTimer = self.nonVulnerableTimer - dt
-	self.nonOperativeTimer = self.nonOperativeTimer - dt
-	self.absorbTimer = self.absorbTimer - dt
-	self.isTargetableTimer = self.isTargetableTimer - dt
-
-	--self.isMoving = false
 end
 
 function M.messages(self, message_id, message, sender)
@@ -180,21 +199,24 @@ function M.messages(self, message_id, message, sender)
 	
 	--AFK
 	if message_id == hash("desactivate") then
+		shaderManager.resetShader("#sprite")
 		sprite.set_constant("#sprite", "tint", vmath.vector4(1, 1, 1, 0.33))
 		self.isVulnerable = false
 		self.nonVulnerableTimer = 999
-		self.nonOperativeTimer = 999
 		playersManager.setActivePlayersIDs()
 	--Activate if player came back
 	elseif message_id == hash("activate") then
+		shaderManager.resetShader("#sprite")
 		shaderManager.backToActivity("#sprite")
 		msg.post("#sprite", "play_animation", {id = hash("player_afk")})
 		self.nonVulnerableTimer = 3
 		self.isVulnerable = false
-		self.nonOperativeTimer = 1
 		
 		self.isTargetableTimer = 3
 		self.isTargetable = false
+
+		self.isBackTimer = 3
+		self.isBack = true
 		playersManager.setActivePlayersIDs()
 	end
 
@@ -232,9 +254,9 @@ function M.updateAnimation(self, dt)
 	local url = msg.url("main", go.get_id(), "attack")
 	local vector = go.get(url, "shootingDir")
 	if go.get(url, "isShooting") and go.get(url, "basicCD_Timer") <= 0.1 then
+		self.isBackTimer = 0
 		self.animTimer = 2 / 10 * go.get(url, "basicCD")
 	end
-
 	if self.animTimer >= 0 then
 		if vector.x < -0.3 then
 			if vector.y > 0.3 then
