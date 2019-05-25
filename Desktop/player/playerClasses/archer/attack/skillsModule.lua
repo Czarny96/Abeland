@@ -91,6 +91,7 @@ function M.sniperShots(self, dt)
 	if self.isRedHit and self.redCD_Timer <= 0 then
 		local targetAmount = 5
 		local enemyPositions = enemyManager.getAllEnemyPos()
+		local l_shootingDir = vmath.vector3(0, 0, 0)
 		if #enemyPositions > 0 then
 			local archerPos = go.get_position()
 			local enemiesToHit = {}
@@ -119,8 +120,14 @@ function M.sniperShots(self, dt)
 
 			for i, enemyPos in pairs(enemiesToHit) do
 				local pos = vmath.normalize(enemyPos - archerPos)
+				l_shootingDir = l_shootingDir + pos
 				local l_angle = math.atan2(pos.y, pos.x)
 				factory.create("#sniperShotFactory", nil, vmath.quat_rotation_z(l_angle), { projectileDir = pos })
+			end
+			if l_shootingDir ~= vmath.vector3(0, 0, 0) then
+				self.shootingDir = vmath.normalize(l_shootingDir)
+				self.basicCD_Timer = self.basicCD / 2
+				self.isShooting = true
 			end
 			
 			self.redCD_Timer = self.redCD

@@ -1,5 +1,5 @@
 go.property("isActive", false)
-go.property("attDuration", 5)
+go.property("attDuration", 5.3)
 go.property("attTimer", 0)
 
 function init(self)
@@ -11,14 +11,16 @@ function update(self, dt)
 	if self.prevDir ~= go.get("#attack", "shootingDir") and go.get("#attack", "shootingDir") ~= vmath.vector3() then
 		self.prevDir = go.get("#attack", "shootingDir")
 	end
-	if self.isActive and self.attTimer > 0 and not self.particleStarted then
+	if self.isActive and self.attTimer > 0.3 and not self.particleStarted then
 		self.particleStarted = true
-		go.set("#attack", "isShooting", true)
 		factory.create("#attack-fireBreathFactory",nil,nil,{parentId = go.get_id()})
-	else
+		go.set("#attack", "isShooting", true)
+	elseif self.attTimer <= 0.3 then
+		if self.isActive then
+			go.set("#attack", "basicCD_Timer", go.get("#attack", "basicCD") / 2)
+		end
 		self.particleStarted = false
 		self.isActive = false
-		self.attTimer = 0
 	end
 
 	self.attTimer = self.attTimer - dt
@@ -29,6 +31,5 @@ function on_message(self, message_id, message, sender)
 		self.isActive = true;
 		self.particleStarted = false
 		self.attTimer = self.attDuration
-		go.set("#attack", "basicCD_Timer", self.attDuration + go.get("#attack", "basicCD") / 2)
 	end
 end
