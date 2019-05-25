@@ -332,31 +332,11 @@ instances {
   }
 }
 instances {
-  id: "torchLightBig"
-  prototype: "/lights/torchLightBig.go"
-  position {
-    x: 46.0
-    y: 323.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-  }
-}
-instances {
   id: "torchLightBig1"
   prototype: "/lights/torchLightBig.go"
   position {
-    x: 48.0
-    y: 681.0
+    x: 46.0
+    y: 689.0
     z: 0.0
   }
   rotation {
@@ -375,8 +355,8 @@ instances {
   id: "torchLightBig2"
   prototype: "/lights/torchLightBig.go"
   position {
-    x: 786.0
-    y: 974.0
+    x: 787.0
+    y: 978.0
     z: 0.0
   }
   rotation {
@@ -395,8 +375,8 @@ instances {
   id: "torchLightBig3"
   prototype: "/lights/torchLightBig.go"
   position {
-    x: 1132.0
-    y: 969.0
+    x: 1134.0
+    y: 978.0
     z: 0.0
   }
   rotation {
@@ -415,7 +395,7 @@ instances {
   id: "torchLightBig4"
   prototype: "/lights/torchLightBig.go"
   position {
-    x: 1863.0
+    x: 1875.0
     y: 688.0
     z: 0.0
   }
@@ -435,8 +415,8 @@ instances {
   id: "torchLightBig5"
   prototype: "/lights/torchLightBig.go"
   position {
-    x: 1855.0
-    y: 321.0
+    x: 1876.0
+    y: 349.0
     z: 0.0
   }
   rotation {
@@ -455,8 +435,8 @@ instances {
   id: "torchLightBig6"
   prototype: "/lights/torchLightBig.go"
   position {
-    x: 1134.0
-    y: 68.0
+    x: 1133.0
+    y: 86.0
     z: 0.0
   }
   rotation {
@@ -475,8 +455,8 @@ instances {
   id: "torchLightBig7"
   prototype: "/lights/torchLightBig.go"
   position {
-    x: 775.0
-    y: 66.0
+    x: 787.0
+    y: 85.0
     z: 0.0
   }
   rotation {
@@ -572,11 +552,11 @@ instances {
   }
 }
 instances {
-  id: "torchLightBig8"
-  prototype: "/lights/torchLightBig.go"
+  id: "soundBox"
+  prototype: "/music/soundBox.go"
   position {
-    x: 949.0
-    y: 504.0
+    x: 0.0
+    y: 0.0
     z: 0.0
   }
   rotation {
@@ -592,11 +572,172 @@ instances {
   }
 }
 instances {
-  id: "soundBox"
-  prototype: "/music/soundBox.go"
+  id: "firePit"
+  prototype: "/lights/firePit/firePit.go"
   position {
+    x: 45.0
+    y: 340.0
+    z: 0.0
+  }
+  rotation {
     x: 0.0
     y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "torchLightBig"
+  prototype: "/lights/torchLightBig.go"
+  position {
+    x: 46.0
+    y: 345.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "firePit2"
+  prototype: "/lights/firePit/firePit.go"
+  position {
+    x: 786.0
+    y: 975.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "firePit3"
+  prototype: "/lights/firePit/firePit.go"
+  position {
+    x: 1133.0
+    y: 975.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "firePit4"
+  prototype: "/lights/firePit/firePit.go"
+  position {
+    x: 1874.0
+    y: 684.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "firePit5"
+  prototype: "/lights/firePit/firePit.go"
+  children: "firePit1"
+  position {
+    x: 1874.0
+    y: 345.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "firePit6"
+  prototype: "/lights/firePit/firePit.go"
+  position {
+    x: 786.0
+    y: 83.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "firePit7"
+  prototype: "/lights/firePit/firePit.go"
+  position {
+    x: 1132.0
+    y: 83.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "firePit1"
+  prototype: "/lights/firePit/firePit.go"
+  position {
+    x: -1829.0
+    y: 339.0
     z: 0.0
   }
   rotation {
@@ -743,166 +884,6 @@ embedded_instances {
   "  position {\n"
   "    x: 1538.0\n"
   "    y: 246.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"firepit_top_2\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/arena/decorations.atlas\\\"\\n"
-  "default_animation: \\\"firepit\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 785.0\n"
-  "    y: 980.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"firepit_top_1\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/arena/decorations.atlas\\\"\\n"
-  "default_animation: \\\"firepit\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 1135.0\n"
-  "    y: 980.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"firepit_bottom_2\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/arena/decorations.atlas\\\"\\n"
-  "default_animation: \\\"firepit\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 1134.0\n"
-  "    y: 74.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"firepit_bottom_1\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/arena/decorations.atlas\\\"\\n"
-  "default_animation: \\\"firepit\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 784.0\n"
-  "    y: 74.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"firepit_left_1\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/arena/decorations.atlas\\\"\\n"
-  "default_animation: \\\"firepit\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 46.0\n"
-  "    y: 690.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"firepit_left_2\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/arena/decorations.atlas\\\"\\n"
-  "default_animation: \\\"firepit\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 46.0\n"
-  "    y: 328.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"firepit_right_1\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/arena/decorations.atlas\\\"\\n"
-  "default_animation: \\\"firepit\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 1873.0\n"
-  "    y: 688.0\n"
-  "    z: 0.0\n"
-  "  }\n"
-  "  rotation {\n"
-  "    x: 0.0\n"
-  "    y: 0.0\n"
-  "    z: 0.0\n"
-  "    w: 1.0\n"
-  "  }\n"
-  "}\n"
-  "embedded_components {\n"
-  "  id: \"firepit_right_2\"\n"
-  "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/arena/decorations.atlas\\\"\\n"
-  "default_animation: \\\"firepit\\\"\\n"
-  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
-  "blend_mode: BLEND_MODE_ALPHA\\n"
-  "\"\n"
-  "  position {\n"
-  "    x: 1873.0\n"
-  "    y: 326.0\n"
   "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
@@ -1219,6 +1200,13 @@ embedded_instances {
 }
 embedded_instances {
   id: "staticLights"
+  children: "firePit"
+  children: "firePit2"
+  children: "firePit3"
+  children: "firePit4"
+  children: "firePit5"
+  children: "firePit6"
+  children: "firePit7"
   children: "torchLightBig"
   children: "torchLightBig1"
   children: "torchLightBig2"
@@ -1227,7 +1215,6 @@ embedded_instances {
   children: "torchLightBig5"
   children: "torchLightBig6"
   children: "torchLightBig7"
-  children: "torchLightBig8"
   children: "torchLightMedium"
   children: "torchLightMedium1"
   children: "torchLightMedium2"

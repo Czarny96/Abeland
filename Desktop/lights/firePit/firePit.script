@@ -1,0 +1,3 @@
+function update(self, dt)
+	g_applyDrawOrder(go.get_id(), 2)
+end

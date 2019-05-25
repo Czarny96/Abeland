@@ -2,7 +2,6 @@
 local MIN_SCALE = 90 -- in percents (%)
 
 function init(self)
-	
 	self.lightScale = math.random(MIN_SCALE, 100) / 100.0
 	self.lightScaleTimer = 0
 end
@@ -14,7 +13,6 @@ function update(self, dt)
 		self.lightScaleTimer = 0
 		self.lightScale = math.random(MIN_SCALE, 100) / 100.0
 	end
-	
 end
 
 function on_message(self, message_id, message, sender)
