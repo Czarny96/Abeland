@@ -18,5 +18,5 @@ function update(self, dt)
 	end
 
 	-- DRAW ORDER
-	g_applyDrawOrder(go.get_id(), -5)
+	g_applyDrawOrder(go.get_id(), 0)
 end
