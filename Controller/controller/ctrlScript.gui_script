@@ -13,6 +13,9 @@ local updateCooldownButtonValue = { }
 local skillsCooldownTime = { }
 local cooldownTimeElapsed = { 0, 0, 0, 0}
 local cooldownCounter = { 0, 0, 0, 0}
+local iterationValueForCooldown = 0.1
+
+local isPause = "false"
 
 local leftJoystick = {
 	defaultPos = vmath.vector3(),
@@ -113,7 +116,7 @@ local function updateCooldownTime(selectButton, buttonNumber, startTimeValue, ca
 	if cooldownTimeElapsed[buttonNumber] > 0.1 then
 		
 		gui.set_text(selectButton, string.format("%.1f", tostring(cooldownTimeElapsed[buttonNumber])))
-		cooldownCounter[buttonNumber] = cooldownCounter[buttonNumber] + 0.1
+		cooldownCounter[buttonNumber] = cooldownCounter[buttonNumber] + iterationValueForCooldown
 		
 	elseif cooldownTimeElapsed[buttonNumber] <= 0.1 then
 		
@@ -126,29 +129,31 @@ local function updateCooldownTime(selectButton, buttonNumber, startTimeValue, ca
 end
 
 local function buttonPressed(hashedNodeId)
-	if hashedNodeId == hash("blueButton") and cooldownTimeElapsed[4] <= 0 then
+	if isPause == "false" then
+		if hashedNodeId == hash("blueButton") and cooldownTimeElapsed[4] <= 0 then
 
-		updateCooldownButtonValue[4] = timer.delay(0.1, true, function(self, handle, time_elapsed)
-			updateCooldownTime(blueButtonTextValue, 4, skillsCooldownTime[4], updateCooldownButtonValue[4])
-		end)
-		
-	elseif hashedNodeId == hash("greenButton") and cooldownTimeElapsed[3] <= 0 then
+			updateCooldownButtonValue[4] = timer.delay(0.1, true, function(self, handle, time_elapsed)
+				updateCooldownTime(blueButtonTextValue, 4, skillsCooldownTime[4], updateCooldownButtonValue[4])
+			end)
+			
+		elseif hashedNodeId == hash("greenButton") and cooldownTimeElapsed[3] <= 0 then
 
-		updateCooldownButtonValue[3] = timer.delay(0.1, true, function(self, handle, time_elapsed)
-			updateCooldownTime(greenButtonTextValue, 3, skillsCooldownTime[3], updateCooldownButtonValue[3])
-		end)
-		
-	elseif hashedNodeId == hash("redButton") and cooldownTimeElapsed[2] <= 0 then
+			updateCooldownButtonValue[3] = timer.delay(0.1, true, function(self, handle, time_elapsed)
+				updateCooldownTime(greenButtonTextValue, 3, skillsCooldownTime[3], updateCooldownButtonValue[3])
+			end)
+			
+		elseif hashedNodeId == hash("redButton") and cooldownTimeElapsed[2] <= 0 then
 
-		updateCooldownButtonValue[2] = timer.delay(0.1, true, function(self, handle, time_elapsed)
-			updateCooldownTime(redButtonTextValue, 2, skillsCooldownTime[2], updateCooldownButtonValue[2])
-		end)
-		
-	elseif hashedNodeId == hash("yellowButton") and cooldownTimeElapsed[1] <= 0 then
+			updateCooldownButtonValue[2] = timer.delay(0.1, true, function(self, handle, time_elapsed)
+				updateCooldownTime(redButtonTextValue, 2, skillsCooldownTime[2], updateCooldownButtonValue[2])
+			end)
+			
+		elseif hashedNodeId == hash("yellowButton") and cooldownTimeElapsed[1] <= 0 then
 
-		updateCooldownButtonValue[1] = timer.delay(0.1, true, function(self, handle, time_elapsed)
-			updateCooldownTime(yellowButtonTextValue, 1, skillsCooldownTime[1], updateCooldownButtonValue[1])
-		end)		
+			updateCooldownButtonValue[1] = timer.delay(0.1, true, function(self, handle, time_elapsed)
+				updateCooldownTime(yellowButtonTextValue, 1, skillsCooldownTime[1], updateCooldownButtonValue[1])
+			end)		
+		end
 	end
 end
 
@@ -242,6 +247,14 @@ function on_message(self, message_id, message, sender)
 			skillsCooldownTime[i] = tonumber(skillsCooldownTime[i])
 		end
 		--pprint(skillsCooldownTime)
+	elseif message_id == hash("pauseFrame") then
+		if message.pauseFrame == "true" then
+			iterationValueForCooldown = 0.0
+			isPause =  message.pauseFrame
+		elseif message.pauseFrame == "false" then
+			iterationValueForCooldown = 0.1
+			isPause =  message.pauseFrame
+		end	
 	end
 
 end

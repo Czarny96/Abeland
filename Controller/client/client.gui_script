@@ -55,7 +55,6 @@ end
 local previousFrame = "M;0;0;0;0;0"
 
 local function onData(data)
-	--print(data)
 	if data == "btn_data" then
 		
 		if client and areTwoFramesDifferent(g_controllerFrame, previousFrame, 0.1) then
@@ -98,6 +97,8 @@ local function onData(data)
 
 	elseif string.sub(data, 1, 1) == "S" then
 		msg.post("/menu#ctrlGui", "cooldownFrame", {cooldownFrame = string.sub(data, 3, #data) })
+	elseif string.sub(data, 1, 1) == "P" then
+		msg.post("/menu#ctrlGui", "pauseFrame", {pauseFrame = string.sub(data, 3, #data - 1) })
 	end
 end
 
