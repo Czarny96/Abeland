@@ -82,8 +82,6 @@ function update(self, dt)
 	if globals.getPause() then
 		return
 	end
-
-	enemyModule.manageStates(self, dt)
 	
 	label.set_text("#hpLabel", tostring(self.health))
 	
