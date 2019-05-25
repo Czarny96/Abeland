@@ -1,5 +1,6 @@
 local scalingButton = require "util/scalingButton"
 local enemyManager = require "managers.enemyManager"
+local clientsManager = require "managers.clientsManager"
 local playersManager = require "managers.playersManager"
 local globals = require "main.globals"
 
@@ -24,6 +25,18 @@ local function ResumeGameAction()
 	gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
 	gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
 	gui.EASING_LINEAR, 0.5, 0, function() msg.post("/menu", "disable") end)
+end
+
+local function GameOver()
+	g_allowOpenPause()
+	g_setUpInGameEnum()
+	globals.setPause(false)
+
+	lockActions = true
+	gui.cancel_animation(blackBoxNode, gui.PROP_COLOR)
+	gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
+	gui.EASING_LINEAR, 0.8, 0, function() g_goToGameOverScreen() end)
+	
 end
 
 local function buttonReleased(hashedNodeId)
@@ -67,6 +80,10 @@ end
 function update(self, dt)
 	-- Add update code here
 	-- Remove this function if not needed
+	if not clientsManager.isAnyPlayer() and g_gameState == g_gameStateEnum.pause then
+		GameOver()
+	end
+	
 end
 
 function on_message(self, message_id, message, sender)
