@@ -16,6 +16,7 @@ end
 
 local function ResumeGameAction()
 	-- print("Clicked Resume Game")
+	sendPauseValue("false")
 	g_allowOpenPause()
 	g_setUpInGameEnum()
 

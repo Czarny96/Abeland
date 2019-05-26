@@ -24,7 +24,9 @@ local function sendMessageToAllActivePlayers(mess)
 	end
 end
 
-
+function sendPauseValue(pauseStatus)
+	sendMessageToAllActivePlayers("P;"..tostring(pauseStatus)..";")
+end
 
 local function beginClientsGame(ip,client)
 	local playerClass = clientsManager.getPlayerClass(ip)
@@ -39,7 +41,6 @@ local function beginClientsGame(ip,client)
 		serverHandler.send("StartGame".."\n\r", client)
 	end)
 end
-
 
 function createSession()
 	if currentSession == nil then

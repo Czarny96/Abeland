@@ -101,4 +101,9 @@ function M.buildCDFrame(CDarray)
 	return frame
 end
 
+function M.getPauseValue(isPause)
+	local frame = "P;"..isPause..";"
+	return frame
+end
+
 return M
