@@ -1,10 +1,13 @@
 local enemyManager = require "managers.enemyManager"
 local globals = require "main.globals"
-go.property("gate", hash(""))
+go.property("gate", hash("top"))
+go.property("gate", hash("bottom"))
+go.property("gate", hash("left"))
+go.property("gate", hash("right"))
 
 function init(self)
 	self.initPos = go.get_position()
-	self.pushingSpeed = 80
+	self.pushingSpeed = 45
 	self.pushingFlag = false
 	self.arenaCentrum = vmath.vector3(960, 540, 0)
 end
@@ -21,7 +24,7 @@ end
 
 local function reset(self)
 	self.pushingFlag = false
-	enemyManager.closeAllGates()
+	enemyManager.closeGate(self.gate)
 	go.set_position(self.initPos)
 end
 
