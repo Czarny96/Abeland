@@ -110,7 +110,7 @@ function M.sniperShots(self, dt)
 						if not isInTable then
 							local l_dist =  math.pow((enemiesToHit[k].x - archerPos.x), 2) + math.pow((enemiesToHit[k].y - archerPos.y), 2)
 							local l_newDist =  math.pow((enemyPos.x - archerPos.x), 2) + math.pow((enemyPos.y - archerPos.y), 2)
-							if l_dist < l_newDist then
+							if l_dist > l_newDist then
 								enemiesToHit[k] = enemyPos
 							end
 						end
@@ -126,7 +126,7 @@ function M.sniperShots(self, dt)
 			end
 			if l_shootingDir ~= vmath.vector3(0, 0, 0) then
 				self.shootingDir = vmath.normalize(l_shootingDir)
-				self.basicCD_Timer = self.basicCD / 2
+				self.basicCD_Timer = 0.1
 				self.isShooting = true
 			end
 			
