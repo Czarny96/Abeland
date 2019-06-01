@@ -158,11 +158,13 @@ function update(self, dt)
 						routeFrameToRespFunc(clientsManager.getClientLastFrame(ip), ip, client)
 					end
 
-					if clientsManager.getPlayerInactivityTimeCounter(ip) > 5 and clientsManager.isPlayerActive(ip) then
+					if clientsManager.getPlayerInactivityTimeCounter(ip) > 10 and clientsManager.isPlayerActive(ip) 
+					and not clientsManager.isPlayerDead(ip) then
 
 						clientsManager.desactivatePlayer(ip)
 						
-					elseif clientsManager.getPlayerInactivityTimeCounter(ip) > 8 and not clientsManager.isPlayerActive(ip) then
+					elseif clientsManager.getPlayerInactivityTimeCounter(ip) > 15 and not clientsManager.isPlayerActive(ip)
+					and not clientsManager.isPlayerDead(ip) then
 
 						self.server.remove_client(client)
 					end
@@ -208,8 +210,10 @@ function on_message(self, message_id, message, sender)
 		currentSession.setPlayersFromQue()
 		currentSession.ressurectPlayers()
 	elseif  message_id == hash("playerDied") then
+		clientsManager.setIsPlayerDead(clientsManager.getPlayerIpFromID(message.playerID), true)
 		serverHandler.send("EndGame".."\n\r", clientsManager.getPlayerClientFromID(message.playerID))
 	elseif  message_id == hash("playerRessurected") then
+		clientsManager.setIsPlayerDead(clientsManager.getPlayerIpFromID(message.playerID), false)
 		serverHandler.send("StartGame".."\n\r", clientsManager.getPlayerClientFromID(message.playerID))
 	end
 	

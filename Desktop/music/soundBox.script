@@ -3,7 +3,7 @@ local currentSong = nil
 local previousSong = nil
 local makeSongTransition = false
 local cummulativeDT = 0
-local musicGain = 0.8
+local musicGain = 0.5
 local musicReduction = 0
 
 function init(self)
@@ -19,7 +19,7 @@ function update(self, dt)
 	-- Add update code here
 	if makeSongTransition == true then
 		if musicGain - cummulativeDT > 0 then
-			cummulativeDT=cummulativeDT+dt/3
+			cummulativeDT=cummulativeDT+dt/4
 			musicReduction = musicGain-cummulativeDT
 			sound.set_gain(previousSong, musicReduction)
 			sound.set_gain(currentSong,cummulativeDT)
