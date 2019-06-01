@@ -3,7 +3,7 @@ local currentSong = nil
 local previousSong = nil
 local makeSongTransition = false
 local cummulativeDT = 0
-local musicGain = 0.3
+local musicGain = 0.4
 local musicReduction = 0
 
 function init(self)
@@ -47,7 +47,7 @@ function on_message(self, message_id, message, sender)
 		previousSong = currentSong
 		makeSongTransition = true
 		currentSong =  message.songName
-		sound.play(currentSong, {gain = musicGain})
+		sound.play(currentSong, {gain = musicGain, delay=0.1})
 	end
 	
 	
