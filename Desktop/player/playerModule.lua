@@ -118,6 +118,7 @@ function M.messages(self, message_id, message, sender)
 		self.absorb = 0
 		self.absorbTimer = 0
 		self.isKilled = false
+		self.isTargetableTimer = 0
 		self.informedAboutBeingKilled = false
 		self.nonVulnerableTimer = 0
 		
@@ -321,6 +322,8 @@ end
 function M.death(self, dt)
 	if not self.isKilled then
 		self.isKilled = true
+		isTargetableTimer = 999;
+		isTargetable = false;
 		msg.post("#sprite", "play_animation", {id = hash("player_killed")})
 		msg.post("#death_sound", "play_sound", {gain = 0.5})	
 		--Creates body of a player
