@@ -7,6 +7,7 @@ local M = {}
 
 local globals = require "main.globals"
 local playersManager = require "managers.playersManager"
+local bodyManager = require "managers/bodyManager.bodyManager"
 
 local enemyTypesAmount = 5
 local enemyIDs = {}
@@ -99,6 +100,7 @@ end
 function M.startNextWave()
 	--Starts new wave
 	M.resetAllEnemyPushers()
+	bodyManager.deleteAllEternalBodies()
 	if globals.getWaveNr() < 5 then
 		M.initializeWave(1)
 	elseif globals.getWaveNr() < 10 then
