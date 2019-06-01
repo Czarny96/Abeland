@@ -28,6 +28,11 @@ local function reset(self)
 	go.set_position(self.initPos)
 end
 
+local function resetPositionOnly(self)
+	self.pushingFlag = false
+	go.set_position(self.initPos)
+end
+
 function on_message(self, message_id, message, sender)
 	if message_id == hash("collision_response") then
 		if message.group == hash("enemyPusherStop") then
@@ -39,5 +44,8 @@ function on_message(self, message_id, message, sender)
 	end
 	if message_id == hash("reset") then
 		reset(self)
+	end
+	if message_id == hash("resetAll") then
+		resetPositionOnly(self)
 	end
 end
