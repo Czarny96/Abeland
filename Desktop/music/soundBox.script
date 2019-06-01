@@ -3,7 +3,7 @@ local currentSong = nil
 local previousSong = nil
 local makeSongTransition = false
 local cummulativeDT = 0
-local musicGain = 0.5
+local musicGain = 0.3
 local musicReduction = 0
 
 function init(self)

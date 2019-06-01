@@ -212,9 +212,9 @@ function on_message(self, message_id, message, sender)
 		clientsManager.setIsPlayerDead(clientsManager.getPlayerIpFromID(message.playerID), true)
 		serverHandler.send("EndGame".."\n\r", clientsManager.getPlayerClientFromID(message.playerID))
 	elseif  message_id == hash("playerRessurected") then
-		local playerClient = clientsManager.getPlayerIpFromID(message.playerID)
+		local playerClient = clientsManager.getPlayerClientFromID(message.playerID)
 		print("Resurecting Player: ".. message.playerID)
-		clientsManager.setIsPlayerDead(playerClient, false)
+		clientsManager.setIsPlayerDead(clientsManager.getPlayerIpFromID(message.playerID), false)
 		clientsManager.resetPlayerInactivityTimeCounter()
 		serverHandler.send("StartGame".."\n\r", playerClient)
 	end
