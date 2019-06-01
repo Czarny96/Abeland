@@ -149,7 +149,7 @@ function update(self, dt)
 			clientsManager.setALLControllerSendFrameFlag(false)
 			for ip,client in pairs(clientsManager.returnAllClients()) do
 
-				if currentSession ~= nil  and not currentSession.isPlayerInQue(ip) then
+				if currentSession ~= nil  and not currentSession.isPlayerInQue(ip) and not clientsManager.isPlayerDead(ip) then
 
 					self.server.send("btn_data\n\r", client)
 					clientsManager.incrementPlayerInactivityTimeCounterByDT(ip,dtPassed)
@@ -158,13 +158,11 @@ function update(self, dt)
 						routeFrameToRespFunc(clientsManager.getClientLastFrame(ip), ip, client)
 					end
 
-					if clientsManager.getPlayerInactivityTimeCounter(ip) > 10 and clientsManager.isPlayerActive(ip) 
-					and not clientsManager.isPlayerDead(ip) then
+					if clientsManager.getPlayerInactivityTimeCounter(ip) > 15 and clientsManager.isPlayerActive(ip) then
 
 						clientsManager.desactivatePlayer(ip)
 						
-					elseif clientsManager.getPlayerInactivityTimeCounter(ip) > 15 and not clientsManager.isPlayerActive(ip)
-					and not clientsManager.isPlayerDead(ip) then
+					elseif clientsManager.getPlayerInactivityTimeCounter(ip) > 20 and not clientsManager.isPlayerActive(ip) then
 
 						self.server.remove_client(client)
 					end
