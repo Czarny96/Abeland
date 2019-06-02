@@ -149,7 +149,7 @@ function update(self, dt)
 			clientsManager.setALLControllerSendFrameFlag(false)
 			for ip,client in pairs(clientsManager.returnAllClients()) do
 
-				if currentSession ~= nil  and not currentSession.isPlayerInQue(ip) then
+				if currentSession ~= nil  and not currentSession.isPlayerInQue(ip) and not clientsManager.isPlayerDead(ip) then
 
 					self.server.send("btn_data\n\r", client)
 					clientsManager.incrementPlayerInactivityTimeCounterByDT(ip,dtPassed)
@@ -158,11 +158,11 @@ function update(self, dt)
 						routeFrameToRespFunc(clientsManager.getClientLastFrame(ip), ip, client)
 					end
 
-					if clientsManager.getPlayerInactivityTimeCounter(ip) > 5 and clientsManager.isPlayerActive(ip) then
+					if clientsManager.getPlayerInactivityTimeCounter(ip) > 15 and clientsManager.isPlayerActive(ip) then
 
 						clientsManager.desactivatePlayer(ip)
 						
-					elseif clientsManager.getPlayerInactivityTimeCounter(ip) > 8 and not clientsManager.isPlayerActive(ip) then
+					elseif clientsManager.getPlayerInactivityTimeCounter(ip) > 20 and not clientsManager.isPlayerActive(ip) then
 
 						self.server.remove_client(client)
 					end
@@ -208,9 +208,15 @@ function on_message(self, message_id, message, sender)
 		currentSession.setPlayersFromQue()
 		currentSession.ressurectPlayers()
 	elseif  message_id == hash("playerDied") then
+		print("Killing Player: ".. message.playerID)
+		clientsManager.setIsPlayerDead(clientsManager.getPlayerIpFromID(message.playerID), true)
 		serverHandler.send("EndGame".."\n\r", clientsManager.getPlayerClientFromID(message.playerID))
 	elseif  message_id == hash("playerRessurected") then
-		serverHandler.send("StartGame".."\n\r", clientsManager.getPlayerClientFromID(message.playerID))
+		local playerClient = clientsManager.getPlayerClientFromID(message.playerID)
+		print("Resurecting Player: ".. message.playerID)
+		clientsManager.setIsPlayerDead(clientsManager.getPlayerIpFromID(message.playerID), false)
+		clientsManager.resetPlayerInactivityTimeCounter()
+		serverHandler.send("StartGame".."\n\r", playerClient)
 	end
 	
 

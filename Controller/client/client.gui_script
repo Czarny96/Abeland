@@ -64,7 +64,7 @@ local function onData(data)
 		
 	elseif data == "StartGame" then
 		
-		if g_gameState == g_gameStateEnum.championSelect then
+		if g_gameState == g_gameStateEnum.championSelect or g_gameState == g_gameStateEnum.gameOverScreen then
 			g_hideConfirmationWindow()
 
 			g_goToController()

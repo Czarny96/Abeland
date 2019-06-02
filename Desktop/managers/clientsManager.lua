@@ -130,7 +130,7 @@ end
 
 function M.resetPlayersToDefault()
 	for ip,values in pairs(playersTable) do
-		playersTable[ip] = {playersTable[ip][1],"",0.0,true,"","", false,"M;0;0;0;0;0",false}
+		playersTable[ip] = {playersTable[ip][1],"",0.0,true,"","", false,"M;0;0;0;0;0",false,false}
 	end
 end
 
@@ -140,7 +140,7 @@ function M.addPlayer(playerIP,client)
 		-- values:
 		-- 1 - client; 2 - playerID; 3 - inactivity time counter; 
 		-- 4 - is player active?;  5 - nick; 6 - class; 7 - is player ready; 8 - last recived frame; 9 - recived frame in last update
-		--TODO: Think about prevention of calling object without url
+		-- 10 - did player died?
 		if playersTable[playerIP] == nil then
 			playersTable[playerIP] = {client,"",0.0,true,"","", false,"M;0;0;0;0;0",false}
 			amountOfCurrentPlayers = amountOfCurrentPlayers + 1 
@@ -256,6 +256,17 @@ function M.getPlayerClientFromID(playerID)
 	return client
 end
 
+function M.getPlayerIpFromID(playerID)
+	local playerIP=nil
+	for ip,values in pairs(playersTable) do
+		if values[2] == playerID then
+			playerIP = ip 
+		end
+	end
+	return playerIP
+end
+
+
 function M.addFrameToTheClient(playerIP, frame)
 	if playersTable[playerIP] ~= nil then
 		playersTable[playerIP][8] = frame
@@ -288,6 +299,20 @@ end
 function M.setALLControllerSendFrameFlag(value)
 	for ip,values in pairs(playersTable) do
 		M.setControllerSendFrameFlag(ip,value)
+	end
+end
+
+function M.isPlayerDead(playerIP)
+	local value = nil
+	if playersTable[playerIP] ~= nil then
+		value = playersTable[playerIP][10]
+	end
+	return value
+end
+
+function M.setIsPlayerDead(playerIP, value)
+	if playersTable[playerIP] ~= nil then
+		playersTable[playerIP][10] = value
 	end
 end
 
