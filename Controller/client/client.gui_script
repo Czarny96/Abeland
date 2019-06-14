@@ -63,7 +63,8 @@ local function onData(data)
 		end
 		
 	elseif data == "StartGame" then
-		
+
+		print("Received StartGame frame", os.date())
 		if g_gameState == g_gameStateEnum.championSelect or g_gameState == g_gameStateEnum.gameOverScreen then
 			g_hideConfirmationWindow()
 
@@ -71,7 +72,8 @@ local function onData(data)
 		end
 		
 	elseif data == "EndGame" then
-		
+
+		print("Received EndGame frame", os.date())
 		if g_gameState == g_gameStateEnum.controller then
 			-- hide pop-up window
 			g_hideConfirmationWindow()
@@ -88,7 +90,8 @@ local function onData(data)
 		
 	elseif string.sub(data, 1, 1) == "C" then
 		-- example: "C;mage" - server confirms, that mage is locked in by this client
-		
+
+		print("Received class confirmation frame", os.date())
 		msg.post("/menu#championSelect", "playerClassConfirm", {playerClass = string.sub(data, 3, #data)})
 		
 	elseif data == "AllDead" then
@@ -190,6 +193,7 @@ function on_message(self, message_id, message, sender)
 		end
 	elseif message_id == hash("sendReady") then
 		if client then
+			print("Sending 'sendReady' frame", os.date())
 			client.send("G;ready\n\r")
 		end
 	elseif message_id == hash("sendUsername") then

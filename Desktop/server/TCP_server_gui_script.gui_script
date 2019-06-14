@@ -37,7 +37,7 @@ local function beginClientsGame(ip,client)
 
 	-- send another StartGame after 0.5s just in case someone wasn't connected
 	timer.delay(0.5, false, function(self, handle, time_elapsed)
-		print("Sending second StartGame frame")
+		print("Sending second StartGame frame", os.date())
 		serverHandler.send("StartGame".."\n\r", client)
 	end)
 end
@@ -157,7 +157,7 @@ function update(self, dt)
 					if not clientsManager.getControllerSendFrameFlag(ip) and currentSession~=nil then
 						routeFrameToRespFunc(clientsManager.getClientLastFrame(ip), ip, client)
 					end
-
+--[[
 					if clientsManager.getPlayerInactivityTimeCounter(ip) > 15 and clientsManager.isPlayerActive(ip) then
 
 						clientsManager.desactivatePlayer(ip)
@@ -165,7 +165,7 @@ function update(self, dt)
 					elseif clientsManager.getPlayerInactivityTimeCounter(ip) > 20 and not clientsManager.isPlayerActive(ip) then
 
 						self.server.remove_client(client)
-					end
+					end--]]
 				end
 			end
 			dtPassed = 0

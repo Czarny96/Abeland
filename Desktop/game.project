@@ -1,6 +1,6 @@
 [project]
 title = Desktop
-dependencies = https://github.com/britzl/defold-luasocket/archive/0.11.zip,https://github.com/Lerg/extension-openal/archive/master.zip
+dependencies = https://github.com/britzl/defold-luasocket/archive/0.11.zip
 write_log = 0
 
 [bootstrap]

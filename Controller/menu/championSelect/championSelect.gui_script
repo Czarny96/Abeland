@@ -30,6 +30,10 @@ local function buttonReleased(hashedNodeId)
 		--gui.animate(blackBoxNode, gui.PROP_COLOR, vmath.vector4(0,0,0,1), 
 		--gui.EASING_LINEAR, 0.5, 0, function() g_goToController() end)
 
+		-- show 'waiting for others...' window
+		g_showWaitingForOthersWindow()
+		
+
 	elseif hashedNodeId == hash("knightButton") then
 		msg.post("/go#client", "sendPlayerClass", {playerClass = "knight"})
 	elseif hashedNodeId == hash("mageButton") then
@@ -39,6 +43,7 @@ local function buttonReleased(hashedNodeId)
 	elseif hashedNodeId == hash("archerButton") then
 		msg.post("/go#client", "sendPlayerClass", {playerClass = "archer"})
 	end
+
 end
 
 local function lockInPlayerClass(class)
@@ -105,6 +110,9 @@ function init(self)
 
 		startButton = scalingButton.create("Start", 2, buttonReleased, buttonPressed)
 	}
+
+	
+	
 end
 
 function final(self)
@@ -119,6 +127,7 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("enable") then
 		start(self)
 	elseif message_id == hash("disable") then
+		g_hideWaitingForOthersWindow()
 
 	elseif message_id == hash("playerClassConfirm") then
 		self.playerClassLocked = message.playerClass
@@ -127,6 +136,7 @@ function on_message(self, message_id, message, sender)
 		
 		-- change color of buttons
 		lockInPlayerClass(message.playerClass)
+
 	end
 end
 

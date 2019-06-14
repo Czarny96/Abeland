@@ -120,6 +120,16 @@ function g_showUsernameFailureWindow()
 	msg.post("/xmenu#usernameFailureWindow", "show")
 end
 
+function g_hideWaitingForOthersWindow()
+	print("Hide WaitingForOthersWindow window")
+	msg.post("/xmenu#waitingForOthersWindow", "hide")
+end
+
+function g_showWaitingForOthersWindow()
+	print("Show WaitingForOthersWindow window")
+	msg.post("/xmenu#waitingForOthersWindow", "show")
+end
+
 -- END OF GAME STATE FUNCTIONS AND VARIABLES
 
 function on_input(self, action_id, action)
