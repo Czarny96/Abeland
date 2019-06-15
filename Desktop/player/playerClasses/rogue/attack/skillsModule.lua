@@ -5,8 +5,8 @@ local lastMovingDir = vmath.vector3(0,1,0)
 
 function M.basic(self, dt)
 	--Shooting
-	if not self.shadowFormFlag and self.isShooting then
-		if self.basicCD_Timer <= 0 then
+	if not self.shadowFormFlag then
+		if self.basicCD_Timer <= 0 and self.isShooting then
 			self.shootingDir = vmath.normalize(self.shootingDir)
 			local l_angle = math.atan2(self.shootingDir.y, self.shootingDir.x)
 			factory.create("#attack-basicFactory", nil, vmath.quat_rotation_z(l_angle), { projectileDir = self.shootingDir })
@@ -17,8 +17,8 @@ function M.basic(self, dt)
 			end
 			self.basicCD_Timer = self.basicCD_Timer - dt
 		end
-	elseif self.shadowFormFlag and self.isShooting then
-		if self.basicShadowFormCD_Timer <= 0 then
+	elseif self.shadowFormFlag then
+		if self.basicShadowFormCD_Timer <= 0 and self.isShooting then
 			self.shootingDir = vmath.normalize(self.shootingDir)
 			local l_angle = math.atan2(self.shootingDir.y, self.shootingDir.x)
 			factory.create("#attack-shadowFormFactory", nil, vmath.quat_rotation_z(l_angle), { projectileDir = self.shootingDir })
