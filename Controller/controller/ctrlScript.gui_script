@@ -30,6 +30,7 @@ local leftJoystick = {
 local rightJoystick = {
 	defaultPos = vmath.vector3(),
 	touchPos = vmath.vector3(),
+	startPos = vmath.vector3(),
 	value = {x=0, y=0},
 	maxDist = 150,
 	touchId = -1,
@@ -48,6 +49,7 @@ local function resetPositon(self)
 	gui.set_position(gui.get_node("joystick_front"), leftJoystick.defaultPos)
 	
 	rightJoystick.touchPos = rightJoystick.defaultPos
+	rightJoystick.startPos = vmath.vector3(0)
 	rightJoystick.value = {x=0, y=0}
 	rightJoystick.touchId = -1
 	gui.set_position(gui.get_node("right_joystick_back"), rightJoystick.defaultPos)
@@ -359,46 +361,23 @@ function on_input(self, action_id, action)
 
 				rightJoystick.touchId = touchData.id
 
-				local newPos = vmath.vector3(touchData.x, touchData.y, 0)
-
-				if newPos.x < rightJoystick.area.left + 185 then
-					newPos.x = rightJoystick.area.left + 185
-				elseif newPos.x > rightJoystick.area.right - 185 then
-					newPos.x = rightJoystick.area.right - 185
-				end
-
-				if newPos.y < rightJoystick.area.bottom + 185 then
-					newPos.y = rightJoystick.area.bottom + 185
-				elseif newPos.y > rightJoystick.area.top - 185 then
-					newPos.y = rightJoystick.area.top - 185
-				end
-
-				local currentJoystickPos = gui.get_position(gui.get_node("right_joystick_back"))
-
-				if vmath.length(vmath.vector3(touchData.x, touchData.y, 0) - currentJoystickPos) > 150 then
-
-					rightJoystick.touchPos = newPos
-
-					gui.set_position(gui.get_node("right_joystick_back"), rightJoystick.touchPos)
-
-				else 
-					rightJoystick.touchPos = currentJoystickPos
-				end
+				rightJoystick.startPos = vmath.vector3(touchData.x, touchData.y, 0)
+				
 			elseif touchData.released and rightJoystick.touchId == touchData.id then
 				if rightJoystick.touchId == touchData.id then
 					rightJoystick.touchId = -1
-					--gui.set_position(gui.get_node("right_joystick_front"), rightJoystick.defaultPos)
-					--gui.set_position(gui.get_node("right_joystick_back"), rightJoystick.defaultPos)
 					gui.set_position(gui.get_node("right_joystick_front"), rightJoystick.touchPos)
-					gui.set_position(gui.get_node("right_joystick_back"), rightJoystick.touchPos)
 					rightJoystick.value.x = 0
 					rightJoystick.value.y = 0
 				end
 			end
 
 			if touchData.id == rightJoystick.touchId then
-				setJoystickPosition(touchData.x, touchData.y, rightJoystick)
+				
+				local p = vmath.vector3(touchData.x, touchData.y, 0) - rightJoystick.startPos
+				setJoystickPosition(rightJoystick.defaultPos.x + p.x, rightJoystick.defaultPos.y + p.y, rightJoystick)
 				goto continue
+				
 			end
 			-- END OF RIGHT JOYSTICK
 
