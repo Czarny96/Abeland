@@ -37,9 +37,6 @@ function M.basic(self, dt)
 	else
 		basicSlow_tim = basicSlow_tim + dt
 	end
-	
-	--Reset flags
-	self.isShooting = false
 end
 
 function M.arrowsCone(self, dt)

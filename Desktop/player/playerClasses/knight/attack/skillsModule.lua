@@ -14,9 +14,6 @@ function M.basic(self, dt)
 		end
 		self.basicCD_Timer = self.basicCD_Timer - dt
 	end
-
-	--Reset flags
-	self.isShooting = false
 end
 
 function M.shieldUp(self, dt)

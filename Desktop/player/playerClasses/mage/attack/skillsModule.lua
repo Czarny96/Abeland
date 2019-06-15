@@ -17,7 +17,6 @@ function M.basic(self, dt)
 			end
 			self.basicCD_Timer = self.basicCD_Timer - dt
 		end
-		self.isShooting = false
 	end
 end
 

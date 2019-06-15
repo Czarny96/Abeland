@@ -1,8 +1,8 @@
 --ROGUE
 go.property("basicCD", 0.6)
-go.property("basicCDmashing", 0.4)
-go.property("basicShadowFormCD", 0.35)
-go.property("basicShadowFormCDmashing", 0.24)
+go.property("basicCDmashing", 0.3)
+go.property("basicShadowFormCD", 0.36)
+go.property("basicShadowFormCDmashing", 0.18)
 
 --Skills CoolDowns
 go.property("yellowCD", 0)
@@ -68,6 +68,9 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("shoot") then
 		self.isShooting = true
 		self.shootingDir = vmath.vector3(message.x, message.y, 0)
+	end
+	if message_id == hash("stoppedShooting") then
+		self.isShooting = false
 	end
 
 	if message_id == hash("btnYellow") then

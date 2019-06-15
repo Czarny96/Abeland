@@ -65,6 +65,8 @@ function M.translateFrameToPlayer(frame, playerObjectID)
 	--Sending shoot command to playerObject
 	if shootingX > 0.4 or shootingX < -0.4 or shootingY > 0.4 or shootingY < -0.4 then
 		msg.post(playerObjectID, "shoot", {x = shootingX, y = shootingY})
+	else
+		msg.post(playerObjectID, "stoppedShooting")
 	end
 	
 	--Button interpretation

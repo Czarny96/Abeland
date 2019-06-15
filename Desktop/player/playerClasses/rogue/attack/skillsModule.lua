@@ -30,9 +30,6 @@ function M.basic(self, dt)
 			self.basicShadowFormCD_Timer = self.basicShadowFormCD_Timer - dt
 		end
 	end
-
-	--Reset flags
-	self.isShooting = false
 end
 
 function M.shadowForm(self, dt)
