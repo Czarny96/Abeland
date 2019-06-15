@@ -1,5 +1,6 @@
 --ARCHER
 go.property("basicCD", 0.6)
+go.property("basicCDmashing", 0.4)
 --Skills CoolDowns
 go.property("yellowCD", 0)
 go.property("redCD", 0)

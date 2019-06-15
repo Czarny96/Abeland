@@ -12,6 +12,9 @@ function M.basic(self, dt)
 			factory.create("#attack-basicFactory", go.get_position() + 25 * self.shootingDir, vmath.quat_rotation_z(l_angle), { projectileDir = self.shootingDir, mageID = go.get_id() })
 			self.basicCD_Timer = self.basicCD
 		else
+			if self.basicCD_Timer > self.basicCDmashing and not self.isShooting then
+				self.basicCD_Timer = self.basicCDmashing
+			end
 			self.basicCD_Timer = self.basicCD_Timer - dt
 		end
 		self.isShooting = false

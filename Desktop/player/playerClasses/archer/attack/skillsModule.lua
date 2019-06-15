@@ -23,6 +23,9 @@ function M.basic(self, dt)
 			self.basicCD_Timer = self.basicCD
 		end
 	else
+		if self.basicCD_Timer > self.basicCDmashing and not self.isShooting then
+			self.basicCD_Timer = self.basicCDmashing
+		end
 		self.basicCD_Timer = self.basicCD_Timer - dt
 	end
 

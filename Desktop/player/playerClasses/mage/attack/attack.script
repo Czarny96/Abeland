@@ -1,5 +1,6 @@
 --MAGE
 go.property("basicCD", 0.9)
+go.property("basicCDmashing", 0.6)
 --Skills CoolDowns
 go.property("yellowCD", 0)
 go.property("redCD", 0)

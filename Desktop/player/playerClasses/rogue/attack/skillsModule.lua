@@ -12,6 +12,9 @@ function M.basic(self, dt)
 			factory.create("#attack-basicFactory", nil, vmath.quat_rotation_z(l_angle), { projectileDir = self.shootingDir })
 			self.basicCD_Timer = self.basicCD
 		else
+			if self.basicCD_Timer > self.basicCDmashing and not self.isShooting then
+				self.basicCD_Timer = self.basicCDmashing
+			end
 			self.basicCD_Timer = self.basicCD_Timer - dt
 		end
 	elseif self.shadowFormFlag and self.isShooting then
@@ -21,6 +24,9 @@ function M.basic(self, dt)
 			factory.create("#attack-shadowFormFactory", nil, vmath.quat_rotation_z(l_angle), { projectileDir = self.shootingDir })
 			self.basicShadowFormCD_Timer = self.basicShadowFormCD
 		else
+			if self.basicShadowFormCD_Timer > self.basicShadowFormCDmashing and not self.isShooting then
+				self.basicShadowFormCD_Timer = self.basicShadowFormCDmashing
+			end
 			self.basicShadowFormCD_Timer = self.basicShadowFormCD_Timer - dt
 		end
 	end
