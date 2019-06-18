@@ -674,7 +674,6 @@ instances {
 instances {
   id: "firePit5"
   prototype: "/lights/firePit/firePit.go"
-  children: "firePit1"
   position {
     x: 1874.0
     y: 345.0
@@ -736,8 +735,8 @@ instances {
   id: "firePit1"
   prototype: "/lights/firePit/firePit.go"
   position {
-    x: -1829.0
-    y: 339.0
+    x: 46.0
+    y: 684.0
     z: 0.0
   }
   rotation {
@@ -1201,6 +1200,7 @@ embedded_instances {
 embedded_instances {
   id: "staticLights"
   children: "firePit"
+  children: "firePit1"
   children: "firePit2"
   children: "firePit3"
   children: "firePit4"

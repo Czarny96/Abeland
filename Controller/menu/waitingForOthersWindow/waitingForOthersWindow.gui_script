@@ -1,31 +1,14 @@
 
-local scalingButton = require "util/scalingButton"
 
 local screenNode = nil
 
 -- don't react after clicking button
 local lockActions = false
 
-local function buttonPressed(hashedNodeId)
-
-end
-
-local function buttonReleased(hashedNodeId)
-	if hashedNodeId == hash("cancelButton") then
-		print("Clicked cancel")
-		msg.post("/xmenu#disconnectedWindow", "hide")
-
-	end
-end
-
 function init(self)
 	msg.post(".", "acquire_input_focus")
 
 	screenNode = gui.get_node("screen")
-
-	self.buttonHolder = {
-		cancelButtonButton = scalingButton.create("cancelButton", 0, buttonReleased, buttonPressed)
-	}
 
 	self.timer = 0
 	self.waitingText = gui.get_text(gui.get_node("waitingText"))
@@ -90,17 +73,6 @@ function on_input(self, action_id, action)
 	
 	if lockActions and action_id ~= nil then
 		return true
-	end
-	
-	if action_id == hash("mouse_left") then
-
-
-		for idx, button in pairs(self.buttonHolder) do
-			button.mouseUpdate(action)
-		end
-	elseif action_id == hash("key_back") then
-		print("Clicked back")
-		msg.post("/xmenu#disconnectedWindow", "hide")
 	end
 	
 	-- other screens shouldn't process input (ACCELEROMETER DATA HAS nil ID)
